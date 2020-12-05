@@ -2,12 +2,13 @@
     <div>
         <div class="row my-3">
             <div class="col-md-3">
-                <img :src="require('../../../../../public/images/' + shop.image+ '.png')" alt="" class="img-main">
+                <img :src="require('../../../../../public/images/' + shop.image+ '.jpg')" alt="" class="img-main">
             </div>
             <div class="col-md-5">
                 <h4>{{shop.name}}</h4>
                 <p>{{meals.length}} Active products</p>
-                <button class="btn-primary btn">Subscribe</button>
+                <!--no of sales-->
+                <!--<button class="btn-primary btn">Subscribe</button>-->
             </div>
         </div>
         <div v-if="errored">
@@ -21,7 +22,7 @@
                         <div class="card-body p-0">
                             <router-link :to="{ path: '/meal/'+meal.id}">
                                 <div class="card-img-top">
-                                <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="" class="card-img-top">-->
+                                    <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="" class="card-img-top">
                                 </div>
                             </router-link>
                             <div class="card-title mb-0">

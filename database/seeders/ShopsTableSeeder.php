@@ -20,20 +20,16 @@ class ShopsTableSeeder extends Seeder
 
         $faker = \Faker\Factory::create();
 
-        $users= DB::table('users')
+        $vv= DB::table('users')
 ->where('role', 'vendor')
 ->pluck('id')->toArray();
-        //$array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
-        //$vend = json_encode($users);
-        $vend = array_rand($users);
-        $vv = $users[$vend];
 
         for($i = 0; $i < 5; $i++){
             Shop::create([
                 'name' => $faker->word,
                 'image' => 'Bag',
                 'description' => $faker->paragraph,
-                'vendor_id' =>$vv,
+                'vendor_id' =>$faker->randomElement($vv),
             ]);
         }
     }

@@ -7,6 +7,7 @@ use App\Models\meal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
+use App\Models\User;
 
 class MealController extends Controller
 {
@@ -17,20 +18,36 @@ class MealController extends Controller
         return response()->json(meal::with(['user', 'shop'])->get(), 200);
     }
 
-    public function show(Meal $meal)
+    public function show($id)
     {
-        return response()->json($meal, 200);
+
+        $meal_ = Meal::with('shop','user')->find($id);
+
+        if (!$meal_) {
+            return response()->json([
+                'error'=> true,
+                'message'=> 'Meal not found',
+                'data' => null
+            ]);
+        }
+
+        return response()->json([
+            'error'=> false,
+            'message'=> null,
+            'data' => $meal_
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //$meal = Meal::create($request->all());
+        $shop = Shop::where('vendor_id', '=' ,$id)->first();
+        $user = User::findorFail($id);
         $meal = Meal::create([
             'name' => $request->name,
             'price' => $request->price,
             'image' => $request->image,
-            'vendor_id' => $request->vendor_id,
-            'user_id' => $request->user_id,
+            'vendor_id' => $shop->id,
+            'user_id' => $user->id,
         ]);
 
         return response()->json([
@@ -38,8 +55,6 @@ class MealController extends Controller
             'data' => $meal,
             'message' => $meal ? 'Meal Created!' : ' Error creating meal',
         ]);
-
-        //return response()->json($meal, 201);
     }
 
     public function uploadFile(Request $request)
@@ -53,14 +68,19 @@ class MealController extends Controller
 
     public function update(Request $request, Meal $meal)
     {
-        $meal->update($request->all());
+        $status = $meal->update(
+            $request->only(['name', 'price', 'image'])
+        );
+       // $meal->update($request->all());
 
-        return response()->json($meal, 200);
+        return response()->json([
+            'status' => $status, 
+            'message' => $status ? 'Meal updated!' : 'Error updating meal'
+            ]);
     }
 
     public function delete(Meal $meal)
     {
-
         $meal->delete();
 
         return response()->json(null, 204);
@@ -68,11 +88,7 @@ class MealController extends Controller
 
     public function showMeals($user_id = null)
     {
-       // return response()->json(meal::with(['shop'])->get(), 200);
-      $meal = DB::select("SELECT meals.name, meals.price, meals.image, meals.user_id, meals.id FROM meals INNER JOIN users ON users.id=meals.user_id WHERE meals.vendor_id = $user_id");
-       //return response()->json(['meal' => $meal], 200);
-     // $shop = Meal::with(['shop'])->get("'meals.name', 'meals.price', 'shops.id', 'shops.name'");
-      //  $meal = Meal::where('vendor_id', $vendor_id)->get();
+        $meal = Meal::where('user_id', $user_id)->get();
         return response()->json($meal, 200);
     }
 

@@ -103,13 +103,17 @@ class UserController extends Controller
         return response()->json($user->orders()->with(['meal'])->get());
     }
 
-   // public function showShop(User $user)
-    //{
-        
-       // select * from `shops` where `shops`.`user_id` = 3 
-     //   return response()->json($user->shops()->with(['meal'])->get());
-        //return response()->json(User::with('meal')->where('shops.vendor_id', $user)->get(), 200);
-   // }  
+    public function update(Request $request, User $user)
+    {
+        $status = $user->update(
+            $request->only(['firstname', 'lastname', 'phoneNumber'])
+        );
+
+        return response()->json([
+            'status' => $status, 
+            'message' => $status ? 'User updated!' : 'Error updating user data'
+            ]);
+    }
     
    
 }

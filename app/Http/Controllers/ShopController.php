@@ -11,8 +11,8 @@ class ShopController extends Controller
     //
     public function index()
     {
-        //return meal::all();
-        return response()->json(Shop::with(['user'])->get(), 200);
+        return Shop::all();
+        //return response()->json(Shop::with(['user'])->get(), 200);
     }
 
     public function show(Shop $shop)
@@ -52,6 +52,5 @@ class ShopController extends Controller
         //SELECT * FROM shops INNER JOIN Meals ON Shops.Vendor_id=meals.id WHERE id = 3
         //$shop = DB::select("SELECT * FROM shops INNER JOIN Meals ON Shops.Vendor_id=meals.id WHERE id = $shop");
       // return response()->json($shop, 200);
-
     }
 }

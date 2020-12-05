@@ -41,6 +41,7 @@ class UsersTableSeeder extends Seeder
                 'phoneNumber' => $faker->unique()->phoneNumber,
                 'email' => $faker->email,
                 'role' => $vendor,
+                'hasShop' => 'Yes',
                 'password' => $password,
                 'image' => 'vendor'
             ]);

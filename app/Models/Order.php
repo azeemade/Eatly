@@ -12,7 +12,14 @@ class Order extends Model
         'meal_id',
         'user_id',
         'quantity',
-        'address',
+        'vendor_id',
+        'shippingAddress',
+        'billingAddress',
+        'paymentType',
+        'nameOnCard',
+        'cardNumber',
+        'cardExpiration',
+        'ccv'
     ];
 
     public function user()

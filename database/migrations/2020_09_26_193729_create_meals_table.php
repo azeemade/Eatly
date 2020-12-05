@@ -18,6 +18,7 @@ class CreateMealsTable extends Migration
             $table->string('name');
             $table->string('price');
             $table->string('image');
+            $table->string('status')->default('awaiting');
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('shops');
             $table->unsignedBigInteger('user_id');

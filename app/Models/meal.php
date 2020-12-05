@@ -13,7 +13,8 @@ class meal extends Model
         'vendor_id',
         'user_id',
         'price',
-        'image'
+        'image',
+        'status'
     ];
 
     public function shop()
@@ -29,5 +30,20 @@ class meal extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function carts()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_meals','meal_id','cart_id');       
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');       
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
     }
 }

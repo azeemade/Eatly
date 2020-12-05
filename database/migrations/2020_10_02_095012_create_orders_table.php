@@ -21,8 +21,17 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('meal_id');
             $table->foreign('meal_id')
             ->references('id')->on('meals');
+            $table->unsignedBigInteger('vendor_id');
+            $table->foreign('vendor_id')
+            ->references('id')->on('shops');
             $table->unsignedInteger('quantity')->default(1);
-            $table->string('address')->nullable();
+            $table->string('billingAddress');
+            $table->string('shippingAddress');
+            $table->string('paymentType');
+            $table->string('nameOnCard')->nullable();
+            $table->string('cardNumber')->nullable();
+            $table->time('cardExpiration')->nullable();
+            $table->string('ccv')->nullable();
             $table->string('is_delivered')->default(false);
             $table->timestamps();
         });

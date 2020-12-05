@@ -50,16 +50,11 @@ export default {
                         if (this.$route.params.nextUrl != null) {
                             this.$router.push(this.$route.params.nextUrl)
                         } else {
-                            if (role == "consumer"){
+                            if (role == "consumer" || role == "vendor"){
                                 this.$router.push('/home')
                             }else{
-                                if (role == "vendor"){
-                                   // this.$router.push('/vendor/home')
-                                   this.$router.push('/home')
-                                }else{
-                                    if (role == "admin"){
-                                        this.$router.push('/admin')
-                                    }
+                                if (role == "admin"){
+                                    this.$router.push('/admin')
                                 }
                             }
                         }

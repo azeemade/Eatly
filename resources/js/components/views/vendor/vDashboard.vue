@@ -6,9 +6,7 @@
                 <h4>{{shop.name}}</h4>
             </div>-->
             <div>
-                <select class="form-control">
-                        <option v-for="(date, index) in dates" :key="index">{{date.tim}}</option>
-                </select>
+                <input type="month" name="filtermonth" class="form-control" v-model="month" @change="loadOrders()">
             </div>
         </div>
         <div class="row">
@@ -16,7 +14,8 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <div>
-                            <h2>{{car.cardno}}</h2>
+                            <h2 v-if="car.name == 'Undelivered orders'">{{oOrders.length}}</h2>
+                            <h2 v-else>{{car.cardno}}</h2>
                         </div>
                         <div>
                             {{car.icon}}
@@ -67,8 +66,7 @@
                 </div>
             </div>
         </div>
-        <vOrdersHistory />
-        <!--<vOrdersHistory :id="order.id" :created_at="order.created_at" :name="order.name" :username="order.username" :is_delivered="order.is_delivered" :price="order.price" />-->
+        <vOrdersHistory :oOrders="oOrders"/>
     </div>
 </template>
 
@@ -81,45 +79,14 @@ export default {
 
     data(){
         return {
-           // orders: [],
-            dates: [
-                {
-                    tim: 'January'
-                },
-                {
-                    tim: 'February'
-                },
-                {
-                    tim: 'March'
-                },
-                {
-                    tim: 'April'
-                },
-                {
-                    tim: 'May'
-                },
-                {
-                    tim: 'June'
-                },
-                {
-                    tim: 'July'
-                },
-                {
-                    tim: 'This month'
-                },
-                {
-                    tim: 'This week'
-                },
-                {
-                    tim: 'Today'
-                },                 
-            ],
+            month: "",
             shop: [],
             isLoggedIn: localStorage.getItem('eatly.jwt') != null,
             id: null,
+            oOrders: [],
             card: [
                 {
-                    cardno: 2,
+                    cardno: "",
                     class: "bi bi-cart-x-fill",
                     d2:"M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM4 14a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm7 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z",
                     name: 'Undelivered orders',
@@ -135,7 +102,7 @@ export default {
                     cardno: 4,
                     class: "bi bi-people-fill",
                     d2: "M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
-                    name: 'Subscribers',
+                    name: 'New comment',
                 }
             ]
         }
@@ -153,24 +120,38 @@ export default {
             this.isLoggedIn = localStorage.getItem('eatly.jwt') != null
             this.setDefaults()
         },
-
-        ole(){
+        
+        getShop(){
             let url =  `/api/shops/${this.id}`
             axios.get(url).then(response => this.shop = response.data)
+        },
+
+        loadMonth(){
+            let urlm =  `http://127.0.0.1:8000/api/vOpenOrders/${this.id}`
+            axios.get(urlm)
+            .then(response => (this.month = response.data.data.month))         
+        },
+
+        loadOrders(){
+            axios.get(`http://127.0.0.1:8000/api/vOpenOrders/${this.id}?month=${this.month}`)
+                    .then((response) => {
+                        this.oOrders = response.data.data.order;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
         }
     },
 
     beforeMount(){
         this.setDefaults();
-        this.ole();
-       // let url =  `/api/shops/${this.id}`
-      // axios.get(url).then(response => this.shop = response.data)
+        this.loadMonth();
+        this.getShop();       
     },
-
-  //  mounted(){
-    //    let url =  `/api/ordersTable/${this.shop.id}`
-     //   axios.get(url).then(response => this.orders = response.data)
-   // },
+    
+    mounted(){
+        this.loadOrders();
+    },
 }
 </script>
 <style>

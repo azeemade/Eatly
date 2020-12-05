@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\meal;
 use App\Models\Order;
+use App\Models\Shop;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -20,10 +24,17 @@ class OrderController extends Controller
         return response()->json(Order::with(['meal'])->get(), 200);
     }
 
-    public function deliverOrder(Order $order)
+    public function deliverOrder(Request $request, Order $order)
     {
+      //  $order->user_id = $request->user_id;
+      //  $order->meal_id = $request->meal_id;
+      //  $order->vendor_id = $request->vendor_id;
         $order->is_delivered = true;
         $status = $order->save();
+
+       // $status = $order->update(
+        //    $request->only(['user_id', 'meal_id', 'vendor_id', 'is_delivered'])
+       // );
 
         return response()->json([
             'status' => $status,
@@ -48,20 +59,47 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $user_id)
     {
-        //
+        $credentials = $request->all('id');
+        $rules = ['id' => 'required'];
+
+        $validatorName = Validator::make($credentials, $rules);
+        if($validatorName->fails()) {
+            return response()->json([
+                'error'=> true,
+                'message'=> 'Meal id is required.',
+                'data' => null
+            ]);
+        }
+
         $order = Order::create([
-            'meal_id' => $request->meal_id,
-            'user_id' => Auth::id(),
+            'meal_id' => $request->id,
+            'user_id' => $user_id,
+            'vendor_id' => $request->vendor_id,
             'quantity' => $request->quantity,
-            'vendor' => $request->vendor_id,
+            'shippingAddress' => $request->shippingAddress,
+            'billingAddress'=> $request->billingAddress,
+            'paymentType' => $request->paymentType,
+            'nameOnCard' => $request->nameOnCard,
+            'cardNumber' => $request->cardNumber,
+            'cardExpiration' => $request->cardExpiration,
+            'ccv' => $request->ccv,
+
         ]);
 
+        if (!$order) {
+            return response()->json([
+                'error' => true,
+                'message' => 'An error occured',
+                'data' => $order
+            ]);
+        }
+
         return response()->json([
-            'status' => (bool) $order,
-            'data' => $order,
-            'message' => '$status' ? 'Order Created!' : 'Error Creating Order'
+            'error' => false,
+            'message' => 'Order has been placed',
+            'data' => null
         ]);
     }
 
@@ -124,18 +162,77 @@ class OrderController extends Controller
             'message' => '$status' ? 'Order Deleted!' : 'Error Deleting Order'
         ]);
     }
-    public function showOrders($user_id = null){
-        $order = DB::select("SELECT meals.name, meals.price, orders.quantity, meals.image FROM orders INNER JOIN meals ON orders.meal_id=meals.id WHERE orders.user_id = $user_id");
+
+    public function closedVendorOrder($id = null){
+       $shop = shop::where('vendor_id', $id)->pluck('id');
+       $order = Order::with(['meal', 'user'])->where('vendor_id', $shop)->where('is_delivered', 1)->latest()->get();
+       
        return response()->json($order, 200);
     }
 
-    public function orderTable($vendor_id= null){
-        $orderTable = DB::select("SELECT Orders.id, meals.name, orders.created_at, orders.is_delivered, meals.price, users.username FROM Orders INNER JOIN meals ON Orders.meal_id=meals.id INNER JOIN users ON Orders.user_id=users.id WHERE meals.vendor_id = $vendor_id");
-        return response()->json($orderTable, 200);
+    function  scopeWithFilters($query)
+    {
+        return $query->when(request()->input('month', []), function ($query) {
+                $query->whereMonth('created_at', request()->input('month'));
+            });
+    }
+
+    public function openedVendorOrder($id = null, Request $request){
+        $thisMonth = Carbon::today()->format('Y-m');
+
+        $shop = shop::where('vendor_id', $id)->pluck('id');
+        $month = Carbon::parse($request->month)->format('m');
+        $year = Carbon::parse($request->month)->format('Y');
+        $order = Order::where('vendor_id', $shop)->where('is_delivered', 0)->whereYear('created_at', $year)->whereMonth('created_at', $month)->latest()->get();    
+        if (!$order) {
+            return response()->json([ 
+                'error' => true,
+                'message' => 'Order was not sent successfully',
+                'data' => null
+            ]);
+        }
+        $data = [
+            'order' => $order->transform(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'created_at' => $order->created_at->format('F d, Y'),
+                    'meal' => $order->meal->name,
+                    'name' => $order->user->username,
+                    'is_delivered' => $order->is_delivered,
+                    'amount' => $order->meal->price,
+                ];
+            }),
+            'month' => $thisMonth
+        ];
+
+            
+        return response()->json([
+            'error' => false,
+            'message' => 'Order sent successfully ',
+            'data' => $data
+        ]);
     }
 
     public function getOrder($meal_id = null){
         $myO = DB::select("SELECT users.id FROM Orders INNER JOIN meals ON Orders.meal_id=meals.id INNER JOIN users ON Orders.user_id=users.id WHERE meals.id = $meal_id");
         return response()->json($myO, 200);
+    }
+
+    public function openOrders($id){
+        $order = Order::with(['meal'])->where('is_delivered', 0)->where('user_id', $id)->latest()->get();
+        return response()->json($order,200);//[
+          //  'error' => false,
+          //  'message' => null,
+          //  'data' => $order
+       // ]);
+    }
+
+    public function closeOrders($id){
+        $order = Order::with(['meal'])->where('is_delivered', 1)->where('user_id', $id)->latest()->get();
+        return response()->json($order,200);//[
+          //  'error' => false,
+          //  'message' => null,
+          //  'data' => $order
+       // ]);
     }
 }

@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex justify-content-between">
             <div>
-                Recent Orders
+                New Orders
             </div>
             <div>
                 <button class="btn" id="orderbtn">Collapse</button>
@@ -17,33 +17,27 @@
                 <th>Shipping</th>
                 <th>Amount</th>
             </tr>
-            <tr v-for="(order, index) in orders" :key="index">
-                <td>{{order.id}}</td>
-                <td>{{order.created_at}}</td>
-                <td>{{order.name}}</td>
-                <td>{{order.username}}</td>
-                <td>{{order.is_delivered}}</td>
-                <td>NGN{{order.price}}</td>
+            <tr v-for="(datas, index) in data" :key="index">
+                <td>{{datas.id}}</td>
+                <td>{{datas.created_at}}</td>
+                <td>{{datas.meal}}</td>
+                <td>{{datas.name}}</td>
+                <td v-if="datas.is_delivered == 0">Undelivered</td>
+                <td>NGN{{datas.amount}}</td>
             </tr>
         </table>
     </div>
 </template>
 
 <script>
-//import vDashboard from './vDashboard';
-
 export default {
-    props: ['id'],// 'created_at', 'name', 'username', 'is_delivered', 'price'],
-    data(){
-        return{
-            orders: [],
+    props: ['oOrders'],
+    computed:{
+        data: function(){
+            if (this.oOrders != null){
+                return this.oOrders
+            }
         }
-    },
-
-    mounted(){
-        let url =  `/api/ordersTable/${this.id}`
-       // let url =  `/api/ordersTable/55`
-        axios.get(url).then(response => this.orders = response.data)
     },
 }
 </script>

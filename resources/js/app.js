@@ -9,7 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import App from './App.vue'
 import router from './index'
-import store from './store'
+import store from './store/index'
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,15 +31,23 @@ Vue.component('uDashboard', require('./components/views/buyer/uDashboard.vue').d
 Vue.component('uHome', require('./components/views/buyer/uHome.vue').default);
 Vue.component('meals', require('./components/views/buyer/meals.vue').default);
 Vue.component('meal', require('./components/views/buyer/meal.vue').default);
+Vue.component('shops', require('./components/views/buyer/shops.vue').default);
 Vue.component('shop', require('./components/views/buyer/shop.vue').default);
 Vue.component('sidenav', require('./components/views/buyer/sidenav.vue').default);
 Vue.component('cart', require('./components/views/buyer/cart.vue').default);
 Vue.component('account', require('./components/views/buyer/account.vue').default);
-Vue.component('orderHistory', require('./components/views/buyer/orderHistory.vue').default);
+Vue.component('orders', require('./components/views/buyer/orders.vue').default);
+Vue.component('ordersOpen', require('./components/views/buyer/ordersOpen.vue').default);
+Vue.component('ordersClosed', require('./components/views/buyer/ordersClosed.vue').default);
 Vue.component('message', require('./components/views/buyer/message.vue').default);
 Vue.component('notification', require('./components/views/buyer/notification.vue').default);
-Vue.component('subscriptions', require('./components/views/buyer/subscriptions.vue').default);
+Vue.component('wishlist', require('./components/views/buyer/wishlist.vue').default);
 Vue.component('rHome', require('./components/views/RECIPE/rHome.vue').default);
+Vue.component('checkout', require('./components/views/buyer/checkout.vue').default);
+Vue.component('comment', require('./components/views/buyer/comment.vue').default);
+Vue.component('rate', require('./components/views/buyer/rate.vue').default);
+Vue.component('addComment', require('./components/views/buyer/addComment.vue').default);
+Vue.component('reply', require('./components/views/buyer/reply.vue').default);
 
 Vue.component('vendorSidenav', require('./components/views/vendor/vendorSidenav.vue').default);
 Vue.component('vDashboard', require('./components/views/vendor/vDashboard.vue').default);

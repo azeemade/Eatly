@@ -1,6 +1,6 @@
 <template>
     <div class="">                     
-        <div class="mt-4 row">
+        <div class="mt-4 d-flex">
             <div class="col-md-2">
                 <button class="btn btn-outline-dark">New</button>
             </div>
@@ -30,13 +30,13 @@
             </div>
             <div v-else>
                 <div v-if="loading" class="load">Eatly</div>
-                    <div class="mt-3 row">
+                    <div class="mt-3 a-row">
                     <div class="col-md-3 mb-5" v-for="(meal, index) in meals" :key="index">
                         <div class="border-0 p-3">                      
                             <div class="card-body p-0">
                                 <router-link :to="{ path: '/meal/'+meal.id}">
                                     <div>
-                                    <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="meal image"  class="card-img-top">-->
+                                        <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="meal image"  class="card-img-top">
                                     </div>
                                 
                                     <div class="card-title mb-0">
@@ -56,7 +56,7 @@
                                             <div class="dropdown-menu px-3" aria-labelledby="dropdownMenu2">
                                                 <div class="d-flex">
                                                     <div class="mr-3">
-                                                    <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="" width="45px">-->
+                                                        <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="" width="45px">
                                                     </div>
                                                     <div>
                                                         <p><b>{{meal.name}}</b></p>
@@ -65,7 +65,7 @@
                                                         </router-link>
                                                     </div>
                                                 </div><hr>
-                                                <li><a href="">Add to bookmark</a></li>
+                                                <li><a href="">Add to wishlist</a></li>
                                                 <li><a href="">Share</a></li>
                                                 <li><router-link :to="{ path: '/shop/'+meal.shop.id}">
                                                             View vendor profile
@@ -102,6 +102,10 @@ export default {
 }
 </script>
 <style scoped>
+    .a-row{
+        display: flex!important;
+        flex-wrap: wrap;
+    }
     .p-0 p{
         margin-bottom: 0;
     }

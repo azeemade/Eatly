@@ -7,12 +7,17 @@ import login from "./components/views/general/Login.vue"
 import uDashboard from "./components/views/buyer/uDashboard.vue"
 import Meal from "./components/views/buyer/meal.vue"
 import Meals from "./components/views/buyer/meals.vue"
+import Shops from "./components/views/buyer/shops.vue"
 import Shop from "./components/views/buyer/shop.vue"
 import cart from "./components/views/buyer/cart.vue"
 import message from "./components/views/buyer/message.vue"
-import subscriptions from "./components/views/buyer/subscriptions.vue"
+import wishlist from "./components/views/buyer/wishlist.vue"
+import openOrders from "./components/views/buyer/ordersOpen.vue"
+import closedOrders from "./components/views/buyer/ordersClosed.vue"
+import orders from "./components/views/buyer/orders.vue"
 import notification from "./components/views/buyer/notification.vue"
 import uHome from "./components/views/buyer/uHome";
+import checkout from "./components/views/buyer/checkout";
 import rHome from "./components/views/RECIPE/rHome";
 
 import vendorHome from "./components/views/vendor/vendorHome.vue"
@@ -76,6 +81,15 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    path: '/shops', 
+                    name: 'shops',
+                    component: Shops,
+                    meta: {
+                        requiresAuth: true,
+                        is_consumer: true
+                    }
+                },
+                {
                     path: '/shop/:id', 
                     name: 'shop',
                     component: Shop,
@@ -92,6 +106,45 @@ const router = new VueRouter({
                         requiresAuth: true,
                         is_consumer: true
                     }
+                },
+                {
+                    path: '/wishlist', 
+                    name: 'wishlist',
+                    component: wishlist,
+                    meta: {
+                        requiresAuth: true,
+                        is_consumer: true
+                    }
+                },
+                {
+                    path: '/checkout', 
+                    name: 'checkout',
+                    component: checkout,
+                    meta: {
+                        requiresAuth: true,
+                        is_consumer: true
+                    }
+                },
+                {
+                    path: '/orders', 
+                    name: 'orders',
+                    component: orders,
+                    meta: {
+                        requiresAuth: true,
+                        is_consumer: true
+                    },
+                    children: [
+                        {
+                            path: '/openOrders', 
+                            name: 'openOrders',
+                            component: openOrders,
+                        },
+                        {
+                            path: '/closedOrders', 
+                            name: 'closedOrders',
+                            component: closedOrders,
+                        },
+                    ]
                 },
                 //{
                  //   path: '/inbox', 
@@ -111,15 +164,15 @@ const router = new VueRouter({
                    //     is_consumer: true
                    // }
                // },
-                {
-                    path: '/subscriptions', 
-                    name: 'subscriptions',
-                    component: subscriptions,
-                    meta: {
-                        requiresAuth: true,
-                        is_consumer: true
-                    }
-                },
+               // {
+               //     path: '/subscriptions', 
+               //     name: 'subscriptions',
+               //     component: subscriptions,
+                //    meta: {
+                //        requiresAuth: true,
+               //         is_consumer: true
+                //    }
+               // },
             ]
         },
         {
@@ -157,15 +210,6 @@ const router = new VueRouter({
                     },
                     props: (route) => ({ pid: route.query.pid })
                 },
-               // {
-                 //   path: '/vendor/inbox',
-                 //   name: 'vInbox', 
-                  //  component: vInbox,
-                 //   meta: {
-                 //       requiresAuth: true,
-                  //      is_vendor: true
-                   // }
-                //},
                 {
                     path: '/vendor/orders',
                     name: 'vOrders', 
@@ -218,49 +262,22 @@ router.beforeEach((to, from, next) => {
         }
         else{
             let user = JSON.parse(localStorage.getItem('eatly.user'))
-            //if (to.matched.some(record => record.meta.is_admin)){
                 if (to.matched.some(record => record.meta.is_admin)){
-                //if (user.is_admin == 1){
-                if (user.role == "admin"){
-                    next()
-                }
-                else{
-                    if (user.role == "consumer"){
-                        next({ path: '/home' })
-                    }
-                    else{
-                        //next({ path: 'home' })
-                        next({ path: 'vendor/home' })
-                    }   
-                }
-            }
-            else if (to.matched.some(record => record.meta.is_consumer)){
-                if (user.role == "consumer"){
-                    next()
-                }
-                else {
                     if (user.role == "admin"){
+                        next()
+                    }
+                    else{ 
+                    next({ path: '/home' })
+                    }
+                }
+                else if (to.matched.some(record => record.meta.is_consumer || record.meta.is_vendor)){
+                    if (user.role == "consumer" || user.role == "vendor"){
+                        next()
+                    }
+                    else {
                         next({ path: 'admin' })
                     }
-                    else{
-                        //next({ path: 'home' })
-                        next({ path: 'vendor/home' })
-                    }   
                 }
-            }
-            else if (to.matched.some(record => record.meta.is_vendor)){
-                if (user.role == "vendor"){
-                    next()
-                }
-                else {
-                    if (user.role == "admin"){
-                        next({ path: 'admin' })
-                    }
-                    else{
-                        next({ path: '/home' })
-                    }
-                }
-            }
             next()
         }
     }
