@@ -17,10 +17,10 @@
     li.btn:hover{
         background-color: #707070;
     }
-    li.btn:active{
+    /*li.btn:active{
         list-style: none;
         color: #707070;
-    }
+    }*/
     .col-md-7 .card{
         background-color: rgba(254, 237, 0, 0.74);
         border: none;

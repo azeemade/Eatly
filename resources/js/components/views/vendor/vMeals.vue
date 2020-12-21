@@ -5,47 +5,44 @@
                 <div class="card">
                     <div class="card-header">
                         <div>
-                            <h2 v-if="car.title == 'Active products'">{{meals.length}}</h2>
+                            <h2 v-if="car.title == 'Active meals'">{{$store.state.vMeals.length}}</h2>
                             <h2 v-else>{{car.cardno}}</h2>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="card-title">
-                            <h5>{{car.title}}</h5>
+                            <h5 class="text-center" style="font-weight: 100">{{car.title}}</h5>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!--<div class="alert alert-success alert-dismissible text-center " role="alert" v-bind:class="{hidden: $store.state.message}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{$store.state.message}}
+        </div>-->
         <div class="row">
-            <div class="col-md-3 my-5" v-for="(meal, index) in meals" :key="index">
+            <div class="col-md-3 my-5" v-for="(meal, index) in $store.state.vMeals" :key="index">
                 <div class="card border-0">                      
                     <div class="card-body p-3">
                         <div class="card-img-top">
-                        <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="" width="160px" height="160px">-->
+                            <img :src="'/images/'+ meal.image" alt="" width="160px" height="160px">
                         </div>
                         <div class="card-title mb-0">
-                            <h6>{{meal.name}}</h6>
+                            <p>{{meal.name}}</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <div class="card-text">
                                 <p><b>NGN {{meal.price}}</b></p>
                             </div>
-                            <!--<div class="card-text" v-for="(order, index) in orders" :key="index">>
-                                <p><b>{{order.length}} sells</b></p>
-                            </div>-->
                             <div>
-                                <button class="btn" type="button" data-toggle="modal" :data-target="'.'+ meal.name" @click="editingMeal = meal">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                <button class="btn" type="button" data-toggle="modal" :data-target="'.'+ meal.name" @click="passMeal(meal)">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-box-arrow-up-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
                                     </svg>
                                 </button>
-                                <editmeal :meal ="editingMeal" @close="endEditing" v-show="editingMeal != null"/>
-                                <button class="btn" @click="deleteMeal(meal)">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
-                                    </svg>
-                                </button>
+                                <vMeal />
                             </div>
                         </div>
                     </div>
@@ -59,55 +56,35 @@ export default {
     props: ['pid'],
     data(){
         return {
-            meals: [],
-            editingMeal: null,
             card: [
                 {
                     cardno: "",
-                    title: 'Active products'
+                    title: 'Active meals'
                 },
                 {
                     cardno: 2,
-                    title: 'Products awaiting approval'
+                    title: 'Meals awaiting approval'
                 },
                 {
                     cardno: 4,
-                    title: 'Canceled products'
+                    title: 'Canceled meals'
                 }
             ]
         }
     },
 
     methods: {
-        getMeals(){
-            axios.get(`http://127.0.0.1:8000/api/store/${this.pid}`).then(response => this.meals = response.data)
+        passMeal(meal){
+            this.$store.dispatch('fetchSale', meal)
+            this.$store.dispatch('fetchVRating', meal)
+            this.$store.commit('SET_VENDOR_MEAL', meal)
+            this.$store.dispatch('fetchComments', meal)
         },
-
-        endEditing(meal){
-            this.editingMeal = null
-
-            let index = this.meals.indexOf(meal)
-            let name = meal.name
-            let price = meal.price
-            let image = meal.image
-
-             axios.put(`http://127.0.0.1:8000/api/meals/${meal.id}`, {name, price, image})
-             .then(response => this.meals[index] = meal)
-        },
-
-        deleteMeal(meal){
-            if(confirm('Are you sure?')){
-                axios.delete('http://127.0.0.1:8000/api/meals/'+ meal.id).then(response =>
-                this.getMeals()
-                );
-            }
-        }
     },
 
     beforeMount(){
-        axios.get(`http://127.0.0.1:8000/api/store/${this.pid}`).then(response => this.meals = response.data)
+        this.$store.dispatch('fetchVMeals', this.pid)
     },
-
 }
 </script>
 <style scoped>
@@ -123,6 +100,6 @@ export default {
         background-color: #80808033;
     }
     .d-flex .card-text {
-    font-size: 0.7rem;
-}
+        font-size: 0.7rem;
+    }
 </style>

@@ -33,6 +33,8 @@ class CreateOrdersTable extends Migration
             $table->time('cardExpiration')->nullable();
             $table->string('ccv')->nullable();
             $table->string('is_delivered')->default(false);
+            $table->string('promo_code')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

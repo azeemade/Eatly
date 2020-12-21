@@ -15,22 +15,6 @@ class ShopsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        //Shop::truncate();
-
-        $faker = \Faker\Factory::create();
-
-        $vv= DB::table('users')
-->where('role', 'vendor')
-->pluck('id')->toArray();
-
-        for($i = 0; $i < 5; $i++){
-            Shop::create([
-                'name' => $faker->word,
-                'image' => 'Bag',
-                'description' => $faker->paragraph,
-                'vendor_id' =>$faker->randomElement($vv),
-            ]);
-        }
+       
     }
 }

@@ -24,8 +24,10 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "bootstrap-icons": "^1.0.0",
+        "bootstrap-icons": "^1.1.0",
+        "vue-dynamic-star-rating": "^1.0.8",
         "vue-router": "^3.4.5",
+        "vue-star-rating": "^1.7.0",
         "vuex": "^3.5.1"
     }
 }

@@ -1,21 +1,25 @@
 <template>
     <div class="block">
-        <p class="text-center alert alert-danger" v-bind:class="{hidden: hasError}">Please fill all the fields.</p>
-        <div class="text-center alert alert-danger" v-bind:class="{hidden: newMeal}" id="qDiv">
+        <div class="alert alert-danger text-center " role="alert" v-bind:class="{hidden: hasError}">
+            
+            Please fill all the fields.
+        </div>
+        <div class="alert alert-warning alert-dismissible text-center " role="alert" v-bind:class="{hidden: newMeal}">
             <p>Meal Added!</p>
             <p>Do you want to continue?</p>
             <div class="d-flex justify-content-center">
-                <button class="btn btn-outline-warning" @click="closeMeal">Yes</button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">Yes</span></button>
                 <button class="btn btn-outline-danger"><router-link :to="{path: '/vendor/meals?pid='+id}">No</router-link></button>
             </div>
         </div>
         <form @submit.prevent="addMeal">
-            <!--<img :src="require('../../../../../public/images/' +data.image+ '.png')" v-show="data.image != null">
-            <input type="file" id="file" @change="attachFile">-->
             <input type="text" name="name" class="form-control mb-3" v-model="meal.name" placeholder="name">
             <input type="text" name="price" class="form-control mb-3" v-model="meal.price" placeholder="price">
-            <input type="text" name="image" class="form-control mb-3" v-model="meal.image" placeholder="image">
-            <button type="submit" class="btn btn-info">Add meal</button>
+            <div>
+                <input type="file" id="file" @change="upload_mealImage" name="image">
+                <img v-bind:src="imagePreview" v-show="showPreview" width="115" height="115"/>
+            </div>
+            <button type="submit" class="btn btn-info mt-3">Add meal</button>
         </form>
     </div>
 </template>
@@ -26,7 +30,8 @@ export default {
         return{
             hasError: true,
             newMeal: true,
-            //attachment: null,
+            imagePreview: null,
+            showPreview: false,
             isLoggedIn: localStorage.getItem('eatly.jwt') != null,
             id: null,
             meal: {
@@ -48,13 +53,7 @@ export default {
         change(){
             this.isLoggedIn = localStorage.getItem('eatly.jwt') != null
             this.setDefaults()
-        },
-
-        closeMeal(){
-            document.getElementById('qDiv').style.display = "none";
-            this.meal = {name:'', price: '', image: ''}
-        },
-        
+        },       
 
       addMeal(){
             var item = this.meal;
@@ -63,14 +62,53 @@ export default {
             }
             else {
               this.hasError = true;
-              axios.post(`http://127.0.0.1:8000/api/meal/${this.id}`, item).then(response => {
-                  if (console.error()){
-                      this.newMeal = true
-                  }
-                  else{
-                      this.newMeal = false
-                  }
-                })
+
+               let headers = {'Content-Type': 'multipart/form-data'}
+
+                let formData = new FormData();
+                formData.append("image", this.meal.image);
+                formData.append("name", this.meal.name);
+                formData.append("price", this.meal.price);
+
+                axios.post(`http://127.0.0.1:8000/api/meal/${this.id}`, formData, {headers})
+                    .then(response => {
+                                this.newMeal = false
+                                this.meal = {'name': '', 'price': '', 'image':''}
+                            
+                        })
+               // axios.post("/api/upload-file", formData, {headers}).then(response => {
+                //        this.meal.image = response.data
+               // });
+
+               // axios.post(`http://127.0.0.1:8000/api/meal/${this.id}`, item).then(response => {
+                  //  this.meal.reset();
+                //  if (console.error()){
+                 //     this.newMeal = true
+                 // }
+                 // else{
+                 //     this.newMeal = false
+                 // }
+               // })
+            }
+        },
+
+        upload_mealImage(event){
+            this.meal.image = event.target.files[0];
+
+            let reader  = new FileReader();
+
+            reader.addEventListener("load", function () {
+                this.showPreview = true;
+                this.imagePreview = reader.result;
+            }.bind(this), false);
+
+            if( this.meal.image ){
+                if ( /\.(jpe?g|png|gif)$/i.test( this.meal.image.name ) ) {
+
+                    console.log("here");
+
+                    reader.readAsDataURL( this.meal.image );
+                }
             }
         }
     },

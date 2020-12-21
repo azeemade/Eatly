@@ -11,7 +11,9 @@ import Shops from "./components/views/buyer/shops.vue"
 import Shop from "./components/views/buyer/shop.vue"
 import cart from "./components/views/buyer/cart.vue"
 import message from "./components/views/buyer/message.vue"
-import wishlist from "./components/views/buyer/wishlist.vue"
+import bookmark from "./components/views/buyer/bookmark.vue"
+import mealBookmark from "./components/views/buyer/mealBookmark.vue"
+import shopBookmark from "./components/views/buyer/shopBookmark.vue"
 import openOrders from "./components/views/buyer/ordersOpen.vue"
 import closedOrders from "./components/views/buyer/ordersClosed.vue"
 import orders from "./components/views/buyer/orders.vue"
@@ -108,13 +110,25 @@ const router = new VueRouter({
                     }
                 },
                 {
-                    path: '/wishlist', 
-                    name: 'wishlist',
-                    component: wishlist,
+                    path: '/bookmark', 
+                    name: 'bookmark',
+                    component: bookmark,
                     meta: {
                         requiresAuth: true,
                         is_consumer: true
-                    }
+                    },
+                    children: [
+                        {
+                            path: '/bookmark/meal', 
+                            name: 'mealBookmark',
+                            component: mealBookmark,
+                        },
+                        {
+                            path: '/bookmark/shop', 
+                            name: 'shopBookmark',
+                            component: shopBookmark,
+                        },
+                    ]
                 },
                 {
                     path: '/checkout', 

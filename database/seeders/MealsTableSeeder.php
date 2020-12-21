@@ -17,56 +17,39 @@ class MealsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        //Meal::truncate();
-
         $faker = \Faker\Factory::create();
-        $vv = User::where('role', '=', 'vendor')->pluck('id')->toArray();
-        $uu = Shop::all()->pluck('id')->toArray();
-
-        for($i = 0; $i < 7; $i++){
+        for($i = 0; $i < 15; $i++){
             Meal::create([
-                'name' => $faker->word,
-                'price' => $faker->randomNumber(4),
-                'image' => 'IMG_9596_(3)',
+                'meal_name' => $faker->word(),
+                'meal_price' => $faker->randomFloat(2, 800, 20000),
+                'meal_slug' => $faker->slug(),
+                'meal_additional_text' => $faker->sentences(2, 10, 10000),
+                'meal_approval' => $this->getApproval(),
+                'meal_status' => $this->getStatus(),
                 'user_id' => $this->getUser(),
-                'vendor_id' => $this->getVendor(),
-                'status' => 'active'
+                'vendor_id' => $this->getVendor()             
             ]);
         }
-
-        for($i = 0; $i < 3; $i++){
-            Meal::create([
-                'name' => $faker->word,
-                'price' => $faker->randomNumber(4),
-                'image' => 'IMG_9596_(3)',
-                'user_id' => $this->getUser(),
-                'vendor_id' => $this->getVendor(),
-                'status' => 'cancelled'
-            ]);
-        }
-
-        for($i = 0; $i < 5; $i++){
-            Meal::create([
-                'name' => $faker->word,
-                'price' => $faker->randomNumber(4),
-                'image' => 'IMG_9596_(3)',
-                'user_id' => $this->getUser(),
-                'vendor_id' => $this->getVendor(),
-            ]);
-        }
-
-        
     }
 
-    private function getUser(){
-        $user = \App\Models\User::inRandomOrder()->where('role', '=', 'vendor')->first();
+    public function getUser(){
+        $user = \App\Models\User::inRandomOrder()->where('hasShop', '=', 'Yes')->first();
+
         return $user->id;
     }
-    private function getVendor(){
-        $shop = \App\Models\Shop::inRandomOrder()->first();
-        //$meal = \App\Models\meal::where('vendor_id', '=', $shop->id)->first();
-        
+    public function getVendor(){
+        $shop = \App\Models\Shop::where('shop_vendor_id', $this->getUser())->first();
+
         return $shop->id;
+    }
+    public function getApproval(){
+        $app = ["active", "awaiting", "cancelled"];
+        $app_ = array_rand($app);
+        return $app[$app_];
+    }
+    public function getStatus(){
+        $stat = ["in-stock", "out-of-stock"];
+        $stat_ = array_rand($stat);
+        return $stat[$stat_];
     }
 }

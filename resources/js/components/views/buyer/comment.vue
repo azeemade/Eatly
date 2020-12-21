@@ -1,9 +1,10 @@
 <template>
-    <div>
-        <div class="mb-3 commentCard" v-for="(comment, index) in $store.state.comments" :key="index">
+    <div> 
+        <h4 style="font-weight:100">REVIEWS</h4>
+        <div class="my-3 commentCard" v-for="(comment, index) in $store.state.comments" :key="index">
             <div class="row">
                 <div class="col-md-5">
-                    <!--User Image -->
+                    <img :src="require(`../../../../../public/images/${comment.user.UserImage}.png`)" alt="" width="115" height="115" style="border-radius:50%;">
                 </div>
                 <div class="col-md-7">
                     <p><b>{{comment.user.username}}</b></p>
@@ -17,7 +18,7 @@
 </template>
 <script>
 export default {
-   // props: ['pagination']
+    
 }
 </script>
 <style>

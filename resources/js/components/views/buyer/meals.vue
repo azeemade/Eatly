@@ -30,13 +30,17 @@
             </div>
             <div v-else>
                 <div v-if="loading" class="load">Eatly</div>
+                    <div class="alert alert-warning alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasMeal}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        Meal already in bookmark
+                    </div>
                     <div class="mt-3 a-row">
                     <div class="col-md-3 mb-5" v-for="(meal, index) in meals" :key="index">
                         <div class="border-0 p-3">                      
                             <div class="card-body p-0">
                                 <router-link :to="{ path: '/meal/'+meal.id}">
                                     <div>
-                                        <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="meal image"  class="card-img-top">
+                                        <img :src="'/images/'+ meal.image" alt="" width="115" height="115" class="rounded">
                                     </div>
                                 
                                     <div class="card-title mb-0">
@@ -56,7 +60,8 @@
                                             <div class="dropdown-menu px-3" aria-labelledby="dropdownMenu2">
                                                 <div class="d-flex">
                                                     <div class="mr-3">
-                                                        <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="" width="45px">
+                                                        <img :src="'/images/'+ meal.image" alt="" width="45" class="rounded">
+                                                        
                                                     </div>
                                                     <div>
                                                         <p><b>{{meal.name}}</b></p>
@@ -65,7 +70,7 @@
                                                         </router-link>
                                                     </div>
                                                 </div><hr>
-                                                <li><a href="">Add to wishlist</a></li>
+                                                <li><a href @click.prevent="bookmarkMeal(index)">Add to bookmark</a></li>
                                                 <li><a href="">Share</a></li>
                                                 <li><router-link :to="{ path: '/shop/'+meal.shop.id}">
                                                             View vendor profile
@@ -90,6 +95,7 @@ export default {
             meals: [],
             loading: true,
             errored: false,
+            hasMeal: true
         }
     },
 
@@ -98,7 +104,27 @@ export default {
         .catch(error => {console.log(error)
         this.errored = true})
         .finally(() => this.loading = false)
+
+        this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
     },
+
+    methods:{
+        bookmarkMeal(index){
+            let meal = this.meals[index]
+            let meal_id = meal.id
+            let id = this.$store.state.id
+            let found = this.$store.state.bookmarkMeal.find(item => item.id == meal_id);
+
+            if (found) {
+                this.hasMeal = false;
+            } else {
+                this.hasMeal = true;
+            axios.post('http://127.0.0.1:8000/api/bookmark/meal/'+meal_id, {meal_id, id})
+            .then(response => this.$store.commit('ADD_TO_BOOKMARK_MEAL', {meal}))
+            alert('Meal added to bookmark')
+            }
+        }, 
+    }
 }
 </script>
 <style scoped>
@@ -120,11 +146,6 @@ export default {
         height: 220px;
         border-radius: 8px;
         background-color: #80808033;
-    }
-    .card-img-top{
-        width: 115px;
-        height: 115px;
-        border-radius: 4px;
     }
     .load {
         position: relative;

@@ -154,10 +154,3 @@ export default {
     },
 }
 </script>
-<style>
-    select.form-control{
-        position: absolute;
-        right: 0;
-        width: 10%;
-    }
-</style>

@@ -2,9 +2,9 @@
     <div class="">
         <div v-if="$store.state.cartCount > 0">
             <div class="cartCard" v-for="(meal, index) in $store.state.cart" :key="index">
-                <div class="d-flex">
+                <div class="d-flex pt-3">
                     <div class="col-md-5">
-                    <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="" class="user_image">-->
+                        <img :src="'/images/'+ meal.image" alt="" width="91" height="75" class="rounded">
                     </div>
                     <div class="col-md-7">
                         <p><b>{{meal.name}}</b></p>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
 export default {
     props:['id'],
     computed:{

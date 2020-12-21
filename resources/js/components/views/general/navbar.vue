@@ -1,10 +1,13 @@
 <template>
-    <div class="nav-wrapper-container fixed-top">
+    <div class="nav-wrapper-container fixed-top" @scroll="navbar">
         <div class="navbar justify-content-between d-flex">
             <div>
-                <router-link to="/" class="navbar-brand">Eatly</router-link>
+                <!--<router-link to="/" class="navbar-brand">Eatly</router-link>-->
+                <router-link to="/" class="navbar-brand">
+                    <img :src="'/images/eatly_new.svg'" alt="" class="rounded" height="45" width="105">
+                </router-link>
             </div>
-            <div v-if="user_type == `consumer` || !isLoggedIn">
+            <div v-if="user_type == `consumer` && isLoggedIn">
                 <form action="" class="d-flex">
                     <input type="search" placeholder="Search" size="40" class="form-control">
                     <button type="submit" class="btn">
@@ -19,11 +22,6 @@
                 <div v-if="isLoggedIn">
                     <div class="d-flex">
                         <div class="mr-2">
-                        <!--    <router-link to="" class="btn add-btn" title="Add recipe" v-if="user_type == `consumer`">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                </svg>
-                            </router-link>-->
                             <router-link :to="{ path: '/vendor/add-meal/'}" class="btn add-btn" title="Add meal" v-if="user_type == `vendor`">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -50,16 +48,6 @@
                                 <notification/>
                             </div>
                         </div>
-                        <!--<div class="mr-2">
-                            <button class="btn" type="button" aria-labelledby="dropdownMenuz" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-                                </svg>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuz">
-                                <message />
-                            </div>
-                        </div>-->
                          <div class="">
                             <button class="btn" aria-labelledby="dropdownMenua" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -71,79 +59,6 @@
                             </div>
                         </div>               
                     </div>
-                    <!--<div class="dropdown" v-if="isLoggedIn">-->
-                    <!--    <div class="btn dropdownBtn" type="button" @click="dropdown">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-justify" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                    </div>
-                    <div id="myDropdown" class="dropdown-content">   
-                        <div class="btn dropdown-item">
-                            <div class="dropdown-top">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-                                </svg>
-                            </div>
-                            <div class="dropdown-bottom">
-                                <router-link to="/inbox">Message</router-link>
-                            </div>
-                        </div>
-                        <div class="btn dropdown-item">
-                            <div class="dropdown-top">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                                </svg>
-                            </div>
-                            <div class="dropdown-bottom">
-                                <router-link to="/cart">Cart ({{ $store.state.cartCount }})</router-link>
-                            </div>
-                        </div>         
-                        <div class="btn dropdown-item">
-                            <div class="dropdown-top">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                                </svg>
-                            </div>
-                            <div class="dropdown-bottom">
-                                <router-link to="/notification">Notification</router-link>
-                            </div>
-                        </div>
-                        <div class="btn dropdown-item">
-                            <div class="dropdown-top">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-collection-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7z"/>
-                                    <path fill-rule="evenodd" d="M2 3a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 0-1h-11A.5.5 0 0 0 2 3zm2-2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7A.5.5 0 0 0 4 1z"/>
-                                </svg>
-                            </div>
-                            <div class="dropdown-bottom">
-                                <router-link to="/subscriptions">Subscriptions</router-link>
-                            </div>
-                        </div>-->
-                    <!--    <ul class="dropdown-menu px-3" aria-labelledby="dashboardMenu">
-                            <li v-if="user_type == `consumer`"><router-link to="/login">User Profile</router-link></li>
-                            <li v-if="user_type == `vendor`"><router-link to="/login">Vendor Profile</router-link></li>
-                            <li><router-link to="/login">Setting</router-link></li><hr>
-                            <li @click="logout" v-if="isLoggedIn">Logout</li>
-                        </ul>
-                    </div>-->
-                    <!-- <div class="btn" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <div style="padding-right: 7px;">
-                            <img :src="require('../../../../../public/images/rocket.png')" alt="" width="30px" class="user_image">
-                        </div>
-                        <div>
-                            <span v-if="user_type == `consumer`">{{ username}}</span>
-                            <span v-if="user_type == `vendor`">{{ username}}</span>
-                            <span v-if="user_type == `admin`">{{ username}}</span>
-                        </div>      
-                    </div>
-                    <div>            
-                        <ul class="dropdown-menu px-3" aria-labelledby="dashboardMenu">
-                            <li v-if="user_type == `consumer`"><router-link to="/login">User Profile</router-link></li>
-                            <li v-if="user_type == `vendor`"><router-link to="/login">Vendor Profile</router-link></li>
-                            <li><router-link to="/login">Setting</router-link></li><hr>
-                            <li @click="logout" v-if="isLoggedIn">Logout</li>
-                        </ul>
-                    </div>-->
                 </div>
                 <div v-else>
                     <div class="dropdown" >
@@ -257,7 +172,6 @@ export default {
             isLoggedIn: localStorage.getItem('eatly.jwt') != null,
             username: null,
             id: null,
-          //  cart: [],
         }
     },
     methods:{
@@ -287,7 +201,12 @@ export default {
             axios.get(`http://127.0.0.1:8000/api/cart?id=${user_id}`)
             .then(response => this.cart = response.data.data.cart.meals)
             .catch(console.error)
+        },
+
+        navbar(){
+           // document.getElementsByClassName('fixed-top').style.box-shadow = "4px 4px 15px grey";
         }
+
     },
 
     beforeMount(){

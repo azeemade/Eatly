@@ -4,17 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class meal extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
+    const MEAL_STATUS_IN_STOCK = 'in-stock';
+    const MEAL_STATUS_OUT_OF_STOCK = 'out-of-stock';
+
+    const MEAL_APPROVAL_ACTIVE = 'active';
+    const MEAL_APPROVAL_AWAITING = 'awaiting';
+    const MEAL_APPROVAL_CANCELLED = 'cancelled';
+    
     protected $fillable = [
-        'name',      
+        'meal_name',     
+        'meal_slug', 
         'vendor_id',
+        'meal_size',
+        'meal_additional_text',
         'user_id',
-        'price',
-        'image',
-        'status'
+        'meal_price',
+        'meal_status',
+        'meal_approval'
     ];
 
     public function shop()
@@ -39,11 +52,26 @@ class meal extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');       
+        return $this->hasMany(Comment::class);      
     }
 
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function favourites()
+    {
+        return $this->belongsToMany(Favourite::class, 'favourite_meals','meal_id','favourite_id');       
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_meals','meal_id','category_id');       
     }
 }

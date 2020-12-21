@@ -5,7 +5,7 @@
                 <div class="card-body p-0">
                     <router-link :to="{ path: '/shop/'+shop.id}">
                         <div>
-                            <img :src="require(`../../../../../public/images/${shop.image}.jpg`)" alt="meal image"  class="rounded-circle" width="115" height="115">
+                            <img :src="'/images/'+ shop.image + '.jpg'" alt="" width="115" height="115"  class="rounded-circle border">
                         </div>
                     
                         <div class="card-title mb-0">

@@ -91,7 +91,7 @@
                     <h4 class="text-center">Cart</h4>
                     <div class="row mb-3 mealRow" v-for="(meal, index) in $store.state.cart" :key="index">
                         <div class="col-md-3">
-                            <!--    <img :src="require('../../../../../public/images/' +meal.image+ '.png')" alt="" class="user_image">-->
+                           <img :src="'/images/'+ meal.image" alt="" width="91" height="75" class="rounded">
                         </div>
                         <div class="col-md-6">
                             <p><b>{{meal.name}}</b></p>

@@ -10,14 +10,16 @@ class Shop extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'image',
-        'vendor_id',
-        'description',
+        'shop_name',
+        'shop_image',
+        'shop_vendor_id',
+        'shop_description',
+        'open_time',
+        'close_time'
     ];
     public function user()
     {
-        return $this->belongsTo(User::class, 'vendor_id');
+        return $this->belongsTo(User::class, 'shop_vendor_id');
     }
 
     public function meals()
@@ -28,5 +30,15 @@ class Shop extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function promos()
+    {
+        return $this->hasMany(Promo::class);
+    }
+
+    public function favourites()
+    {
+        return $this->belongsToMany(Favourite::class, 'favourite_shops','shop_id','favourite_id');       
     }
 }

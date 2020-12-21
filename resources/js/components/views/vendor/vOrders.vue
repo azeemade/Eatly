@@ -16,16 +16,16 @@
                 <th>Name</th>
                 <th>Amount</th>
                 <th>Delivery status</th>
-                <th>Deliver</th>
+                <th>Action</th>
             </tr>
             <tr v-for="(norder, index) in oOrders" :key="index">
                 <td>{{norder.id}}</td>
                 <td>{{norder.created_at}}</td>
-                <td>{{norder.meal.name}}</td>
-                <td>{{norder.user.username}}</td>
+                <td>{{norder.meal}}</td>
+                <td>{{norder.name}}</td>
                 <!--<td>Address</td>
                 <td>Quantity</td>-->
-                <td>NGN{{norder.meal.price}}</td>
+                <td>NGN{{norder.amount}}</td>
                 <td v-if="norder.is_delivered == 0">Undelivered</td>
                 <td v-if="norder.is_delivered == 0">
                     <button type="submit" @click="deliver(index)" class="btn btn-success">Deliver Meal</button>
@@ -75,7 +75,7 @@ export default {
 
     beforeMount(){
         let url1 =  `http://127.0.0.1:8000/api/vOpenOrders/${this.pid}`
-        axios.get(url1).then(response => this.oOrders = response.data)
+        axios.get(url1).then(response => this.oOrders = response.data.data.order)
     },
 
     methods:{

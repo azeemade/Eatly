@@ -1,20 +1,28 @@
 <template>
     <div>
         <div class="container">
-            <div class="row mb-5">
+            <div class="row">
                 <div class="col-md-6">
-                    <h1>Welcome back,</h1>
-                    <p>Login to continue.</p>
+                    <img :src="'/images/loginImage.png'" alt="" width="100%" height="auto" class="rounded">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 login-section p-5">
+                    <h1 style="font-weight:100;">Welcome back,</h1>
+                    <p>Login to continue.</p>
                     <form>
                         <div class="form-group">
-                            <input type="email" placeholder="user@example.com" class="form-control" v-model="email" required>
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" v-model="email" required>
                         </div>
                         <div class="form-group">
-                            <input type="password" placeholder="password" class="form-control" v-model="password" required>
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" v-model="password" required>
                         </div>
-                        <button class="btn-block btn btn-primary" @click="handleSubmit">Login</button>
+                        <button class="btn-link btn">Forgotten password ?</button>
+                        <button class="btn float-right" @click="handleSubmit">Login</button>
+                        <div class="mt-5 d-flex align-items-baseline">
+                            <p>No account yet ???</p>
+                            <button class="btn-link btn">Create account </button>
+                        </div>  
                     </form>
                 </div>
             </div>
@@ -68,3 +76,23 @@ export default {
     },
 }
 </script>
+<style>
+    div.form-group input{
+        border: none;
+        border-bottom: 1px solid;
+        background-color: whitesmoke;
+    }
+    div.form-group label{
+        opacity: 1;
+        font-size: smaller;
+    }
+    .login-section{
+        border-radius: 1rem;
+        background-color: #f5f5f5;
+        margin-top: 3rem;
+    }
+    .login-section button.btn.float-right{
+        float: right;
+        background-color: #ffdb00;
+    }
+</style>

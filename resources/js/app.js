@@ -41,13 +41,13 @@ Vue.component('ordersOpen', require('./components/views/buyer/ordersOpen.vue').d
 Vue.component('ordersClosed', require('./components/views/buyer/ordersClosed.vue').default);
 Vue.component('message', require('./components/views/buyer/message.vue').default);
 Vue.component('notification', require('./components/views/buyer/notification.vue').default);
-Vue.component('wishlist', require('./components/views/buyer/wishlist.vue').default);
-Vue.component('rHome', require('./components/views/RECIPE/rHome.vue').default);
+Vue.component('bookmark', require('./components/views/buyer/bookmark.vue').default);
 Vue.component('checkout', require('./components/views/buyer/checkout.vue').default);
 Vue.component('comment', require('./components/views/buyer/comment.vue').default);
 Vue.component('rate', require('./components/views/buyer/rate.vue').default);
 Vue.component('addComment', require('./components/views/buyer/addComment.vue').default);
-Vue.component('reply', require('./components/views/buyer/reply.vue').default);
+Vue.component('shopBookmark', require('./components/views/buyer/shopBookmark.vue').default);
+Vue.component('mealBookmark', require('./components/views/buyer/mealBookmark.vue').default);
 
 Vue.component('vendorSidenav', require('./components/views/vendor/vendorSidenav.vue').default);
 Vue.component('vDashboard', require('./components/views/vendor/vDashboard.vue').default);
@@ -59,7 +59,9 @@ Vue.component('vOrders', require('./components/views/vendor/vOrders.vue').defaul
 Vue.component('vOrdersHistory', require('./components/views/vendor/vOrdersHistory.vue').default);
 Vue.component('addmeal', require('./components/views/vendor/addmeal.vue').default);
 Vue.component('editmeal', require('./components/views/vendor/editmeal.vue').default);
-
+Vue.component('vMeal', require('./components/views/vendor/vMeal.vue').default);
+Vue.component('vMealRating', require('./components/views/vendor/vMealRating.vue').default);
+Vue.component('vReviews', require('./components/views/vendor/vReviews.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

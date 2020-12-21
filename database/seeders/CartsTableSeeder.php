@@ -26,9 +26,7 @@ class CartsTableSeeder extends Seeder
     }
 
     private function getUser(){
-       // $user = DB::table('users')->where('role', '!=', 'admin')->pluck('id')->toArray();
-      // $user = \App\Models\User::pluck('id')->toArray();
-        $user = \App\Models\User::where('role', '!=', 'admin')->first();
+        $user = \App\Models\User::where('role', '!=', 'admin')->inRandomOrder()->first();
         return $user->id;
     }
 }

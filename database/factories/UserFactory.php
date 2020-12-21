@@ -2,9 +2,16 @@
 
 namespace Database\Factories;
 
+/** @var  \Illuminate\Database\Eloquent\Factories\Factory $factory */
+ 
 use App\Models\User;
+use App\Models\meal;
+use App\Models\Shop;
+use App\Models\Cart;
+use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Favourite;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -22,12 +29,17 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $password = Hash::make('secret123');
+        $faker = \Faker\Factory::create();
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'firstname' => $faker->firstName,
+            'lastname' => $faker->lastName,
+            'username' => $faker->userName,
+            'phoneNumber' => $faker->unique()->phoneNumber,
+            'email' => $faker->email,
+            'hasShop' => 'Yes',
+            'password' => $password,
+            'user_image' => 'vendor'
         ];
     }
 }

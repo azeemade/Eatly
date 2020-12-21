@@ -22,7 +22,6 @@ class CreateCommentsTable extends Migration
             $table->unsignedBigInteger('commentable_id');
             $table->foreign('commentable_id')
             ->references('id')->on('meals');
-            $table->string('commentable_type');
             $table->timestamps();
         });
     }

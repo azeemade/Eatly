@@ -15,12 +15,14 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('image');
-            $table->unsignedBigInteger('vendor_id');
-            $table->foreign('vendor_id')
+            $table->string('shop_name')->unique();
+            $table->string('shop_image');
+            $table->unsignedBigInteger('shop_vendor_id');
+            $table->foreign('shop_vendor_id')
             ->references('id')->on('users');
-            $table->string('description');
+            $table->string('shop_description');
+            $table->time('open_time');
+            $table->time('close_time');
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ class CreateCartMealsTable extends Migration
             $table->foreign('meal_id')
             ->references('id')->on('meals');
             $table->unsignedInteger('quantity')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -35,7 +35,7 @@ export default {
                 id: this.meal.id, 
                 user_id: this.id, 
                 comment: newComment_
-            }).then(response =>  this.$store.commit('ADD_TO_COMMENTS', {newComment_}))
+            }).then(response =>  this.$store.commit('ADD_TO_COMMENTS', newComment_))
             alert('Comment posted !.')
         },
     },

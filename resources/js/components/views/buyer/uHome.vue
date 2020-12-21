@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div class="a-row">
+        <div class="row">
             <div class="col-md-7">
                 <div class="card">
                     <div class="card-body">
@@ -34,6 +34,10 @@
                             </router-link>
                         </span>
                     </div>
+                    <div class="alert alert-warning alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasMeal}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        Meal already in bookmark
+                    </div>
                     <div class="row justify-content-between align-items-center">
                         <div class="">
                             <button id="left-button" @click="swipeLeft" class="btn btn-secondary">
@@ -44,22 +48,35 @@
                         </div>
                         <div class="my-3 content" ref="content">
                             <div class="mb-5 pr-5 d-inline-block" v-for="(meal, index) in meals" :key="index">
-                                <div class="border-0 p-3">                      
+                                <div class="border-0 p-3 btn-section">                      
                                     <div class="card-body p-0">
                                         <router-link :to="{ path: '/meal/'+meal.id}">
                                             <div>
-                                                <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="meal image"  class="card-img-top">
+                                                <img :src="'/images/'+ meal.image" alt="" width="115" height="115" class="rounded">
                                             </div>
                                         
                                             <div class="card-title mb-0">
                                                 <p>{{meal.name}}</p>
+                                                <p>{{meal.shop.name}}</p>
                                             </div>
                                         </router-link>
                                         <div class="d-flex justify-content-between">
                                             <div class="align-self-center font-weight-bold">
                                                 <p>NG₦{{meal.price}}</p>
                                             </div>
-                                            <div class="dropdown">
+                                            <div class="action-buttons">
+                                                <button class="btn btn-secondary" type="button" title="share meal">
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-share-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+                                                    </svg>
+                                                </button>
+                                                <button class="btn btn-secondary" type="button" title="Add to bookmark">
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmark-plus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4 0a2 2 0 0 0-2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4zm4.5 4.5a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5V4.5z"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <!--<div class="dropdown">
                                                 <div class="btn px-0" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -68,7 +85,7 @@
                                                 <div class="dropdown-menu px-3" aria-labelledby="dropdownMenu2">
                                                     <div class="d-flex">
                                                         <div class="mr-3">
-                                                            <img :src="require(`../../../../../public/images/${meal.image}.jpg`)" alt="" width="45px">
+                                                            <img :src="'/images/'+ meal.image" alt="" width="45" class="rounded">
                                                         </div>
                                                         <div>
                                                             <p><b>{{meal.name}}</b></p>
@@ -77,7 +94,7 @@
                                                             </router-link>
                                                         </div>
                                                     </div><hr>
-                                                    <li><a href="">Add to wishlist</a></li>
+                                                    <li><a href @click.prevent="bookmarkMeal(index)">Add to bookmark</a></li>
                                                     <li><a href="">Share</a></li>
                                                     <li>
                                                         <router-link :to="{ path: '/shop/'+meal.shop.id}">
@@ -86,7 +103,7 @@
                                                     </li><br>
                                                     <li><a class="btn btn-outline-dark" id="close">Close</a></li>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -108,21 +125,19 @@
                             </router-link>
                         </span>
                     </div>
-                    <div class="mt-3 a-row">
-                        <div class="mb-5 px-5" v-for="(shop, index) in shops" :key="index">
-                            <!--<div class="border-0 p-3">                      -->
+                    <div class="mt-3 row">
+                        <div class="mb-5 px-5" v-for="(shop, index) in shops" :key="index">         
                                 <div class="card-body p-0">
                                     <router-link :to="{ path: '/shop/'+shop.id}">
                                         <div>
-                                            <img :src="require(`../../../../../public/images/${shop.image}.jpg`)" alt="meal image"  class="rounded-circle" width="115" height="115">
+                                            <img :src="'/images/'+ shop.image + '.jpg'" alt="" width="115" height="115"  class="rounded-circle">
                                         </div>
                                     
                                         <div class="card-title mb-0">
-                                            <p class="text-center">{{shop.name}}</p>
+                                            <p class="text-center">{{shop.ShopName}}</p>
                                         </div>
                                     </router-link>
                                 </div>
-                            <!--</div>-->
                         </div>
                     </div>
             </div>               
@@ -130,7 +145,7 @@
 
     </div>
 </template>
-<script>
+<script> 
 export default {
     data(){
         return{
@@ -138,6 +153,7 @@ export default {
             shops: [],
             loading: true,
             errored: false,
+            hasMeal: true
         }
     },
 
@@ -180,7 +196,23 @@ export default {
         swipeRight() {
             const content = this.$refs.content;
             this.scrollTo(content, 300, 800);
-        }
+        },
+
+         bookmarkMeal(index){
+            let meal = this.meals[index]
+            let meal_id = meal.id
+            let id = this.$store.state.id
+            let found = this.$store.state.bookmarkMeal.find(item => item.id == meal_id);
+
+            if (found) {
+                this.hasMeal = false;
+            } else {
+                this.hasMeal = true;
+            axios.post('http://127.0.0.1:8000/api/bookmark/meal/'+meal_id, {meal_id, id})
+            .then(response => this.$store.commit('ADD_TO_BOOKMARK_MEAL', {meal}))
+            alert('Meal added to bookmark')
+            }
+        }, 
     },
 
     mounted(){
@@ -193,29 +225,20 @@ export default {
         .catch(error => {console.log(error)
         this.errored = true})
         .finally(() => this.loading = false)
+
+        this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
     },
 }
 </script>
 <style scoped>
-    .p-0 p{
-        margin-bottom: 0;
-    }
     .dropdown-menu.px-3{
         width:200px;
-    }
-    .btn.btn-outline-dark {
-        font-size: 0.8rem;
     }
     .border-0 {
         width: 147px;
         height: 220px;
         border-radius: 8px;
         background-color: #80808033;
-    }
-    .card-img-top{
-        width: 115px;
-        height: 115px;
-        border-radius: 4px;
     }
     .load {
         position: absolute;
@@ -250,14 +273,22 @@ export default {
     .col-md-7 .card .card-body .card-title p{
         font-size: 1.3rem;
     }
-    .a-row{
-        display: flex!important;
-        flex-wrap: wrap;
-    }
     .content{
         width: 1000px;
         overflow: hidden;
         white-space: nowrap;
     }
+    /*.btn-section div div .action-buttons .btn {
+        position: absolute;
+        top: 50%;
+        left: 90%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        display: none
+    }
+
+    .btn-section:hover div div .action-buttons .btn{
+        display: block;
+    }*/
 
 </style>

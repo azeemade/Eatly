@@ -15,14 +15,17 @@ class CreateMealsTable extends Migration
     {
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('price');
-            $table->string('image');
-            $table->string('status')->default('awaiting');
+            $table->string('meal_name');
+            $table->decimal('meal_price', 8, 2);
+            $table->string('meal_slug');
+            $table->string('meal_additional_text')->nullable();
+            $table->enum('meal_status', ['in-stock', 'out-of-stock'])->default('in-stock');
+            $table->enum('meal_approval', ['active', 'awaiting', 'cancelled'])->default('awaiting');
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('shops');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

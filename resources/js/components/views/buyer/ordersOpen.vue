@@ -7,7 +7,7 @@
             <div class="mb-5 col-md-3" v-for="(order, index) in orders" :key="index">
                 <div>
                     <div>
-                    <!--    <img :src="require('../../../../../public/images/' +order.image+ '.png')" alt="" class="user_image">-->
+                    <img :src="'/images/'+ order.meal.image" alt="" width="45" height="45" class="rounded">
                     </div>
                     <div>
                         <h6>{{order.meal.name}}</h6>
@@ -70,11 +70,6 @@ export default {
 </script>
 
 <style scoped>
-    .user_image{
-        width: 45px;
-        height: 45px;
-        border-radius: 4px;
-    }
     .d-flex .col-md-8{
         font-size: small;
     }

@@ -27,7 +27,7 @@ class User extends Authenticatable
         'phoneNumber',
         'role',
         'hasShop',
-        'image'
+        'user_image'
     ];
 
     /**
@@ -49,10 +49,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function recipes()
-    {
-        return $this->hasMany(Recipe::class);
-    }
     public function shops()
     {
         return $this->hasMany(Shop::class);
@@ -66,6 +62,11 @@ class User extends Authenticatable
         return $this->hasOne(Cart::class);
     }
 
+    public function favourites()
+    {
+        return $this->hasOne(Favourite::class);
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -74,6 +75,16 @@ class User extends Authenticatable
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
     }
 }
 

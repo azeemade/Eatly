@@ -49,7 +49,8 @@ export default {
                     id: this.meal.id,
                     points: this.rating
                 })
-                .then(response => this.message = response.message)
+                .then(response => this.message = response.data.message)
+                .then(response => this.$store.commit('ADD_RATING', this.rating))
             }
         }
     }
