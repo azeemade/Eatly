@@ -17,6 +17,10 @@
         </div>
     <script>
         window.onclick = function(event) {
+           // if (!event.target.matches('.meal-menu-btn')) {
+           //     document.getElementById("menu-content").style.display = "none";
+           // }
+            
             if (!event.target.matches('.dropdownBtn')) {
                 var dropdowns = document.getElementsByClassName("dropdown-content");
                 var i;

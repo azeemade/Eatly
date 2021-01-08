@@ -13,6 +13,7 @@ class CreateCartMealsTable extends Migration
      */
     public function up()
     {
+       // Schema::enableForeignKeyConstraints();
         Schema::create('cart_meals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cart_id');
@@ -21,6 +22,9 @@ class CreateCartMealsTable extends Migration
             $table->unsignedBigInteger('meal_id');
             $table->foreign('meal_id')
             ->references('id')->on('meals');
+            $table->unsignedBigInteger('meal_size_id');
+            $table->foreign('meal_size_id')
+            ->references('id')->on('meal_sizes');
             $table->unsignedInteger('quantity')->default(1);
             $table->softDeletes();
             $table->timestamps();
@@ -34,6 +38,7 @@ class CreateCartMealsTable extends Migration
      */
     public function down()
     {
+      //  Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('cart_meals');
     }
 }

@@ -19,15 +19,16 @@ class MealsTableSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
         for($i = 0; $i < 15; $i++){
+            $user_id = $this->getUser();
+            $vendor_id = $this->getVendor($user_id);
             Meal::create([
+                'user_id' => $user_id,
                 'meal_name' => $faker->word(),
-                'meal_price' => $faker->randomFloat(2, 800, 20000),
                 'meal_slug' => $faker->slug(),
                 'meal_additional_text' => $faker->sentences(2, 10, 10000),
                 'meal_approval' => $this->getApproval(),
                 'meal_status' => $this->getStatus(),
-                'user_id' => $this->getUser(),
-                'vendor_id' => $this->getVendor()             
+                'shop_id' => $vendor_id             
             ]);
         }
     }
@@ -37,8 +38,8 @@ class MealsTableSeeder extends Seeder
 
         return $user->id;
     }
-    public function getVendor(){
-        $shop = \App\Models\Shop::where('shop_vendor_id', $this->getUser())->first();
+    public function getVendor($user_id){
+        $shop = \App\Models\Shop::where('shop_vendor_id', $user_id)->first();
 
         return $shop->id;
     }

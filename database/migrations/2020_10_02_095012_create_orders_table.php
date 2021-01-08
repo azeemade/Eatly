@@ -13,6 +13,7 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
+        Schema::enableForeignKeyConstraints();
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -21,18 +22,23 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('meal_id');
             $table->foreign('meal_id')
             ->references('id')->on('meals');
-            $table->unsignedBigInteger('vendor_id');
-            $table->foreign('vendor_id')
+            $table->unsignedBigInteger('shop_id');
+            $table->foreign('shop_id')
             ->references('id')->on('shops');
             $table->unsignedInteger('quantity')->default(1);
+            $table->unsignedBigInteger('meal_size_id');
+            $table->foreign('meal_size_id')
+            ->references('id')->on('meal_sizes');
             $table->string('billingAddress');
             $table->string('shippingAddress');
-            $table->string('paymentType');
+            $table->enum('paymentType', ['bank-transfer', 'credit-card']);
+            $table->text('order_status', ['delivery not started', 'delivery in progress', 'delivered'])->default('delivery not started');
+            $table->string('cardType')->nullable();
             $table->string('nameOnCard')->nullable();
             $table->string('cardNumber')->nullable();
-            $table->time('cardExpiration')->nullable();
+            $table->string('cardExpiration')->nullable();
             $table->string('ccv')->nullable();
-            $table->string('is_delivered')->default(false);
+            $table->boolean('is_delivered')->default(false);
             $table->string('promo_code')->nullable();
             $table->softDeletes();
             $table->timestamps();
@@ -46,6 +52,7 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('orders');
     }
 }

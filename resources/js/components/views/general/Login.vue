@@ -43,7 +43,8 @@ export default {
             e.preventDefault()
 
             if (this.password.length > 0) {
-                axios.post('api/login', {
+                this.loading = true;
+                axios.post('api/v1/auth/login', {
                     email: this.email, 
                     password: this.password
                     })
@@ -58,7 +59,7 @@ export default {
                         if (this.$route.params.nextUrl != null) {
                             this.$router.push(this.$route.params.nextUrl)
                         } else {
-                            if (role == "consumer" || role == "vendor"){
+                            if (role == "user"){
                                 this.$router.push('/home')
                             }else{
                                 if (role == "admin"){
@@ -68,9 +69,9 @@ export default {
                         }
                     }
                 })
-                .catch(function (error){
-                    console.error(error);
-                });
+                .catch(error => {
+                    console.log(error)
+                    })
             }
         }
     },

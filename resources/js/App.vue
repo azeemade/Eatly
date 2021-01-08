@@ -1,6 +1,10 @@
 <template>
     <div>
         <navbar />
+        <div>
+            <account />
+            <vSideMenu />
+        </div>
         <div class="myMain">
             <router-view></router-view>
         </div>
@@ -19,6 +23,7 @@ export default {
         list-style: none;
     }
     .myMain{
-        margin-top:56px;
+        margin-top:71px;
+        width: 100%;
     }
 </style>

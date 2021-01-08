@@ -13,8 +13,11 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
+       // Schema::enableForeignKeyConstraints();
+
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->timestamps();
         });
     }
@@ -26,6 +29,7 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
+        //Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('categories');
     }
 }

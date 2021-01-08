@@ -40,14 +40,15 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        $cart = Cart::where('user_id', $request->id)->first('id');
+        $cart = Cart::where('user_id', $request->id)->first();
         $meal_id = $request->meal_id;
         $quantity = $request->quantity;
-        $cart->meals()->attach($meal_id, ['quantity' => $quantity]);
+        $meal_size_id = $request->meal_size_id;
+        $cart->meals()->attach($meal_id, ['quantity' => $quantity],['meal_size_id' => $meal_size_id]);
 
         return response()->json([
             'status' => (bool) $cart,
-            'data' => $cart,
+           // 'data' => $cart,
             'message' => '$status' ? 'Meal has been added to cart!' : 'Meal not added'
         ]);
     }
@@ -58,9 +59,27 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function show(Cart $cart)
+    public function show(Request $request)
     {
+        $cart = Cart::where('user_id', $request->user_id)->first();
+        $meal_size =$cart->meal_size;
+        
 
+        return response()->json([
+            'error' => 'false',
+            'message' => '$meals' ? 'Meal in cart!' : 'Cart is empty',  
+            'data' =>  $meal_size->transform(function ($meal_size) {
+                    return[
+                    'id' => $meal_size->id,
+                    'meal_name' => $meal_size->meal->meal_name,
+                    'meal_price' => $meal_size->meal_price,
+                    'meal_size' => $meal_size->meal_size,
+                    'shop_name' =>$meal_size->meal->shop->shop_name,
+                    'image' => $meal_size->meal->images->where('master', 1)->first()->url,
+                    'quantity' => $meal_size->pivot->quantity,
+                 ];
+                }),    
+        ]);
     }
 
     /**
@@ -81,10 +100,10 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request)
     {
-        $cart = Cart::where('user_id', $request->id)->first('id');
-        $status = $cart->meals()->updateExistingPivot($request->meal_id, ['quantity' => $request->quantiti]);
+        $cart = Cart::where('user_id', $request->user_id)->first();
+        $status = $cart->meals()->updateExistingPivot($request->meal_id, ['quantity' => $request->quantity],['meal_size_id' => $request->meal_size_id]);
         return response()->json([
             'status' => $status, 
             'message' => $status ? 'Meal updated!' : 'Error updating meal'
@@ -100,34 +119,18 @@ class CartController extends Controller
     public function destroy(Request $request)
     {
         $credentials = [
-            'id' => $request->get('id'),
-            'meal_id' => $request->get('meal_id'),
-            'quantity' => $request->get('quantity'),
+            'user_id' => $request->user_id,
+            'meal_id' => $request->meal_id,
+            'quantity' => $request->quantity,
+            'meal_size_id' => $request->meal_size_id,
         ];
-        $cart = Cart::where('user_id', $credentials['id'])->first('id');
-       // $meal_id = $request->meal_id;
-        //$quantity = $request->quantity;
-        $cart->meals()->detach($credentials['meal_id'], ['quantity' => $credentials['quantity']]);
+        $cart = Cart::where('user_id', $credentials['user_id'])->first();
+        $cart->meals()->detach($credentials['meal_id'], ['quantity' => $credentials['quantity'],'meal_size_id' => $credentials['meal_size_id']]);
 
         return response()->json([
             'status' => (bool) $cart,
             'data' => $cart,
             'message' => '$status' ? 'Meal removed from cart!' : 'Meal not removed'
         ]);
-    }
-
-    public function mealsInCart(Request $request)
-    {
-       $cart = DB::select("SELECT meals.id, meals.name, meals.price, meals.image, cart_meals.quantity, meals.vendor_id
-                FROM `carts` INNER JOIN meals INNER JOIN cart_meals 
-                ON carts.id = cart_meals.cart_id AND cart_meals.meal_id =meals.id 
-                WHERE carts.user_id =  $request->id");
-                return response()->json([
-                    'error' => 'false',
-                    'message' => '$cart' ? 'Meal in cart!' : 'Error in Meal cart',
-                    'data' => [
-                        'cart' =>$cart
-                    ]
-                ]);       
     }
 }

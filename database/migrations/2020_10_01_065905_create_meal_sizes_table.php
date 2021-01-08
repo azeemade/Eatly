@@ -13,10 +13,12 @@ class CreateMealSizesTable extends Migration
      */
     public function up()
     {
+       // Schema::enableForeignKeyConstraints();
         Schema::create('meal_sizes', function (Blueprint $table) {
             $table->id();
             $table->string('meal_size');
             $table->string('meal_id');
+            $table->decimal('meal_price', 8, 2);
             $table->timestamps();
         });
     }
@@ -28,6 +30,7 @@ class CreateMealSizesTable extends Migration
      */
     public function down()
     {
+       // Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('meal_sizes');
     }
 }

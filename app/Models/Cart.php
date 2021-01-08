@@ -23,4 +23,10 @@ class Cart extends Model
         ->withPivot('quantity')
     	->withTimestamps();
     }
+    public function meal_size()
+    {
+        return $this->belongsToMany(Meal_size::class, 'cart_meals', 'cart_id', 'meal_size_id')
+        ->withPivot('quantity')
+    	->withTimestamps();
+    }
 }

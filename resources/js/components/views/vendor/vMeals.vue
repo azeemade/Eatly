@@ -53,38 +53,31 @@
 </template>
 <script>
 export default {
-    props: ['pid'],
     data(){
         return {
-            card: [
-                {
-                    cardno: "",
-                    title: 'Active meals'
-                },
-                {
-                    cardno: 2,
-                    title: 'Meals awaiting approval'
-                },
-                {
-                    cardno: 4,
-                    title: 'Canceled meals'
-                }
-            ]
+            aMeals: [],
         }
     },
 
     methods: {
         passMeal(meal){
             this.$store.dispatch('fetchSale', meal)
-            this.$store.dispatch('fetchVRating', meal)
+            this.$store.dispatch('fetchVRating', meal) 
             this.$store.commit('SET_VENDOR_MEAL', meal)
             this.$store.dispatch('fetchComments', meal)
         },
     },
 
     beforeMount(){
-        this.$store.dispatch('fetchVMeals', this.pid)
+        let shop_name  = this.$store.state.shop_name 
+        this.$store.dispatch('fetchVMeals', shop_name)
     },
+
+    mounted(){
+        axios.get(`http://127.0.0.1:8000/api/v1/meal/active/?shop_name=${this.$store.state.shop_name}`)
+        .then(response => this.aMeals = response.data.data
+        )
+    }
 }
 </script>
 <style scoped>

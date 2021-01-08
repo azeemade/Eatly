@@ -20,7 +20,8 @@ class MealSizeSeeder extends Seeder
         for($i = 0; $i < 30; $i++){
             Meal_size::create([
                 'meal_id' => $this->getMealId(),
-                'meal_size' => $this->getMealSize()
+                'meal_size' => $this->getMealSize(),
+                'meal_price' => $faker->randomFloat(2, 800, 20000),
             ]);
         }
     }

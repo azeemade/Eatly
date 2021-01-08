@@ -13,9 +13,11 @@ class Shop extends Model
         'shop_name',
         'shop_image',
         'shop_vendor_id',
+        'shop_address',
         'shop_description',
         'open_time',
-        'close_time'
+        'close_time',
+        'shop_views'
     ];
     public function user()
     {
@@ -40,5 +42,24 @@ class Shop extends Model
     public function favourites()
     {
         return $this->belongsToMany(Favourite::class, 'favourite_shops','shop_id','favourite_id');       
+    }
+
+    public function shop_view()
+    {
+        return $this->hasMany(Shop_view::class);
+    }
+
+    public function showShop()
+    {
+        if(auth()->id() == null){
+            return $this->shop_view()
+            ->where('ip', request()->ip())->exist();
+        }
+
+        return $this->shop_view()
+        ->where(function($shop_viewsQuery){
+            $shop_viewsQuery->where('session_id', request()->getSession()->getId())
+            ->orWhere('user_id', (auth()->check()));
+        })->exists();
     }
 }

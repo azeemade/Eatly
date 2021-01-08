@@ -4,6 +4,8 @@ namespace App\Http\Controllers\v1\Rating;
 
 use App\Models\Rating;
 use App\Http\Controllers\Controller;
+use App\Models\meal;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
@@ -25,7 +27,7 @@ class RatingController extends Controller
     public function create(Request $request)
     {
         $rating = Rating::create([
-            'meal_id' => $request->id,
+            'meal_id' => $request->meal_id,
             'user_id' => $request->user_id,
             'points' => $request->points,
 
@@ -101,6 +103,20 @@ class RatingController extends Controller
     {
         //
     }
+
+    public function shopRating(Request $request){
+        $rating =Rating::join('meals', 'ratings.meal_id', 'meals.id')
+        ->join('shops', 'shops.id', 'meals.shop_id')
+        ->where('shop_name', $request->shop_name)
+        ->avg('points');
+
+        return response()->json([
+            'error'=> true,
+            //'message'=> 'Rating not found, error occured',
+            'data' => round($rating, 2)
+        ]);
+     }
+
 
     public function mealRating(Request $request){
         $rating = Rating::where('meal_id', $request->id)->get();

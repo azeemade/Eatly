@@ -18,6 +18,9 @@ class CreatePromosTable extends Migration
             $table->string('promo_code');
             $table->string('promo_status')->default('active');
             $table->string('promo_amount');
+            $table->date('initial_active_date')->nullable();
+            $table->date('final_active_date')->nullable();
+            $table->string('no_of_users')->nullable();
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')
             ->references('id')->on('shops');

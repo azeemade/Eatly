@@ -17,6 +17,8 @@ class CreateShopsTable extends Migration
             $table->id();
             $table->string('shop_name')->unique();
             $table->string('shop_image');
+            $table->string('shop_address');
+            $table->string('shop_views')->nullable();
             $table->unsignedBigInteger('shop_vendor_id');
             $table->foreign('shop_vendor_id')
             ->references('id')->on('users');

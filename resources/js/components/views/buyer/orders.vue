@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="d-flex justify-content-around mb-5">
+        <div class="d-flex justify-content-around mb-5 border-top border-bottom py-3">
             <div>
-                <router-link to="/openOrders">Open Orders</router-link>
+                <router-link to="/openOrders" class="tablinks">Open Orders</router-link>
             </div>
             <div>
-                <router-link to="/closedOrders">Closed Orders</router-link>
+                <router-link to="/closedOrders" class="tablinks">Closed Orders</router-link>
             </div>
         </div>
         <div>
@@ -13,3 +13,17 @@
         </div>
     </div>
 </template>
+<style>
+    .router-link-exact-active.router-link-active.tablinks {
+        border-bottom: 2px solid;
+        padding-bottom: 1rem;
+    }
+</style>
+<script>
+export default {
+    mounted(){
+        this.$store.dispatch('fetchOpenOrders', this.$store.state.id)
+        this.$store.dispatch('fetchClosedOrders', this.$store.state.id)
+    }, 
+}
+</script>

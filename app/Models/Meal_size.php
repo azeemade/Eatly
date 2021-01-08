@@ -10,11 +10,22 @@ class Meal_size extends Model
     use HasFactory;
     protected $fillable = [    
         'meal_id',
-        'meal_size'
+        'meal_size',
+        'meal_price',
     ];
 
     public function meal()
     {
         return $this->belongsTo(meal::class, 'meal_id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function meal_sizes()
+    {
+        return $this->hasMany(Meal_size::class);
     }
 }

@@ -3,15 +3,29 @@ let mutations = {
         state.id = id
     },
 
-    SET_MEAL_ID(state, meal_id){
-        state.meal_id = meal_id
+    SET_MEAL_SLUG(state, meal_slug){
+        state.meal_slug = meal_slug
     },
 
 
-    ADD_TO_CART(state, {meal, quantity}) {
+    ADD_TO_CART(state, {meal, quantity, size}) {
         state.cart.push(meal)
-       Vue.set(meal, 'quantity', quantity);
+        Vue.set(meal, 'quantity', quantity);
+        Vue.set(meal, 'size', size);
         state.cartCount++;
+
+        this.commit('SAVE_CART');
+    },
+
+    UPDATE_CART({meal, quantity}){
+        meal.quantity += quantity;
+       //Vue.set(meal, 'quantity', quantity);
+        this.commit('SAVE_CART');
+    },
+
+    SAVE_CART(state){
+        window.localStorage.setItem('cart', JSON.stringify(state.cart));
+        window.localStorage.setItem('cartCount', state.cartCount)
     },
 
     FETCH_CART(state, cart){
@@ -19,33 +33,33 @@ let mutations = {
         return state.cart = cart
     },
 
-    ADD_TO_BOOKMARK_MEAL(state, {meal}) {
-        state.bookmarkMeal.push(meal)
+    ADD_MEAL_TO_FAVOURITE(state, {meal}) {
+        state.favMeal.push(meal)
     },
 
-    FETCH_BOOKMARK_MEAL(state, meal){
-        return state.bookmarkMeal = meal
+    FETCH_FAV_MEAL(state, meal){
+        return state.favMeal = meal
     },
 
-    REMOVE_MEAL_BOOKMARK(state, meal) {
-        let index = state.bookmarkMeal.indexOf(meal);
+    REMOVE_MEAL_FAVOURITE(state, meal) {
+        let index = state.favMeal.indexOf(meal);
     
-        state.bookmarkMeal.splice(index, 1);
+        state.favMeal.splice(index, 1);
     },
 
 
-    ADD_TO_BOOKMARK_SHOP(state, {shop}) {
-        state.bookmarkShop.push(shop)
+    ADD_SHOP_TO_FAVOURITE(state, {shop}) {
+        state.favShop.push(shop)
     },
 
-    FETCH_BOOKMARK_SHOP(state, shop){
-        return state.bookmarkShop = shop
+    FETCH_FAV_SHOP(state, shop){
+        return state.favShop = shop
     },
 
-    REMOVE_SHOP_BOOKMARK(state, shop) {
-        let index = state.bookmarkShop.indexOf(shop);
+    REMOVE_SHOP_FAVOURITE(state, shop) {
+        let index = state.favShop.indexOf(shop);
     
-        state.bookmarkShop.splice(index, 1);
+        state.favShop.splice(index, 1);
     },
 
 
@@ -54,6 +68,8 @@ let mutations = {
     
         state.cart.splice(index, 1);
         state.cartCount--;
+
+        this.commit('SAVE_CART');
     },
     
 
@@ -102,6 +118,49 @@ let mutations = {
 
     SET_MESSAGE(state, message){
         return state.message = message
+    },
+
+
+    CLEAR_RECENT(state, search){
+        let index = state.searches.indexOf(search);
+    
+        state.searches.splice(index, 1);
+    },
+    STORE_SEARCH(state, search){
+        state.searches.push(search)
+
+        this.commit('SAVE_SEARCH');
+    },
+    SAVE_SEARCH(state){
+        window.localStorage.setItem('search', JSON.stringify(state.searches));
+    },
+    FETCH_RECENT_SEARCH(state, search){
+        return state.searches = search
+    },
+    NEW_SEARCH(state, search){
+        return state.search = search
+    },
+
+
+    FETCH_USER(state, user){
+        return state.user = user
+    },
+
+    FETCH_OPEN_ORDERS(state, oOrders){
+        return state.oOrders = oOrders
+    },
+    FETCH_CLOSED_ORDERS(state, cOrders){
+        return state.cOrders = cOrders
+    },
+    CANCEL_ORDER(state, order){
+        let index = state.oOrders.indexOf(order);
+    
+        state.oOrders.splice(index, 1);
+    },
+
+    SET_SHOP_NAME(state, shop_name){
+        state.shop_name = shop_name
     }
+    
 }
 export default mutations

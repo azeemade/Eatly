@@ -19,7 +19,7 @@ class CreateImagesTable extends Migration
             $table->foreign('meal_id')
             ->references('id')->on('meals');
             $table->string('url')->nullable();
-            $table->boolean('primary')->nullable();
+            $table->boolean('master');//->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

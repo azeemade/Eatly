@@ -1,15 +1,18 @@
+let cart = window.localStorage.getItem('cart');
+let cartCount = window.localStorage.getItem('cartCount');
+
 let state = {
     id: null,
-    cart: [],
-    cartCount: 0,
+    cart: cart ? JSON.parse(cart) : [],
+    cartCount: cartCount ? parseInt(cartCount) : 0,
 
     comments: [],
     ratings: [],
 
-    meal_id: null,
+    meal_slug: null,
 
-    bookmarkShop: [],
-    bookmarkMeal: [],
+    favShop: [],
+    favMeal: [],
 
     vMeal: {},
     vMeals: [],
@@ -20,7 +23,17 @@ let state = {
             "June", "July", "August", "September", 
             "October", "November", "December"],
 
-    message: ''
+    message: '',
+    search:'',
+    searches: [],
+
+    user:[],
+
+    oOrders:[],
+    cOrders:[],
+
+    shop_name: null,
+
 }
 
 export default state

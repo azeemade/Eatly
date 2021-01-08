@@ -13,7 +13,7 @@ class Image extends Model
     protected $fillable = [    
         'meal_id',
         'url',
-        'primary'
+        'master'
     ];
 
     public function meal()

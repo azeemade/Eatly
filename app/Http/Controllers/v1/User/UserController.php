@@ -14,10 +14,46 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     //
-    public function show(User $user)
+    public function index()
     {
-        return response()->json($user, 200);
+        $user = User::where('role', 'user')->get();
+        return response()->json([
+            'error'=> false,
+            'message'=> null,
+            'data' => $user->transform(function ($user) {
+                return [
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
+                    'displayName' => $user->displayName,
+                    'username' => $user->username,
+                    'user_image'=> $user->user_image
+                ];
+            })
+        ]);
+    }
 
+    public function show(Request $request)
+    {
+        $user = User::find($request->user_id);
+        //$user = User::where('id', $request->user_id)->get();
+        return response()->json([
+            'error'=> false,
+            'message'=> null,
+            'data' => //$user->transform(function ($user) {
+                //return 
+                [
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
+                    'displayName' => $user->displayName,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'password' => $user->password,
+                    'phoneNumber' => $user->phoneNumber,
+                    'hasShop' => $user->hasShop,
+                    'user_image'=> $user->user_image
+                ]
+            //})
+        ]);
     }
 
     public function login(Request $request)
@@ -102,21 +138,40 @@ class UserController extends Controller
         return response()->json($success);
     }
 
-    public function showOrders(User $user)
-    {
-        return response()->json($user->orders()->with(['meal'])->get());
-    }
+    public function store(Request $request)
+    {      
+        $fileExt = $request->file->getClientOriginalExtension();
+        $name = $request->username.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
+        $user_image = config('app.url').'/images/user/'.$name;
 
-    public function update(Request $request, User $user)
-    {
-        $status = $user->update(
-            $request->only(['firstname', 'lastname', 'phoneNumber'])
-        );
+        $user = User::updateOrCreate([
+            'id' => $request->id,
+        ],[
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'displayName' => $request->displayName,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => $request->password,
+            'phoneNumber' => $request->phoneNumber,
+            'role' => 'user',
+            'hasShop' => $request->hasShop,
+            'user_image'=> $user_image
+        ]);
+
+        if (!$user) {
+            return response()->json([
+                'error'=> true,
+                'message'=> 'Profile was not saved, error occured',
+                'data' => null
+            ]);
+        }
 
         return response()->json([
-            'status' => $status, 
-            'message' => $status ? 'User updated!' : 'Error updating user data'
-            ]);
+            'error'=> false,
+            'message'=> 'Profile saved successfully',
+            'data' => $user
+        ]);
     }
 
     public function liveStatus($user_id){
@@ -136,6 +191,13 @@ class UserController extends Controller
             'status' => $status,
             'last_seen' => $last_seen,
         ]);
+    }
+
+
+
+    public function showOrders(User $user)
+    {
+        return response()->json($user->orders()->with(['meal'])->get());
     }
     
    

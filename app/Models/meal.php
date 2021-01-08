@@ -21,18 +21,18 @@ class meal extends Model
     protected $fillable = [
         'meal_name',     
         'meal_slug', 
-        'vendor_id',
-        'meal_size',
+        'shop_id',
+        'user_id',
         'meal_additional_text',
         'user_id',
-        'meal_price',
+        //'meal_price',
         'meal_status',
         'meal_approval'
     ];
 
     public function shop()
     {
-        return $this->belongsTo(Shop::class, 'vendor_id');
+        return $this->belongsTo(Shop::class, 'shop_id');
     }
 
     public function user()
@@ -63,6 +63,11 @@ class meal extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function meal_sizes()
+    {
+        return $this->hasMany(Meal_size::class);
     }
 
     public function favourites()

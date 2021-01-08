@@ -26,6 +26,8 @@ Vue.component('navbar', require('./components/views/general/navbar.vue').default
 Vue.component('home', require('./components/views/general/home.vue').default);
 Vue.component('vendorReg', require('./components/views/general/vendorReg.vue').default);
 Vue.component('login', require('./components/views/general/Login.vue').default);
+Vue.component('sidemenu', require('./components/views/general/sidemenu.vue').default);
+Vue.component('search-result', require('./components/views/general/search-result.vue').default);
 
 Vue.component('uDashboard', require('./components/views/buyer/uDashboard.vue').default);
 Vue.component('uHome', require('./components/views/buyer/uHome.vue').default);
@@ -41,14 +43,23 @@ Vue.component('ordersOpen', require('./components/views/buyer/ordersOpen.vue').d
 Vue.component('ordersClosed', require('./components/views/buyer/ordersClosed.vue').default);
 Vue.component('message', require('./components/views/buyer/message.vue').default);
 Vue.component('notification', require('./components/views/buyer/notification.vue').default);
-Vue.component('bookmark', require('./components/views/buyer/bookmark.vue').default);
+Vue.component('favourites', require('./components/views/buyer/favourites.vue').default);
 Vue.component('checkout', require('./components/views/buyer/checkout.vue').default);
 Vue.component('comment', require('./components/views/buyer/comment.vue').default);
 Vue.component('rate', require('./components/views/buyer/rate.vue').default);
 Vue.component('addComment', require('./components/views/buyer/addComment.vue').default);
-Vue.component('shopBookmark', require('./components/views/buyer/shopBookmark.vue').default);
-Vue.component('mealBookmark', require('./components/views/buyer/mealBookmark.vue').default);
+Vue.component('shopFav', require('./components/views/buyer/shopFav.vue').default);
+Vue.component('mealFav', require('./components/views/buyer/mealFav.vue').default);
+Vue.component('category', require('./components/views/buyer/category.vue').default);
+Vue.component('footernav', require('./components/views/buyer/footernav.vue').default);
+Vue.component('search', require('./components/views/buyer/search.vue').default);
+Vue.component('search-result', require('./components/views/general/search-result.vue').default);
 
+
+
+
+Vue.component('vfooter', require('./components/views/vendor/vfooter.vue').default);
+Vue.component('vSideMenu', require('./components/views/vendor/vSideMenu.vue').default);
 Vue.component('vendorSidenav', require('./components/views/vendor/vendorSidenav.vue').default);
 Vue.component('vDashboard', require('./components/views/vendor/vDashboard.vue').default);
 Vue.component('vendorHome', require('./components/views/vendor/vendorHome.vue').default);

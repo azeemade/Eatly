@@ -19,69 +19,135 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'], function ($router) {
-    Route::post('/login', 'UserController@login');
-    Route::get('/users/{user}', 'UserController@show');
-    Route::put('/users/{user}', 'UserController@update');
+    Route::group(['prefix' => 'auth'], function ($router) {
+        Route::post('/login', 'v1\User\UserController@login');
+    });
+
+    Route::group(['prefix' => 'user'], function ($router) {
+        Route::get('/show', 'v1\User\UserController@show');
+        Route::post('/create', 'v1\User\UserController@store');
+        Route::get('/', 'v1\User\UserController@index');
+    });
+    
 
     Route::group(['prefix' => 'shop'], function ($router) {
-    Route::get('/shops', 'v1/Shop/ShopController@index');
-    Route::get('shops/{shop}', 'v1/Shop/ShopController@showShops');
-    Route::get('shop/{shop}', 'v1/Shop/ShopController@show');
-    Route::get('shop/user/{shop}', 'v1/Shop/ShopController@shopOwner');
+        Route::get('/exist', 'v1\Shop\ShopController@checkExistence');
+        Route::get('/vendor', 'v1\Shop\ShopController@show');
+        Route::post('/store', 'v1\Shop\ShopController@store');
+        Route::get('/shops', 'v1\Shop\ShopController@index');
+        Route::get('/shop-name', 'v1\Shop\ShopController@shopName');
+        Route::get('/shop-props', 'v1\Shop\ShopController@shopProps');
+        Route::get('/best-seller', 'v1\Shop\ShopController@bestSeller');
+        
+
+        
+        //Route::get('/details', 'v1\Shop\ShopController@shopDetails');
+
+        
+        Route::get('shops/{shop}', 'v1\Shop\ShopController@showShops');
+        Route::get('shop/{shop}', 'v1\Shop\ShopController@show');
+        Route::get('shop/user/{shop}', 'v1\Shop\ShopController@shopOwner');
     });
 
 
     Route::group(['prefix' => 'meal'], function ($router) {
-        Route::get('/meals', 'v1/Meal/MealController@index');
-        Route::get('meals/{meal}', 'v1/Meal/MealController@show');
-        Route::post('meal/{id}', 'v1/Meal/MealController@store');
-        Route::put('meals/{meal}', 'v1/Meal/MealController@update');
-        Route::delete('meals/{meal}', 'v1/Meal/MealController@delete');
-        Route::get('/mealid/{shop}', 'v1/Meal/MealController@Shop');
-        Route::get('store/{meal}', 'v1/Meal/MealController@showMeals');
-        Route::get('mealDetails/{meal}', 'v1/Meal/MealController@mealDetails');
-        Route::get('related-meals/{meal}', 'v1/Meal/MealController@moreMeals');
-        Route::get('/meal/sales', 'v1/Meal/MealController@mealSales');
-        Route::post('upload-file', 'v1/Meal/MealController@uploadFile');
-        Route::get('/meal/rating', 'v1/Meal/MealController@mealRating');
-        Route::get('/top/meals', 'v1/Meal/MealController@homepageMeals');
+        Route::get('/listing/{slug}', 'v1\Meal\MealController@show');
+        Route::get('/vendor', 'v1\Meal\MealController@vendorMeals');
+        Route::get('/related-meals', 'v1\Meal\MealController@relatedMeals');
+        Route::get('/active', 'v1\Meal\MealController@activeMeals');
+        Route::get('/awaiting', 'v1\Meal\MealController@awaitingMeals');
+        Route::get('/cancelled', 'v1\Meal\MealController@cancelledMeals');
+        Route::get('/edit', 'v1\Meal\MealController@editingMeal');
+        Route::post('/meal-details', 'v1\Meal\MealController@updateOrCreateMeal');
+        Route::post('/mealsize', 'v1\Meal\MealController@updateOrCreateMealSize');
+        Route::post('/primary-image', 'v1\Meal\MealController@updateCreatePrimaryMealImage');
+        Route::post('/secondary-image', 'v1\Meal\MealController@updateCreateSecondayMealImages');
+        Route::delete('delete', 'v1\Meal\MealController@delete');
+        Route::delete('delete/secondary-image', 'v1\Meal\MealController@deleteSecondaryImage');
+        Route::get('/meals', 'v1\Meal\MealController@index');
+
+        
+        
+        Route::post('meal/{id}', 'v1\Meal\MealController@store');
+        Route::put('meals/{meal}', 'v1\Meal\MealController@update');
+        Route::delete('meals/{meal}', 'v1\Meal\MealController@delete');
+        Route::get('/mealid/{shop}', 'v1\Meal\MealController@Shop');
+        Route::get('store/{meal}', 'v1\Meal\MealController@showMeals');
+        Route::get('mealDetails/{meal}', 'v1\Meal\MealController@mealDetails');
+        Route::get('related-meals/{meal}', 'v1\Meal\MealController@moreMeals');
+        Route::get('/meal/sales', 'v1\Meal\MealController@mealSales');
+        Route::post('upload-file', 'v1\Meal\MealController@uploadFile');
+        Route::get('/meal/rating', 'v1\Meal\MealController@mealRating');
+        Route::get('/top/meals', 'v1\Meal\MealController@homepageMeals');
+    });
+
+    Route::group(['prefix' => 'order'], function ($router) {
+        /**homepage meals */
+        Route::get('/top-meals', 'v1\Order\OrderController@topMeals');
+
+        Route::group(['prefix' => 'user'], function ($router) {
+            Route::get('/open', 'v1\Order\OrderController@openUserOrders');
+            Route::get('/closed', 'v1\Order\OrderController@closedUserOrders');
+            Route::delete('/clear', 'v1\Order\OrderController@clearClosed');
+            Route::delete('/cancel-order', 'v1\Order\OrderController@cancelOrder');           
+        });
+        Route::get('/featured-meals', 'v1\Order\OrderController@featuredMeals');
+        Route::post('checkout', 'v1\Order\OrderController@store');
+        Route::get('/count', 'v1\Order\OrderController@orderCount');
+        Route::get('/closed', 'v1\Order\OrderController@closedVendorOrder');
+        Route::get('/open', 'v1\Order\OrderController@openedVendorOrder');
+        Route::put('deliver', 'v1\Order\OrderController@deliverOrder');
+
+
+        Route::get('/orders', 'v1\Order\OrderController@index');
+        Route::get('/shop/{id}/sells', 'v1\Order\OrderController@shopSells');
     });
 
     Route::group(['prefix' => 'cart'], function ($router) {
-        Route::get('/orders', 'v1/Order/OrderController@index');
-        Route::get('/vCloseOrders/{user}', 'v1/Order/OrderController@closedVendorOrder');
-        Route::get('/vOpenOrders/{user}', 'v1/Order/OrderController@openedVendorOrder');
-        Route::post('order/{user}', 'v1/Order/OrderController@store');
-        Route::get('/openOrders/{id}', 'v1/Order/OrderController@openOrders');
-        Route::get('/closeOrders/{id}', 'v1/Order/OrderController@closeOrders');
-        Route::put('orders/{order}/delivery', 'v1/Order/OrderController@deliverOrder');
-        Route::get('/shop/{id}/sells', 'v1/Order/OrderController@shopSells');
-    });
+        Route::get('/', 'v1\Cart\CartController@show');
+        Route::put('/update', 'v1\Cart\CartController@update');
+        Route::delete('/delete', 'v1\Cart\CartController@destroy');
+        Route::post('/store', 'v1\Cart\CartController@store');
 
-    Route::group(['prefix' => 'cart'], function ($router) {
-        Route::get('/cart', 'v1/Cart/CartController@mealsInCart');
-        Route::delete('/cart/{meal}', 'v1/Cart/CartController@destroy');
-        Route::post('/cart/{meal}', 'v1/Cart/CartController@store');
-        Route::put('/cart/{meal}', 'v1/Cart/CartController@update');
+        
     });
 
     Route::group(['prefix' => 'comment'], function ($router) {
-        Route::post('/comment/store', 'v1/Comment/CommentController@store');
-        Route::get('/comments', 'v1/Comment/CommentController@mealComment');
+        Route::get('/', 'v1\Comment\CommentController@show');
+        Route::post('/store', 'v1\Comment\CommentController@store');
+        Route::get('/count', 'v1\Comment\CommentController@shopReviewsCount');
+        
     });
 
     Route::group(['prefix' => 'rating'], function ($router) {
-        Route::post('/rateMeal', 'v1/Rating/RatingController@create');
-        Route::get('/ratings', 'v1/Rating/RatingController@mealRating');
+        Route::post('/store', 'v1\Rating\RatingController@create');
+        Route::get('/shop', 'v1\Rating\RatingController@shopRating');
     });
 
     Route::group(['prefix' => 'favourite'], function ($router) {
-        Route::get('/favourite/meals', 'v1/Favourite/FavouriteController@mealsInFavourite');
-        Route::get('/favourite/shops', 'v1/Favourite/FavouriteController@shopsInFavourite');
-        Route::delete('/favourite/shop/{shop}', 'v1/Favourite/FavouriteController@destroyShop');
-        Route::delete('/favourite/meal/{meal}', 'v1/Favourite/FavouriteController@destroyMeal');
-        Route::post('/favourite/meal/{meal}', 'v1/Favourite/FavouriteController@storeMeal');
-        Route::post('/favourite/shop/{shop}', 'v1/Favourite/FavouriteController@storeShop');
+        Route::get('/meals', 'v1\Favourite\FavouriteController@showMeals');
+        Route::get('/shops', 'v1\Favourite\FavouriteController@showShops');
+        Route::delete('/delete/shop', 'v1\Favourite\FavouriteController@destroyShop');
+        Route::delete('/delete/meal', 'v1\Favourite\FavouriteController@destroyMeal');
+        Route::post('/meal', 'v1\Favourite\FavouriteController@storeMeal');
+        Route::post('/shop', 'v1\Favourite\FavouriteController@storeShop');
+    });
+
+    Route::group(['prefix' => 'category'], function ($router) {
+        Route::get('/', 'v1\Category\CategoryController@index');
+        Route::get('/{title}/show', 'v1\Category\CategoryController@show');
+        Route::post('/attach-meal', 'v1\Category\CategoryController@attachMeal');
+        Route::delete('/detach-meal', 'v1\Category\CategoryController@detachMeal');
+       // Route::get('/meals/sort', 'v1\Category\CategoryController@sortBy');
+        
+    });
+
+    Route::group(['prefix' => 'search'], function ($router) {
+        Route::get('/recent', 'v1\Search\SearchController@recent');
+        Route::get('/popular', 'v1\Search\SearchController@popular');
+        Route::post('/create', 'v1\Search\SearchController@store');
+        Route::delete('/clear', 'v1\Search\SearchController@clear');
+        
     });
 });
 

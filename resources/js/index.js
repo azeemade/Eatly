@@ -11,18 +11,19 @@ import Shops from "./components/views/buyer/shops.vue"
 import Shop from "./components/views/buyer/shop.vue"
 import cart from "./components/views/buyer/cart.vue"
 import message from "./components/views/buyer/message.vue"
-import bookmark from "./components/views/buyer/bookmark.vue"
-import mealBookmark from "./components/views/buyer/mealBookmark.vue"
-import shopBookmark from "./components/views/buyer/shopBookmark.vue"
+import Favourites from "./components/views/buyer/favourites.vue"
+import mealFav from "./components/views/buyer/mealFav.vue"
+import shopFav from "./components/views/buyer/shopFav.vue"
 import openOrders from "./components/views/buyer/ordersOpen.vue"
 import closedOrders from "./components/views/buyer/ordersClosed.vue"
 import orders from "./components/views/buyer/orders.vue"
 import notification from "./components/views/buyer/notification.vue"
 import uHome from "./components/views/buyer/uHome";
 import checkout from "./components/views/buyer/checkout";
-import rHome from "./components/views/RECIPE/rHome";
+import Category from "./components/views/buyer/category";
+import Search from "./components/views/buyer/search";
 
-import vendorHome from "./components/views/vendor/vendorHome.vue"
+import vHome from "./components/views/vendor/vendorHome.vue"
 import vDashboard from "./components/views/vendor/vDashboard.vue"
 import vMeals from "./components/views/vendor/vMeals.vue"
 import vOrders from "./components/views/vendor/vOrders.vue"
@@ -42,8 +43,23 @@ const router = new VueRouter({
             component: Home
         },
         {
+            path: '/i/listings/:meal_slug',
+            name: 'imeal', 
+            component: Meal,
+        },
+        {
+            path: '/i/shop/:shop_name', 
+            name: 'ishop',
+            component: Shop,
+        },
+        {
+            path: '/i/category/:title', 
+            name: 'icategory',
+            component: Category,
+        },
+        {
             path: '/uDashboard', 
-            name: 'Dashboard',
+            name: 'uDashboard',
             component: uDashboard,
             children: [
                 {
@@ -52,16 +68,18 @@ const router = new VueRouter({
                     component: uHome,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
-                    path: '/recipes',
-                    name: 'rHome', 
-                    component: rHome,
+                    path: '/search',
+                    name: 'search', 
+                    component: Search,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
@@ -70,34 +88,49 @@ const router = new VueRouter({
                     component: Meals,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
-                    path: '/meal/:id',
+                    path: '/listings/:meal_slug',
                     name: 'meal', 
                     component: Meal,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
+                {
+                    path: '/category/:title', 
+                    name: 'category',
+                    component: Category,
+                    meta: {
+                         requiresAuth: true,
+                         is_user: true,
+                         name: 'uDashboard',
+                     }
+                },
+
                 {
                     path: '/shops', 
                     name: 'shops',
                     component: Shops,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
-                    path: '/shop/:id', 
+                    path: '/shop/:shop_name', 
                     name: 'shop',
                     component: Shop,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_consumer: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
@@ -106,27 +139,39 @@ const router = new VueRouter({
                     component: cart,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
-                    path: '/bookmark', 
-                    name: 'bookmark',
-                    component: bookmark,
+                    path: '/favourites', 
+                    name: 'favourites',
+                    component: Favourites,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     },
                     children: [
                         {
-                            path: '/bookmark/meal', 
-                            name: 'mealBookmark',
-                            component: mealBookmark,
+                            path: '/favourites/meal', 
+                            name: 'mealFav',
+                            component: mealFav,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'uDashboard',
+                            },
                         },
                         {
-                            path: '/bookmark/shop', 
-                            name: 'shopBookmark',
-                            component: shopBookmark,
+                            path: '/favourites/shop', 
+                            name: 'shopFav',
+                            component: shopFav,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'uDashboard',
+                            },
                         },
                     ]
                 },
@@ -136,7 +181,8 @@ const router = new VueRouter({
                     component: checkout,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     }
                 },
                 {
@@ -145,18 +191,29 @@ const router = new VueRouter({
                     component: orders,
                     meta: {
                         requiresAuth: true,
-                        is_consumer: true
+                        is_user: true,
+                        name: 'uDashboard',
                     },
                     children: [
                         {
                             path: '/openOrders', 
                             name: 'openOrders',
                             component: openOrders,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'uDashboard',
+                            },
                         },
                         {
                             path: '/closedOrders', 
                             name: 'closedOrders',
                             component: closedOrders,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'uDashboard',
+                            },
                         },
                     ]
                 },
@@ -200,19 +257,19 @@ const router = new VueRouter({
             component: vendorReg
         },
         {
-            path: '/vdashboard',
-            name: 'vendorHome',
-            component: vendorHome,
+            path: '/vDashboard',
+            name: 'vDashboard',
+            component: vDashboard,
             children: [
                 {
-                    path: '/vendor/home',
-                    name: 'vDashboard', 
-                    component: vDashboard,
+                    path: '/vendor/:shop_name/home',
+                    name: 'vHome', 
+                    component: vHome,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     },
-                    props: (route) => ({ pid: route.query.pid })
                 },
                 {
                     path: '/vendor/meals',
@@ -220,9 +277,9 @@ const router = new VueRouter({
                     component: vMeals,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     },
-                    props: (route) => ({ pid: route.query.pid })
                 },
                 {
                     path: '/vendor/orders',
@@ -230,7 +287,8 @@ const router = new VueRouter({
                     component: vOrders,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     },
                     props: (route) => ({ pid: route.query.pid })
                 },
@@ -240,7 +298,8 @@ const router = new VueRouter({
                     component: addmeal,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     }
                 },
                 {
@@ -249,7 +308,8 @@ const router = new VueRouter({
                     component: editmeal,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     }
                 },
                 {
@@ -258,7 +318,8 @@ const router = new VueRouter({
                     component: vEarnings,
                     meta: {
                         requiresAuth: true,
-                        is_vendor: true
+                        is_user: true,
+                        name: 'vDashboard',
                     }
                 },
             ]
@@ -284,8 +345,8 @@ router.beforeEach((to, from, next) => {
                     next({ path: '/home' })
                     }
                 }
-                else if (to.matched.some(record => record.meta.is_consumer || record.meta.is_vendor)){
-                    if (user.role == "consumer" || user.role == "vendor"){
+                else if (to.matched.some(record => record.meta.is_user)){
+                    if (user.role == "user"){
                         next()
                     }
                     else {

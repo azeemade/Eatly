@@ -20,7 +20,7 @@ class ImageTableSeeder extends Seeder
             Image::create([
                 'meal_id' => $this->getMealId(),
                 'url' => $this->getURL(),
-                'primary' => $faker->boolean()
+                'master' => $faker->boolean()
                 
             ]);
         }
@@ -32,7 +32,7 @@ class ImageTableSeeder extends Seeder
     }
 
     private function getURL(){
-        $url = ["meal1", "meal2", "meal3", "meal4", "meal5"];
+        $url = ["meal1.jpg", "meal2.jpg", "suya.png", "18_spaghetti_and_turkey_wings_2020-12-24_1608795847_276.png"];
         $url_ = array_rand($url);
         return $url[$url_];
     }

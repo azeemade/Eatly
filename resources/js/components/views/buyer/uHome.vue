@@ -1,7 +1,7 @@
 <template>
     <div class="">
-        <div class="row">
-            <div class="col-md-7">
+        <div class="row my-3">
+            <div class="col-md-7 col-7">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
@@ -10,7 +10,7 @@
                     </div>  
                 </div>                                                           
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 col-5">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
@@ -21,128 +21,58 @@
             </div>
         </div>                       
         <div class="">
-            <div v-if="errored">
-                <p>This info isnt available rn</p>
+            <div class="mb-5">
+                <h5 class="section-title">Categories</h5>
+                <div class="hr-section mx-3">
+                    <div v-for="(category, index) in categories" :key="index" class="mr-3">
+                        <router-link :to="{ path: 'i/category/'+category.title}">
+                            <h6 class="category-title">{{category.title}}</h6>
+                        </router-link> 
+                    </div>
+                </div>
             </div>
-            <div v-else>
-                <div v-if="loading" class="load"></div>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span><h3>Meals</h3></span>
-                        <span>
-                            <router-link to="/meals">
-                                View more meals
-                            </router-link>
-                        </span>
-                    </div>
-                    <div class="alert alert-warning alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasMeal}">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        Meal already in bookmark
-                    </div>
-                    <div class="row justify-content-between align-items-center">
-                        <div class="">
-                            <button id="left-button" @click="swipeLeft" class="btn btn-secondary">
+            <div>
+                <div v-if="errored">
+                    <p>This info isnt available rn</p>
+                </div>
+                <div v-else>
+                    <div v-if="loading" class="load"></div>
+                    <h5 class="section-title">Top meals</h5>
+                    <div class="ml-3 hr-section mb-3">
+                        <div>
+                            <button id="scroll-btn-left" class="hide" @click="swipeLeft">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-left-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10a.5.5 0 0 1-.832.374l-4.5-4a.5.5 0 0 1 0-.748l4.5-4A.5.5 0 0 1 10.5 4v8z"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="my-3 content" ref="content">
-                            <div class="mb-5 pr-5 d-inline-block" v-for="(meal, index) in meals" :key="index">
-                                <div class="border-0 p-3 btn-section">                      
-                                    <div class="card-body p-0">
-                                        <router-link :to="{ path: '/meal/'+meal.id}">
-                                            <div>
-                                                <img :src="'/images/'+ meal.image" alt="" width="115" height="115" class="rounded">
-                                            </div>
-                                        
-                                            <div class="card-title mb-0">
-                                                <p>{{meal.name}}</p>
-                                                <p>{{meal.shop.name}}</p>
-                                            </div>
-                                        </router-link>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="align-self-center font-weight-bold">
-                                                <p>NG₦{{meal.price}}</p>
-                                            </div>
-                                            <div class="action-buttons">
-                                                <button class="btn btn-secondary" type="button" title="share meal">
-                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-share-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
-                                                    </svg>
-                                                </button>
-                                                <button class="btn btn-secondary" type="button" title="Add to bookmark">
-                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmark-plus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" d="M4 0a2 2 0 0 0-2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4zm4.5 4.5a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5V4.5z"/>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <!--<div class="dropdown">
-                                                <div class="btn px-0" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                                                    </svg>
-                                                </div>
-                                                <div class="dropdown-menu px-3" aria-labelledby="dropdownMenu2">
-                                                    <div class="d-flex">
-                                                        <div class="mr-3">
-                                                            <img :src="'/images/'+ meal.image" alt="" width="45" class="rounded">
-                                                        </div>
-                                                        <div>
-                                                            <p><b>{{meal.name}}</b></p>
-                                                            <router-link :to="{ path: '/shop/'+meal.shop.id}">
-                                                                <p>BY {{meal.shop.name}}</p>
-                                                            </router-link>
-                                                        </div>
-                                                    </div><hr>
-                                                    <li><a href @click.prevent="bookmarkMeal(index)">Add to bookmark</a></li>
-                                                    <li><a href="">Share</a></li>
-                                                    <li>
-                                                        <router-link :to="{ path: '/shop/'+meal.shop.id}">
-                                                                View vendor profile
-                                                        </router-link>
-                                                    </li><br>
-                                                    <li><a class="btn btn-outline-dark" id="close">Close</a></li>
-                                                </div>
-                                            </div>-->
-                                        </div>
+                        <div class=" hr-section-inner" ref="content">
+                            <div class="mb-3 mr-3 col-md-3 col-6 d-inline-block" v-for="(meal, index) in meals" :key="index">
+                                <router-link :to="{ path: 'i/listings/'+meal.meal_slug}">
+                                    <div>
+                                        <img :src="'/images/meal/'+ meal.image" alt="" width="160" height="160" class="rounded meal-image">
                                     </div>
+                                </router-link>                
+                                <div class="card-title mb-0">
+                                    <p class="mb-0">{{meal.meal_name}}</p>
+                                    <router-link :to="{ path: 'i/shop/'+meal.shop_name}">
+                                        <p class="mb-0 shop-title" style="font-weight: 200;">{{meal.shop_name}}</p>
+                                    </router-link> 
+                                    <p class="mb-0"><b>NGN {{meal.meal_price}}</b></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="">
-                            <button id="right-button" @click="swipeRight" class="btn btn-secondary">
+                        <div>
+                            <button id="scroll-btn-right" class="hide" @click="swipeRight">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-right-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4v8z"/>
                                 </svg>
                             </button>
-                        </div>
+                        </div>    
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span><h3>Shops</h3></span>
-                        <span>
-                            <router-link to="/shops">
-                                View more shops
-                            </router-link>
-                        </span>
-                    </div>
-                    <div class="mt-3 row">
-                        <div class="mb-5 px-5" v-for="(shop, index) in shops" :key="index">         
-                                <div class="card-body p-0">
-                                    <router-link :to="{ path: '/shop/'+shop.id}">
-                                        <div>
-                                            <img :src="'/images/'+ shop.image + '.jpg'" alt="" width="115" height="115"  class="rounded-circle">
-                                        </div>
-                                    
-                                        <div class="card-title mb-0">
-                                            <p class="text-center">{{shop.ShopName}}</p>
-                                        </div>
-                                    </router-link>
-                                </div>
-                        </div>
-                    </div>
-            </div>               
+                </div>
+            </div>              
         </div>
-
     </div>
 </template>
 <script> 
@@ -150,7 +80,7 @@ export default {
     data(){
         return{
             meals: [],
-            shops: [],
+            categories: [],
             loading: true,
             errored: false,
             hasMeal: true
@@ -216,47 +146,44 @@ export default {
     },
 
     mounted(){
-        axios.get("api/meals").then(response => this.meals = response.data)
+        //axios.get("api/meals").then(response => this.meals = response.data)
+       /// .catch(error => {console.log(error)
+      //  this.errored = true})
+       // .finally(() => this.loading = false)
+
+      //  axios.get("api/shops").then(response => this.shops = response.data)
+      //  .catch(error => {console.log(error)
+       // this.errored = true})
+       // .finally(() => this.loading = false)
+
+        axios.get('http://127.0.0.1:8000/api/v1/category/')
+        .then(response => this.categories = response.data.data)
+
+        axios.get('http://127.0.0.1:8000/api/v1/order/top-meals')
+        .then(response => this.meals = response.data.data)
         .catch(error => {console.log(error)
         this.errored = true})
         .finally(() => this.loading = false)
 
-        axios.get("api/shops").then(response => this.shops = response.data)
-        .catch(error => {console.log(error)
-        this.errored = true})
-        .finally(() => this.loading = false)
-
-        this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
+        //this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
     },
 }
 </script>
 <style scoped>
-    .dropdown-menu.px-3{
-        width:200px;
-    }
-    .border-0 {
-        width: 147px;
-        height: 220px;
-        border-radius: 8px;
-        background-color: #80808033;
-    }
     .load {
-        position: absolute;
+        position: relative;
         left: 50%;
         top: 50%;
         z-index: 1;
-        width: 150px;
-        height: 150px;
         margin: -75px 0 0 -75px;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
         border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
+        width: 75px;
+        height: 75px;
         -webkit-animation: spin 2s linear infinite;
         animation: spin 2s linear infinite;
     }
-    /* Standard syntax */
     @-webkit-keyframes spin {
         0% { -webkit-transform: rotate(0deg); }
         100% { -webkit-transform: rotate(360deg); }
@@ -267,28 +194,57 @@ export default {
     100% { transform: rotate(360deg); }
     }
 
-    .btn.btn-outline-dark{
-        font-size: 0.8rem;
+    .col-md-7 .card{
+        background-color: rgba(254, 237, 0, 0.74);
+        border: none;
+        border-radius: 7px;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.16);
     }
-    .col-md-7 .card .card-body .card-title p{
-        font-size: 1.3rem;
+    .col-md-5 .card{
+        background-color:rgb(226, 226, 226);
+        border: none;
+        border-radius: 7px;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.16);
     }
-    .content{
-        width: 1000px;
-        overflow: hidden;
+    .section-title{
+        font-weight: normal;
+    }
+    .hr-section{
+        display: flex;
+        flex-direction: row;
+    }
+    .hr-section-inner{
+        overflow: auto;
         white-space: nowrap;
     }
-    /*.btn-section div div .action-buttons .btn {
-        position: absolute;
-        top: 50%;
-        left: 90%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        display: none
+    .hr-section-inner::-webkit-scrollbar{
+        display: none;
     }
-
-    .btn-section:hover div div .action-buttons .btn{
-        display: block;
+    .category-title{
+        font-weight:100;
+        white-space: nowrap
+    }
+    .shop-title{
+        color: #A98402;
+    }
+    /*.scroll-btn{
+        position: absolute;
+        cursor: pointer;
+    }
+    #scroll-btn-left{
+        left: 0;
+    }
+    #scroll-btn-right{
+        right: 0;
     }*/
+
+    @media only screen and (min-width: 768px) {
+        .hide{
+            display: block;
+        }
+        .search-bar{
+            display: none;
+        }
+    }
 
 </style>

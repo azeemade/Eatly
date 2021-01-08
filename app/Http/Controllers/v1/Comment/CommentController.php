@@ -5,6 +5,8 @@ namespace App\Http\Controllers\v1\Comment;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\meal;
+use App\Models\Shop;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -51,27 +53,17 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        $comment = new Comment;
+        $comment = Comment::create([
+            'review' => $request->review,
+            'meal_id' => $request->meal_id,
+            'user_id' => $request->user_id,
+        ]);
 
-        $comment->comment = $request->comment;
-        //$comment->user()->associate($request->user());
-        $comment->user()->associate($request->user_id);
-
-        $meal = meal::find($request->id);
-        $meal->comments()->save($comment);
-
-        if(!$comment) {
-            return response()->json([
-                'error'=> true,
-                'message'=> 'Comment no posted, error occured',
-                'data' => null
-            ]);
-        }
 
         return response()->json([
-            'error'=> false,
-            'message'=> 'Comment posted successfully',
-            'data' => $comment->comment
+            'status' => (bool) $comment,
+            'data' => $comment,
+            'message' => $comment ? 'Review added!' : ' Error creating review',
         ]);
     }
 
@@ -81,10 +73,25 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
-    {
-        //
-    }
+    public function show(Request $request){
+        $meal = meal::where('meal_slug', $request->meal_slug)->first();
+        //$comment = Comment::with('user')->where('meal_id', $meal->id)->latest()->paginate(5);
+        $comment = Comment::with('user')->where('meal_id', $meal->id)->orderBy('created_at', 'DESC')->paginate(5);
+        
+         if(!$comment) {
+             return response()->json([
+                 'error'=> true,
+                 'message'=> 'Comment no found, error occured',
+                 'data' => null
+             ]);
+         }
+ 
+         return response()->json([
+             'error'=> false,
+             'message'=> 'Comment loaded successfully',
+             'data' => $comment
+         ]);
+    } 
 
     /**
      * Show the form for editing the specified resource.
@@ -119,22 +126,23 @@ class CommentController extends Controller
     {
         //
     }
+    function myfunction($meal_)
+    {
+        $comment = Comment::where('meal_id', $meal_)->get();
+        return $comment;
+    }
 
-    public function mealComment(Request $request){
-       $comment = Comment::with('user')->where('commentable_id', $request->id)->latest()->paginate(5);
-       
-        if(!$comment) {
-            return response()->json([
-                'error'=> true,
-                'message'=> 'Comment no found, error occured',
-                'data' => null
-            ]);
-        }
+    public function shopReviewsCount(Request $request)
+    {
+        $comment =Comment::join('meals', 'comments.meal_id', 'meals.id')
+        ->join('shops', 'shops.id', 'meals.shop_id')
+        ->where('shop_name', $request->shop_name)
+        ->get();
 
-        return response()->json($comment, 200);//[
-           // 'error'=> false,
-           // 'message'=> 'Comment loaded successfully',
-           // 'data' => ['comments' => $comment]
-       // ]);
+        return response()->json([
+            'error'=> true,
+            //'message'=> 'Rating not found, error occured',
+            'data' => $comment->count()
+        ]);
     }
 }

@@ -5,8 +5,11 @@
                 <div class="a-sidenav">
                     <sidenav />
                 </div>
-                <div class="main mt-5">
+                <div class="main container mb-5">
                     <router-view></router-view>
+                </div>
+                <div class="footer">
+                    <footernav />
                 </div>
             </div>
         </div>
@@ -14,44 +17,42 @@
 </template>
 
 <style>
-    li.btn:hover{
-        background-color: #707070;
-    }
-    /*li.btn:active{
-        list-style: none;
-        color: #707070;
-    }*/
-    .col-md-7 .card{
-        background-color: rgba(254, 237, 0, 0.74);
-        border: none;
-        border-radius: 7px;
-        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.16);
-    }
-    .col-md-5 .card{
-        background-color:rgb(226, 226, 226);
-        border: none;
-        border-radius: 7px;
-        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.16);
-    }
     .main{
-        width: 81%;
-        margin-left: 16.666667%;;
+        width: 100%;
     }
     .wrapper-container{
         width: 100%;
         padding-right: 15px;
         padding-left: 15px;
     }
-    .a-sidenav{
+    .a-sidenav{   
+        display: none;
+    }
+    .footer{
+        overflow: hidden;
         position: fixed;
-        z-index: 1;
-        overflow-x: hidden;
-        background-color: #f5f5f5;
-        height: 100%;
-        width: 200px;
-        /*padding: 1rem 0rem;*/
+        bottom: 0;
+        width: 100%;
+        box-shadow: -1px -1px 1px rgba(32, 33, 36, 0.28);
+        background-color: white;
+    }
+
+    @media only screen and (min-width: 768px) {
+        .a-sidenav{
+            display: block;
+            position: fixed;
+            z-index: 1;
+            overflow-x: hidden;
+            height: 100%;
+            width: 200px;
+            box-shadow: 0 1px 3px rgba(32, 33, 36, 0.28);
+        }
+        .main{
+            width: 81%;
+            margin-left: 16.666667%;
+        }
+        .footer{
+            display: none
+        }
     }
 </style>
-
-
-

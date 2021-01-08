@@ -12,7 +12,8 @@ class Cart_meal extends Model
     use SoftDeletes;
     protected $fillable = [
         'meal_id',
-        'cart_id',      
+        'cart_id',
+        'meal_size_id' ,     
         'quantity' 
     ];
 }

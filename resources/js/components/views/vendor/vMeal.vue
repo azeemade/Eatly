@@ -1,6 +1,6 @@
 <template>
     <div>
-         <div class="modal right fade" tabindex="-1" role="dialog" aria-labelledby="mealLabel" v-bind:class="meal.name">
+        <div class="modal right fade" tabindex="-1" role="dialog" aria-labelledby="mealLabel" v-bind:class="meal.name">
             <div class="modal-dialog">
                 <div class="modal-content px-3">   
                     <div class="modal-header">

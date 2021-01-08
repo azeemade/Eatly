@@ -13,6 +13,7 @@ class Search extends Model
     protected $fillable = [
         'user_id',
         'search_title',
+        
     ];
 
     public function user()

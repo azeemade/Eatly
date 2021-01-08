@@ -28,6 +28,7 @@
         "vue-dynamic-star-rating": "^1.0.8",
         "vue-router": "^3.4.5",
         "vue-star-rating": "^1.7.0",
+        "vue-swipeable-bottom-sheet": "0.0.5",
         "vuex": "^3.5.1"
     }
 }
