@@ -44,45 +44,60 @@
                     </div>
                 </div>
             </div>
-            <div class="container-fluid">
+            <div class="container">
                 <div class="mb-5">
                     <h5 class="section-title">Categories</h5>
-                    <div class="hr-section ml-3">
-                        <div v-for="(category, index) in categories" :key="index" class="mr-3">
-                            <router-link :to="{ path: 'i/category/'+category.title}">
-                                <h6 class="category-title">{{category.title}}</h6>
+                    <div class="hr-section mx-3">
+                        <div v-for="(category, index) in categories" :key="index" class="col-md-2">
+                            <div class="category-card p-1 text-center">
+                                <router-link :to="{ path: '/category/'+category.title}">
+                                    <p class="category-title mb-0">{{category.title}}</p>
+                                </router-link> 
+                            </div>
+                        </div>
+                        <div class="category-card text-center px-1">
+                            <router-link to="/">
+                                <h6 class="category-title p-1 mb-0">More categories</h6>
                             </router-link> 
                         </div>
                     </div>
                 </div>
                 <h5 class="section-title">Top meals</h5>
-                <div class="ml-3 hr-section" ref="content">
-                    <div class="mb-3 mr-3 col-md-4" v-for="(meal, index) in meals" :key="index">
-                        <router-link :to="{ path: 'i/listings/'+meal.meal_slug}">
-                            <div>
-                                <img :src="'/images/'+ meal.image" alt="" width="160px" height="160px" class="rounded ">
+                <div class="ml-3 hr-section mb-3 positioner">
+                    <div class="positioner-btn-l">
+                        <button id="scroll-btn-left" class="hide btn" @click="swipeLeft">
+                            <i class="bi bi-caret-left-square-fill"></i>
+                        </button>
+                    </div>
+                    <div class=" hr-section-inner" ref="content">
+                        <div class="mb-3 mr-3 col-md-3 col-6 d-inline-block" v-for="(meal, index) in meals" :key="index">
+                            <div class="home-image-section">
+                                <div>
+                                    <img :src="'/images/meal/'+ meal.image" alt="" width="160" height="160" class="rounded">
+                                </div>
+                                <div class="home-image-overlay">
+                                    <button @click="favMeal(meal)" class="home-image-overlay-icon">
+                                        <i class="bi bi-heart-fill home-image-overlay-icon" style="font-size: 2rem;"></i>
+                                    </button>
+                                </div>
+                            </div>              
+                            <div class="mb-0">
+                                <router-link :to="{ path: 'i/listings/'+meal.meal_slug}">
+                                    <p class="mb-0">{{meal.meal_name}}</p>
+                                </router-link> 
+                                <router-link :to="{ path: 'i/shop/'+meal.shop_name}">
+                                    <p class="mb-0 shop-title" style="font-weight: 200;">{{meal.shop_name}}</p>
+                                </router-link> 
+                                <p class="mb-0"><b>NG₦ {{meal.meal_price}}</b></p>
                             </div>
-                        </router-link>                
-                        <div class="card-title mb-0">
-                            <p class="mb-0">{{meal.meal_name}}</p>
-                            <router-link :to="{ path: 'i/shop/'+meal.shop_name}">
-                                <p class="mb-0" style="font-weight: 200;">{{meal.shop_name}}</p>
-                            </router-link> 
-                            <p class="mb-0"><b>NGN {{meal.meal_price}}</b></p>
                         </div>
                     </div>
+                    <div class="positioner-btn-r">
+                        <button id="scroll-btn-right" class="hide btn" @click="swipeRight">
+                            <i class="bi bi-caret-right-square-fill"></i>
+                        </button>
+                    </div>    
                 </div>
-                <button id="scroll-btn-left" @click="swipeLeft" class="btn btn-secondary hide scroll-btn">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-left-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10a.5.5 0 0 1-.832.374l-4.5-4a.5.5 0 0 1 0-.748l4.5-4A.5.5 0 0 1 10.5 4v8z"/>
-                    </svg>
-                </button>
-                <button id="scroll-btn-right" @click="swipeRight" class="btn btn-secondary hide scroll-btn">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-right-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4v8z"/>
-                    </svg>
-                </button>
-                    
             </div>               
         </div>
     </div>
@@ -122,19 +137,86 @@
     .hr-section::-webkit-scrollbar{
         display: none;
     }
-    .category-title{
-        font-weight:100;
-        white-space: nowrap
+    .section-title{
+        font-weight: normal;
     }
-    .scroll-btn{
-        position: absolute;
-        top: 175%;
+    .hr-section-inner{
+        overflow: auto;
+        white-space: nowrap;
+        width: 100%;
+    }
+    .hr-section-inner::-webkit-scrollbar{
+        display: none;
+    }
+    .hr-section{
+        display: flex;
+        flex-direction: row;
+    }
+    .category-title{
+        font-weight:600;
+        white-space: nowrap;
+        color: #a98402;
+    }
+    .category-card{
+        border-radius: 8px;
+        background-color:#fee280;
+    }
+    .category-card:hover{
+        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
     }
     #scroll-btn-left{
         left: 0;
     }
     #scroll-btn-right{
         right: 0;
+    }
+    .positioner{
+        position: relative;
+    }
+
+    .positioner-btn-l{
+        position:absolute;
+        top: 30%;
+        z-index: 1;
+        left: 0;
+    }
+    .positioner-btn-r{
+        position:absolute;
+        top: 30%;
+        z-index: 1;
+        right: 0;
+    }
+
+    .home-image-section{
+        width: 160px;
+        height: 160px;
+        position: relative;
+    }
+
+    .home-image-overlay{
+        position: absolute;
+        width: 160px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        opacity: 0;
+        background-color: #000;
+        transition: .3s ease;
+    }
+    .home-image-section:hover .home-image-overlay{
+        opacity: 0.3;
+    }
+
+    .home-image-overlay-icon {
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
     }
 
     @media only screen and (min-width: 768px) {
@@ -155,12 +237,13 @@ export default {
             meals:[],
             shop_name: '',
             message: '',
-            categories:[]
+            categories:[],
+            isLoggedIn: localStorage.getItem('eatly.jwt') != null,
         }   
     },
 
     beforeMount(){
-        axios.get('http://127.0.0.1:8000/api/v1/category/')
+        axios.get('http://127.0.0.1:8000/api/v1/category/top-category')
         .then(response => this.categories = response.data.data)
         axios.get('http://127.0.0.1:8000/api/v1/order/top-meals')
         .then(response => this.meals = response.data.data)
@@ -206,7 +289,23 @@ export default {
                 axios.get(`http://127.0.0.1:8000/api/v1/shop/exist?shop_name=${this.shop_name}`)
                 .then(response =>  this.message = response.data.message)
             }
-        }
+        },
+        favMeal(meal){
+            let meal_id = meal.id
+            let id = this.$store.state.id
+            if (this.isLoggedIn == true){
+                axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
+                .then(response => {
+                    this.message = response.data.message
+                    setTimeout(() => {
+                        this.message = null;
+                    }, 3000);
+                })
+            }
+            else{
+                this.$router.push({name: 'login', params: {nextUrl: this.$route.fullPath}})
+            }
+        },
     }
 }
 </script>

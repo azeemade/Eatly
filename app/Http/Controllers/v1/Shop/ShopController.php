@@ -76,12 +76,13 @@ class ShopController extends Controller
                 'sales' => $shop->orders->where('is_delivered', 1)->count(),
                 'last_seen' => $shop->user->last_seen,
                 //'rating' => $shop->meals->ratings->avg('points'),
+                'address' => $shop->shop_address,
                 'created_at' => Carbon::parse($shop->created_at)->format('M Y'),
                 'active_meals' => $shop->meals->where('meal_approval', 'active')->count(),
                 'vendor_id' =>$shop->shop_vendor_id,
-                'Bio' => $shop->shop_description,
-                'opening_time' => Carbon::parse($shop->open_time)->format('h:ia'),
-                'close_time' => Carbon::parse($shop->close_time)->format('h:ia'),
+                'bio' => $shop->shop_description,
+                'opening_time' => Carbon::parse($shop->open_time)->format('h:i a'),
+                'close_time' => Carbon::parse($shop->close_time)->format('h:i a'),
                 //'meal' => $shop->meals
                 'vendor_name' => $shop->user->firstname.' '.$shop->user->lastname,
                 'vendor_image' => $shop->user->user_image
@@ -104,9 +105,8 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {      
-        $fileExt = $request->file->getClientOriginalExtension();
-        $name = $request->shop_name.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-        $shop_image = config('app.url').'/images/shop/'.$name;
+        $fileExt = $request->file('image')->getClientOriginalExtension();
+        $image_name = $request->shop_name.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
 
         $shop = Shop::updateOrCreate([
             'id' => $request->id,
@@ -115,10 +115,11 @@ class ShopController extends Controller
             'shop_address' => $request->shop_address,
             'shop_description' => $request->shop_bio,
             'shop_vendor_id' => $request->user_id,
-            'shop_image' => $shop_image,
+            'shop_image' => $image_name,
             'open_time' => $request->open_time,
             'close_time' => $request->close_time,
         ]);
+        
 
         if (!$shop) {
             return response()->json([
@@ -224,6 +225,14 @@ class ShopController extends Controller
             }),
             'message' => 'Best sellers',
 
+        ]);
+    }
+
+    public function getShopId(Request $request){
+        $shop_id = Shop::where('shop_vendor_id', $request->user_id)->pluck('id');
+
+        return response()->json([
+            'data' => $shop_id
         ]);
     }
 

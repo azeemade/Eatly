@@ -6,7 +6,7 @@
             </div>
             <div>
                 <p>Greetings !</p>
-                <router-link to="">
+                <router-link to="/vendor/profile">
                     <h4 class="shop_name">{{shop.shop_name}}</h4>
                 </router-link>
             </div>      
@@ -130,13 +130,20 @@ export default {
         } ) 
 
         let url =  `http://127.0.0.1:8000/api/v1/shop/vendor?user_id=${this.$store.state.id}`
-        axios.get(url).then(response => this.shop = response.data.data)  
+        axios.get(url).then(response => {
+            this.shop = response.data.data
 
-        let url_ = `http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=${this.$route.params.shop_name}`
-        axios.get(url_).then(response => this.ratings = response.data.data)        
+            let url_ = `http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=${this.shop.shop_name}`
+            axios.get(url_).then(response => this.ratings = response.data.data)
 
-        let url1 = `http://127.0.0.1:8000/api/v1/shop/best-seller?shop_name=${this.$route.params.shop_name}`
-        axios.get(url1).then(response => this.bestSellers = response.data.data) 
+            let url1 = `http://127.0.0.1:8000/api/v1/shop/best-seller?shop_name=${this.shop.shop_name}`
+            axios.get(url1).then(response => this.bestSellers = response.data.data) 
+            }
+        )  
+
+                
+
+       
         
     },
 }

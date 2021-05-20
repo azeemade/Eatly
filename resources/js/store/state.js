@@ -3,6 +3,12 @@ let cartCount = window.localStorage.getItem('cartCount');
 
 let state = {
     id: null,
+    shop_name: null,
+    shop: {},
+
+    master_image: null,
+    meal_images: [],
+    
     cart: cart ? JSON.parse(cart) : [],
     cartCount: cartCount ? parseInt(cartCount) : 0,
 
@@ -14,8 +20,8 @@ let state = {
     favShop: [],
     favMeal: [],
 
-    vMeal: {},
-    vMeals: [],
+   // vMeal: {},
+    vendorMeals: [],
     sale:'',
     vRating: 0,
 
@@ -23,7 +29,7 @@ let state = {
             "June", "July", "August", "September", 
             "October", "November", "December"],
 
-    message: '',
+    message: null,
     search:'',
     searches: [],
 
@@ -32,7 +38,12 @@ let state = {
     oOrders:[],
     cOrders:[],
 
-    shop_name: null,
+    undelivered:[],
+    delivered:[],
+
+    selectedmeal:{},
+    selected_meal_image: [],
+    selected_meal_size: [],
 
 }
 

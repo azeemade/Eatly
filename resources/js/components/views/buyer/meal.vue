@@ -20,10 +20,10 @@
                     <div class="col-md-6">
                         <h3 class="meal-title">{{meal.meal_name}}</h3>
                         <div class="d-flex justify-content-between">
-                            <router-link v-if="isLoggedIn" :to="{ path: 'shop/'+meal.shop_name}">
+                            <router-link v-if="isLoggedIn" :to="{ path: '/shop/'+meal.shop_name}">
                                 <h5 style="font-size:100">{{meal.shop_name}}</h5>
                             </router-link>
-                            <router-link v-else :to="{ path: 'i/shop/'+meal.shop_name}">
+                            <router-link v-else :to="{ path: '/i/shop/'+meal.shop_name}">
                                 <h5 style="font-size:100">{{meal.shop_name}}</h5>
                             </router-link>
                             <div class="d-flex align-items-center">
@@ -48,13 +48,9 @@
                                 </select>
                             </div>
                             <div>
-                                <h5>NG₦ {{meal.meal_price}}</h5>
+                               <h5>NG₦ {{meal.meal_price}}</h5>
                             </div>
-                        </div> 
-                        <div class="alert alert-danger alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasError}">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
-                            <p>Meal size cannot be empty!</p>
-                        </div>                   
+                        </div>                  
                         <div class="d-flex my-4 align-items-baseline">
                             <div>
                                 <p><b>Quantity:</b></p>
@@ -140,11 +136,8 @@
                 </div>
             </div>  
         </div>
-        <div class="row mt-3">
-            <div class="alert alert-warning alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasMeal}">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                Meal already in favourites
-            </div>
+        <div class="alert alert-secondary text-center mb-0" role="alert" v-if="message != null">
+            <p>{{message}}</p>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -170,11 +163,11 @@
                             <div class="col-md-9 col-9">
                                 <h5 style="font-weight: 100">{{meal.vendor_name}}</h5>
                                 <p>Owner of 
-                                    <router-link :to="{ path: 'i/shop/'+meal.shop_name}">
+                                    <router-link v-if="!isLoggedIn" :to="{ path: '/i/shop/'+meal.shop_name}">
                                         <b>{{meal.shop_name}}</b>
                                     </router-link>
-                                    <router-link v-if="isLoggedIn" :to="{ path: 'shop/'+meal.shop_name}">
-                                        <h5 style="font-size:100">{{meal.shop_name}}</h5>
+                                    <router-link v-if="isLoggedIn" :to="{ path: '/shop/'+meal.shop_name}">
+                                        <b>{{meal.shop_name}}</b>
                                     </router-link>
                                 </p>
                             </div>
@@ -210,16 +203,15 @@ export default {
         return{
             meal: {},
             images: [],
-            size: '',
+            size: "",
             url: '',
             meal_sizes:[],
             meals:[],
             quantity: 1,
             id: null,
             isLoggedIn: localStorage.getItem('eatly.jwt') != null,
-            cart: [],
             hasError: true,
-            hasMeal: true
+            message: null
         }
     },
 
@@ -248,55 +240,43 @@ export default {
 
         addToCart(meal){
             let meal_id = this.meal.id
-            let id = this.id
             let quantity = this.quantity
             let size = this.size
-            let found = this.$store.state.cart.find(item => item.id == meal_id);
             
             if (this.size == '' ){
                 this.hasError = false;
+                this.message = 'Meal size cannot be empty'
+                setTimeout(() => {
+                    this.message = null;
+                }, 3000);
             }else{
                 this.hasError = true;
-                if (found) {
-                    found.quantity += quantity;
-                   // let quantiti = found.quantity
-                    if (this.isLoggedIn){
-                        axios.put(`http://127.0.0.1:8000/api/v1/cart/update?meal_id=${meal_id}&user_id=${id}&quantity=${quantity}`)
-                    }else{
-                        this.$store.commit('UPDATE_CART', {meal, quantity})
-                    }   
-                } 
-                else {
-                    if (this.isLoggedIn){
-                        axios.post(`http://127.0.0.1:8000/api/v1/cart/?meal_id=${meal_id}&user_id=${id}&quantity=${quantity}`)
-                        .then(response => this.$store.commit('ADD_TO_CART', {quantity, meal}))
-                        alert('Meal added to cart')
-                    }
-                    else{
-                        this.$store.commit('ADD_TO_CART', {quantity, meal, size})
-                    }
+
+                let found = this.meal_sizes.find(item => item.meal_size == size);
+                if (found){
+                   // return found.id;    
+                    let size_id = found.id
+                    this.$store.commit('ADD_TO_CART', {quantity, meal, size_id, size})
                 }
             }
         }, 
 
         favMeal(meal){
-            let meal_id = this.meal.id
+            let meal_id = meal.id
             let id = this.id
-            let found = this.$store.state.favMeal.find(item => item.id == meal_id);
 
             if (this.isLoggedIn == true){
-                if (found) {
-                    this.hasMeal = false;
-                } else {
-                    this.hasMeal = true;
-                    axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
-                    .then(response => this.$store.commit('ADD_MEAL_TO_FAVOURITE', {meal}))
-                    alert('Meal added to favourites')
-                }
-            }else{
-                this.$router.push({name: 'login', params: {nextUrl: this.$route.fullPath}})
+                axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
+                .then(response => {
+                    this.message = response.data.message
+                    setTimeout(() => {
+                        this.message = null;
+                    }, 3000);
+                })
             }
-            
+            else{
+                this.$router.push({name: 'login', params: {nextUrl: this.$route.fullPath}})
+            }           
         }, 
 
         loadPrice(){
@@ -311,8 +291,7 @@ export default {
 
         showOverlay(){
             document.getElementById('menu-content').style.display= "block";
-        }
-
+        },
     },
 
     beforeMount(){ 
@@ -332,15 +311,8 @@ export default {
 
     mounted(){
         let url_ =`http://127.0.0.1:8000/api/v1/meal/related-meals/?meal_slug=${this.$route.params.meal_slug}`
-        axios.get(url_).then(response => this.meals = response.data.data)
-
-        //this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
-       // this.$store.dispatch('fetchRatings', meal_id)
-      //  this.$store.dispatch('fetchComments', meal_id)
-
-       // axios.get(`http://127.0.0.1:8000/api/ratings?id=${meal_id}`)
-       // .then(response => this.ratings = response.data.data.ratings)       
-    }
+        axios.get(url_).then(response => this.meals = response.data.data)    
+    },
 }
 </script>
 <style>

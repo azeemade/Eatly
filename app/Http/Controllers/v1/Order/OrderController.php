@@ -8,8 +8,7 @@ use App\Models\Shop;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth as Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -35,6 +34,19 @@ class OrderController extends Controller
             'status' => $status,
             'data' => $order,
             'message' => '$status' ? 'Order Delivered!' : 'Error Delivering Order'
+        ]);
+    }
+
+    public function startDelivery(Request $request)
+    {
+        $order = Order::findOrFail($request->order_id);
+        $order->order_status = "delivery in process";
+        $status = $order->save();
+
+        return response()->json([
+            'status' => $status,
+            'data' => $order,
+            'message' => '$status' ? 'Delivery in progress!' : 'Error starting Delivering'
         ]);
     }
 
@@ -71,8 +83,10 @@ class OrderController extends Controller
         $order = Order::create([
             'meal_id' => $request->meal_id,
             'user_id' => $request->user_id,
+            //'user_id' => Auth::id(),
             'shop_id' => $request->shop_id,
             'quantity' => $request->quantity,
+            'meal_size_id' => $request->meal_size_id,
             'shippingAddress' => $request->shippingAddress,
             'billingAddress'=> $request->billingAddress,
             'paymentType' => $request->paymentType,
@@ -168,8 +182,6 @@ class OrderController extends Controller
                     ->orderBy('count', 'desc')
                     ->take(5)
                     ->get();
-      //  $meal = meal::find($orders->meal_id);
-       // $shop = Shop::find($meal->shop_id);
 
         return response()->json([
             'data' => $orders->transform(function ($orders) {
@@ -180,9 +192,7 @@ class OrderController extends Controller
                     'meal_price' => $orders->meal->meal_sizes->first()->meal_price,
                     'meal_slug' =>  $orders->meal->meal_slug,
                     'shop_name' => $orders->meal->shop->shop_name,
-                    //'shop_name' =>  Shop::select('shop_name')->where('id',$orders->meal->shop_id)->first()->shop_name,
                     'image' => $orders->meal->images->where('master', 1)->first()->url
-                    //'image' =>  implode([$orders->meal->images->where('master', 1)->first('url')])
                 ];
             }),
             'message' => 'Top meals',
@@ -199,7 +209,7 @@ class OrderController extends Controller
                 return [
                     'id' => $order->id,
                     'meal_name' => $order->meal->meal_name,
-                    'meal_price' => $order->meal_size->meal_price,
+                    'meal_price' => $order->meal_size->first()->meal_price,
                     'meal_size' => $order->meal_size->meal_size,
                     'meal_slug' =>  $order->meal->meal_slug,
                     'quantity' => $order->quantity,
@@ -222,15 +232,17 @@ class OrderController extends Controller
             'data' => $order->transform(function ($order) {
                 return [
                     'id' => $order->id,
+                    'meal_id' => $order->meal->id,
                     'meal_name' => $order->meal->meal_name,
-                    'meal_price' => $order->meal_size->meal_price,
+                    'meal_price' => $order->meal->meal_sizes->first()->meal_price,
                     'meal_size' => $order->meal_size->meal_size,
                     'meal_slug' =>  $order->meal->meal_slug,
                     'quantity' => $order->quantity,
                     'status' => $order->order_status,
                     'shop_name' => $order->meal->shop->shop_name,
                     'image' => $order->meal->images->where('master', 1)->first()->url,
-                    'created_at' => $order->created_at
+                    'updated_at' => $order->updated_at,
+                    'hasReview' => $order->comment
                 ];
             }),
         ]);
@@ -245,7 +257,7 @@ class OrderController extends Controller
 
         return response()->json([
             'error'=> false,
-            'message'=> $clear ? 'Orders cleared' : 'Error clearing orders',
+            'message'=> $clear ? 'Closed orders cleared' : 'Error clearing orders',
             'data' => $closed
         ]);
     }
@@ -313,8 +325,10 @@ class OrderController extends Controller
     }
 
     public function closedVendorOrder(Request $request){
-       $shop = shop::where('shop_name', $request->shop_name)->pluck('id');
-       $order = Order::where('shop_id', $shop)->where('is_delivered', 1)->latest()->get();
+      // $shop = shop::where('shop_name', $request->shop_name)->pluck('id');
+      // $order = Order::where('shop_id', $shop)->where('is_delivered', 1)->latest()->take(10)->get();
+      $shop = shop::where('shop_vendor_id', $request->user_id)->pluck('id');
+       $order = Order::where('shop_id', $shop)->where('is_delivered', 1)->latest()->take(10)->get();
        
         return response()->json([ 
             'error' => true,
@@ -322,12 +336,14 @@ class OrderController extends Controller
             'data' => $order->transform(function ($order) {
                 return [
                     'id' => $order->id,
-                    'created_at' => $order->created_at->format('F d, Y'),
+                    'created_at' => Carbon::parse($order->created_at)->format('F d, Y'),
                     'meal_name' => $order->meal->meal_name,
                     'meal_size' => $order->meal_size->meal_size,
                     'quantity' => $order->quantity,
                     'username' => $order->user->username,
-                    'amount' => $order->meal->meal_price,
+                    'meal_price' => $order->meal->meal_sizes->first()->meal_price,
+                    'image' => $order->meal->images->where('master', 1)->first()->url,
+                    'status' => $order->order_status
                 ];
             }),
         ]);
@@ -336,9 +352,12 @@ class OrderController extends Controller
     public function openedVendorOrder(Request $request){
         $thisMonth = Carbon::today()->format('Y-m');
 
-        $shop = shop::where('shop_name', $request->shop_name)->pluck('id');
+        //$shop = shop::where('shop_name', $request->shop_name)->pluck('id');
         $month = Carbon::parse($request->month)->format('m');
         $year = Carbon::parse($request->month)->format('Y');
+        //$order = Order::where('shop_id', $shop)->where('is_delivered', 0)->whereYear('created_at', $year)->whereMonth('created_at', $month)->latest()->get();    
+
+        $shop = shop::where('shop_vendor_id', $request->user_id)->pluck('id');
         $order = Order::where('shop_id', $shop)->where('is_delivered', 0)->whereYear('created_at', $year)->whereMonth('created_at', $month)->latest()->get();    
         if (!$order) {
             return response()->json([ 
@@ -351,12 +370,14 @@ class OrderController extends Controller
             'order' => $order->transform(function ($order) {
                 return [
                     'id' => $order->id,
-                    'created_at' => $order->created_at->format('F d, Y'),
+                    'created_at' => Carbon::parse($order->created_at)->format('F d, Y'),
                     'meal_name' => $order->meal->meal_name,
                     'meal_size' => $order->meal_size->meal_size,
                     'quantity' => $order->quantity,
                     'username' => $order->user->username,
-                    'amount' => $order->meal->meal_price,
+                    'meal_price' => $order->meal->meal_sizes->first()->meal_price,
+                    'image' => $order->meal->images->where('master', 1)->first()->url,
+                    'status' => $order->order_status
                 ];
             }),
             'month' => $thisMonth,
@@ -371,13 +392,4 @@ class OrderController extends Controller
         ]);
     } 
     
-
-
-
-    public function shopSells($id = null){
-        $shop = shop::where('id', $id)->pluck('id');
-        $order = Order::with(['meal', 'user'])->where('vendor_id', $shop)->where('is_delivered', 1)->count();
-        
-        return response()->json($order, 200);
-    }
 }

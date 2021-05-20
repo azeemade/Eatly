@@ -4,13 +4,16 @@
             filters
         </div>-->
         <div v-if="favMeal.length > 0" class="row">
+            <div class="alert alert-secondary text-center mb-0" role="alert" v-if="message != null">
+                <p>{{message}}</p>
+            </div>
             <div class="mb-5 col-md-3 col-6" v-for="(meal, index) in favMeal" :key="index">
-                <div class="image-section">
+                <div class="meal-image-section">
                     <div>
                         <img :src="'/images/meal/'+ meal.image" alt="" width="160" height="160" class="rounded">
                     </div>
-                    <div class="image-overlay">
-                        <button class="btn" @click.prevent="removeMeal(meal)">
+                    <div class="meal-image-overlay">
+                        <button class="image-overlay-icon btn" @click.prevent="removeMeal(meal)">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-heart-fill image-overlay-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                             </svg>
@@ -44,11 +47,21 @@
 <script>
 import {mapGetters} from 'vuex'
 export default {
+    data(){
+        return{
+            message: null,
+        }
+    },
     methods:{
         removeMeal(meal) {
            axios.delete(`http://127.0.0.1:8000/api/v1/favourite/delete/meal?user_id=${this.$store.state.id}&meal_id=${meal.id}`)
-           .then(response =>  this.$store.commit('REMOVE_MEAL_FAVOURITE', {meal}))
-           alert('Meal removed')
+           .then(response =>  {
+                this.message = response.data.message
+                setTimeout(() => {
+                    this.message = null;
+                }, 3000);
+
+                this.$store.commit('REMOVE_MEAL_FAVOURITE', {meal})})
         },
     },
     computed:{
@@ -58,3 +71,45 @@ export default {
     },
 }
 </script>
+<style>
+    .meal-image-section{
+        width: 160px;
+        height: 160px;
+        position: relative;
+    }
+    .meal-image-overlay{
+        position: absolute;
+        width: 160px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        opacity: 0;
+        background-color: #000;
+        transition: .3s ease;
+    }
+    .meal-image-section:hover .meal-image-overlay {
+        opacity: 0.3;
+    }
+    .image-overlay-icon {
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    .alert{
+        overflow: hidden;
+        z-index: 1999;
+        position: fixed;
+        bottom: 50px;
+        right: 0;
+        box-shadow: -1px -1px 1px rgba(32, 33, 36, 0.28);
+       /* width: 100%;
+
+        background-color: white;*/
+    }
+</style>

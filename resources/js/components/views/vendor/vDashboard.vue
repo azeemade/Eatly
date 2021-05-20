@@ -5,7 +5,7 @@
                 <div class="a-sidenav">
                     <vendorSidenav />
                 </div>
-                <div class="container vMain mt-5">
+                <div class="container vMain mb-5">
                     <router-view></router-view>
                 </div>
                 <div class="vfooter">

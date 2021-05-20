@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container">
+        <!--<div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <img :src="'/images/loginImage.png'" alt="" width="100%" height="auto" class="rounded">
@@ -26,11 +26,20 @@
                     </form>
                 </div>
             </div>
+        </div>-->
+        <div class="desktop">
+            <desktopLogin />
+        </div>
+        <div class="mobile">
+            <mobile-login/>
         </div>
     </div>
 </template>
 <script>
+import desktopLogin from '../assets/desktopLogin.vue';
+import mobileLogin from '../assets/mobileLogin.vue';
 export default {
+  components: { 'mobileLogin': mobileLogin, 'desktopLogin': desktopLogin },
         data(){
         return {
             email: '',
@@ -75,6 +84,14 @@ export default {
             }
         }
     },
+
+    created: function(){
+        document.body.style.backgroundColor = "#EDE5C7"
+    },
+
+    destroyed: function(){
+        document.body.style.backgroundColor = "null"
+    },
 }
 </script>
 <style>
@@ -95,5 +112,19 @@ export default {
     .login-section button.btn.float-right{
         float: right;
         background-color: #ffdb00;
+    }
+    .desktop{
+        display: none;
+    }
+    .mobile{
+        display: block;
+    }
+    @media only screen and (min-width: 768px) {
+        .mobile{
+            display: none;
+        }
+        .desktop{
+            display: block;
+        }
     }
 </style>

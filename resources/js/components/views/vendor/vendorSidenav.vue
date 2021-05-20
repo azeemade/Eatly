@@ -1,6 +1,6 @@
 <template>
     <div class="mt-5">
-        <router-link :to="{ path: '/vendor/'+shop_name+'/home'}" class="mb-3 d-flex btn"> 
+        <router-link to="/vendor/home" class="mb-3 d-flex btn"> 
             <div class="mr-3">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z"/>
@@ -16,7 +16,7 @@
                 </svg>
             </div>My meals
         </router-link>
-        <router-link :to="{path: '/vendor/orders?pid='+id}" class="mb-3 d-flex btn">
+        <router-link to="/undelivered-orders" class="mb-3 d-flex btn">
             <div class="mr-3">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
@@ -78,6 +78,7 @@ export default {
 
         axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${this.id}`)
         .then(response => this.shop_name = response.data.data.shop_name)
+       // .then(this.$store.commit('SET_SHOP_NAME', ))
 
        
     },

@@ -16,30 +16,31 @@
         </div> 
         <div v-else class="row">
             <div class="mb-5 col-md-6" v-for="(order, index) in oOrders" :key="index">
-                <div class="row order-card">
-                    <div class="col-md-3 col-3">
-                        <img :src="'/images/meal/'+ order.image" alt="" width="100" height="100" class="rounded order-meal-image">
-                    </div>
-                    <div class="col-md-4 col-5">
-                        <p class="mb-0">{{order.meal_name}}</p>
-                        <p class="mb-0">{{order.shop_name}}</p>
-                        <p class="mb-0">NG₦ {{ order.meal_price}}</p>
-                        <p class="mb-0">Quantity: {{ order.quantity }}</p>
-                        <p class="mb-0"><b>NG₦ {{ (order.meal_price * order.quantity).toFixed(2) }}</b></p>
-                        
-                    </div>
-                    <div class="col-md-5 col-4">
-                        <p class="mb-0">ID: {{order.id}}</p>
-                        <p>{{order.created_at}}</p>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <p class="small mb-0"><i>{{order.status}}</i></p>
-                            <button class="btn text-danger" @click="clear(order)" v-if="order.status == 'delivery not started'">
-                                <p class="small mb-0">Cancel Order</p>
-                            </button>
+                <div class="v-meal-card p-2 meal-image">
+                    <div class="row">
+                        <div class="col-md-3 col-3">
+                            <img :src="'/images/meal/'+ order.image" alt="" width="100" height="100" class="rounded order-meal-image">
+                        </div>
+                        <div class="col-md-4 col-5">
+                            <p class="mb-0">{{order.meal_name}}</p>
+                            <p class="mb-0">{{order.shop_name}}</p>
+                            <p class="mb-0">NG₦ {{ order.meal_price}}</p>
+                            <p class="mb-0">Quantity: {{ order.quantity }}</p>
+                            <p class="mb-0"><b>NG₦ {{ ((order.meal_price.replace(",", "")) * order.quantity).toLocaleString() }}</b></p>
+                            
+                        </div>
+                        <div class="col-md-5 col-4">
+                            <p class="mb-0">ID: {{order.id}}</p>
+                            <p>{{order.created_at}}</p>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <p class="small mb-0"><i>{{order.status}}</i></p>
+                                <button class="btn text-danger" @click="clear(order)" v-if="order.status == 'delivery not started'">
+                                    <p class="small mb-0">Cancel Order</p>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-               
             </div>
         </div>
     </div>  
@@ -84,11 +85,8 @@ export default {
         width: 50px;
         height: 50px;
     }
-    .order-card{
-        background-color: #fff;
-        margin: 0 0 10px 0;
-        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-        border-radius: 8px;
+    .v-meal-card{
+        border: 0.5px solid #a98629;
     }
     @media only screen and (min-width: 768px) {
         .order-meal-image{

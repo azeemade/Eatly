@@ -140,9 +140,9 @@ class UserController extends Controller
 
     public function store(Request $request)
     {      
-        $fileExt = $request->file->getClientOriginalExtension();
+        $fileExt = $request->file("profile_image")->getClientOriginalExtension();
         $name = $request->username.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-        $user_image = config('app.url').'/images/user/'.$name;
+       // $user_image = config('app.url').'/images/user/'.$name;
 
         $user = User::updateOrCreate([
             'id' => $request->id,
@@ -156,14 +156,13 @@ class UserController extends Controller
             'phoneNumber' => $request->phoneNumber,
             'role' => 'user',
             'hasShop' => $request->hasShop,
-            'user_image'=> $user_image
+            'user_image'=> $name
         ]);
 
         if (!$user) {
             return response()->json([
-                'error'=> true,
-                'message'=> 'Profile was not saved, error occured',
-                'data' => null
+                'status' => (bool) $user,
+                'message' => '$user' ? 'Profile saved' : 'Error saving profile'
             ]);
         }
 
@@ -172,6 +171,39 @@ class UserController extends Controller
             'message'=> 'Profile saved successfully',
             'data' => $user
         ]);
+    }
+
+    public function update(Request $request)
+    {      
+            $fileExt = $request->file("masterImage")->getClientOriginalExtension();
+            $name = $request->username.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
+            $storeFile = $request->file("masterImage")->move(public_path('images/vendor'), $name);
+        // $user_image = config('app.url').'/images/user/'.$name;
+            
+            $user = User::findOrFail($request->id);
+
+            $updateUser = $user->update(
+            [
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'displayName' => $request->displayName,
+                'username' => $request->username,
+                'phoneNumber' => $request->phoneNumber,
+                'user_image'=> $name
+            ]);
+
+            if (!$updateUser) {
+                return response()->json([
+                    'status' => (bool) $user,
+                    'message' => '$user' ? 'Profile updated' : 'Error updating profile'
+                ]);
+            }
+
+            return response()->json([
+                'error'=> false,
+                'message'=> 'Profile updated successfully',
+                //'data' => $user
+            ]);
     }
 
     public function liveStatus($user_id){

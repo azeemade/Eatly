@@ -126,7 +126,7 @@ export default {
     },
 
     methods:{
-         add(index) {
+        add(index) {
             this.inputs.push({ quantityType: '' });
         },
 

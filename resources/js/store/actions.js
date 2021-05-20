@@ -1,17 +1,38 @@
 let actions = {
-    fetchCart({commit}, id) {
+    setShopName({commit}, id) {
         let user_id = id
-        axios.get(`http://127.0.0.1:8000/api/v1/cart/?user_id=${user_id}`)
+        axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${user_id}`)
             .then(res => {
-                commit('FETCH_CART', res.data.data)
-            }).catch(err => {
+                commit('SET_SHOP_NAME', res.data.data.shop_name)
+            })
+            .catch(err => {
             console.log(err)
         })
     },
+    setShop({commit},id){
+        let url = `http://127.0.0.1:8000/api/v1/shop/vendor?user_id=${id}`
+        axios.get(url)
+            .then(res => {
+                commit('SET_SHOP', res.data.data)
+            })
+            .catch(err => {
+            console.log(err)
+        })
+    },
+    ////fetchCart({commit}, id) {
+    //    let user_id = id
+    //    axios.get(`http://127.0.0.1:8000/api/v1/cart/?user_id=${user_id}`)
+    //        .then(res => {
+    //            commit('FETCH_CART', res.data.data)
+    //        }).catch(err => {
+    //        console.log(err)
+    //    })
+    //},
 
     fetchFavMeal({commit}, id) {
         let user_id = id
         axios.get(`http://127.0.0.1:8000/api/v1/favourite/meals?user_id=${user_id}`)
+        //axios.get(`http://127.0.0.1:8000/api/v1/favourite/meals`)
             .then(res => {
                 commit('FETCH_FAV_MEAL', res.data.data)
             }).catch(err => {
@@ -49,30 +70,39 @@ let actions = {
         })
     },
 
-    setShopName({commit}, id) {
-        let user_id = id
-        axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${user_id}`)
+
+
+    fetchUndelivered({commit}, id) {
+        axios.get(`http://127.0.0.1:8000/api/v1/order/open/?user_id=${id}`)
             .then(res => {
-                commit('SET_SHOP_NAME', res.data.data.shop_name)
+                commit('FETCH_UNDELIVERED', res.data.data.order)
+            }).catch(err => {
+            console.log(err)
+        })
+    },
+
+    fetchDelivered({commit}, id) {
+        axios.get(`http://127.0.0.1:8000/api/v1/order/closed/?user_id=${id}`)
+            .then(res => {
+                commit('FETCH_DELIVERED', res.data.data)
+            }).catch(err => {
+            console.log(err)
+        })
+    },
+
+
+    fetchComments({commit}, meal_slug) {
+        //let meal_id = meal.id
+        axios.get(`http://127.0.0.1:8000/api/v1/comment/?meal_slug=${meal_slug}`)
+            .then(res => {
+                commit('FETCH_COMMENTS', res.data.data.data)
             })
             .catch(err => {
             console.log(err)
         })
     },
 
-    fetchComments({commit}, meal) {
-        let meal_id = meal.id
-        axios.get(`http://127.0.0.1:8000/api/comments?id=${meal_id}`)
-            .then(res => {
-                commit('FETCH_COMMENTS', res.data.data)
-            })
-            .catch(err => {
-            console.log(err)
-        })
-    },
-
-    fetchVMeals({commit}, shop_name) {
-       // let user_id = id
+    fetchVendorMeals({commit}, shop_name) {
         axios.get(`http://127.0.0.1:8000/api/v1/meal/vendor?shop_name=${shop_name}`)
             .then(res => {
                 commit('FETCH_VENDOR_MEALS', res.data.data)
@@ -144,6 +174,17 @@ let actions = {
         axios.get(url)
         .then(res => {
             commit('FETCH_USER', res.data.data)
+        })
+        .catch(err => {
+        console.log(err)
+    })
+    },
+
+    editingMeal({commit}, meal_slug){
+        let url = `http://127.0.0.1:8000/api/v1/meal/edit/?meal_slug=${meal_slug}`
+        axios.get(url)
+        .then(res => {
+            commit('EDITING_MEAL', res.data.data)
         })
         .catch(err => {
         console.log(err)

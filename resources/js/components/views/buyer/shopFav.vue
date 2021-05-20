@@ -4,13 +4,13 @@
             filters
         </div>-->
         <div v-if="favShop.length > 0" class="row">
-            <div class="mb-5 col-md-3 col-6" v-for="(shop, index) in favShop" :key="index">
-                <div class="image-section">
+            <div class="mb-5 col-md-3 col-6 fav-shop-card" v-for="(shop, index) in favShop" :key="index">
+                <div class="shop-image-section">
                     <div>
-                        <img :src="'/images/'+ shop.shop_image + '.jpg'" alt="" width="160" height="160"  class="rounded-circle">
+                        <img :src="'/images/'+ shop.shop_image + '.jpg'" alt="" width="115" height="115"  class="rounded-circle">
                     </div>
-                    <div class="image-overlay">
-                        <button class="btn"  @click.prevent="removeShop(shop)">
+                    <div class="shop-image-overlay">
+                        <button class="image-overlay-icon btn"  @click.prevent="removeShop(shop)">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-heart-fill image-overlay-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                             </svg>
@@ -22,6 +22,9 @@
                         <p>{{shop.shop_name}}</p>
                     </router-link>
                 </div>
+            </div>
+            <div class="alert alert-secondary text-center mb-0" role="alert" v-if="message != null">
+                <p>{{message}}</p>
             </div>
         </div>
         <div v-else class="no-fav">
@@ -39,11 +42,22 @@
 <script>
 import {mapGetters} from 'vuex'
 export default {
+    data(){
+        return{
+            message: null,
+        }
+    },
     methods:{
         removeShop(shop) {
            axios.delete(`http://127.0.0.1:8000/api/v1/favourite/delete/shop?user_id=${this.$store.state.id}&shop_id=${shop.id}`)
-           .then(response =>  this.$store.commit('REMOVE_SHOP_FAVOURITE', {shop}))
-           alert('Shop removed')
+           .then(response =>  {
+               this.message = response.data.message
+               setTimeout(() => {
+                    this.message = null;
+                }, 3000);
+                
+               this.$store.commit('REMOVE_SHOP_FAVOURITE', {shop})
+               })
         },
     },
 
@@ -54,3 +68,32 @@ export default {
     },
 }
 </script>
+<style>
+    .fav-shop-card{
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .shop-image-section{
+        width: 115px;
+        height: 115px;
+        position: relative;
+    }
+    .shop-image-overlay{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        opacity: 0;
+        background-color: #000;
+        transition: .3s ease;
+        width: 115px;
+        border-radius: 50%
+    }
+    .shop-image-section:hover .shop-image-overlay {
+        opacity: 0.3;
+    }
+</style>

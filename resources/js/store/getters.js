@@ -37,6 +37,35 @@ let getters = {
     oOrders: state => {
         return state.oOrders
     },
+
+    delivered: state => {
+        return state.delivered
+    },
+    undelivered: state => {
+        return state.undelivered
+    },
+    vmeals: state => {
+        return state.vendorMeals
+    },
+    selectedmeal: state => {
+        return state.selectedmeal
+    },
+    selectedmeal_size: state => {
+        return state.selectedmeal.meal_size
+    },
+    selectedmeal_image: state => {
+        return state.selectedmeal.image
+    },
+    selectedmeal_categories: state => {
+        return state.selectedmeal.categories
+    },
+    
+    master_image: state => {
+        return state.master_image
+    },
+    images: state => {
+        return state.meal_images
+    }
 }
 
 export default  getters

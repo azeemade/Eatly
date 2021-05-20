@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\Favourite;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Favourite;
+use App\Models\meal;
 use Illuminate\Support\Facades\DB;
 
 class FavouriteController extends Controller
@@ -32,27 +33,46 @@ class FavouriteController extends Controller
      */
     public function storeMeal(Request $request)
     {
-        $favourite = Favourite::where('user_id', $request->user_id)->first('id');
-        $meal_id = $request->meal_id;
-        $favourite->meals()->attach($meal_id);
+        $favourite = Favourite::where('user_id', $request->user_id)->first();
+        $meals = $favourite->meals;
+        $exist = $meals->where('id', '=', $request->meal_id)->first();
+
+        if ($exist)
+            $message = 'Meal already in favourite';
+        else{
+            $favourite = Favourite::where('user_id', $request->user_id)->first('id');
+            $meal_id = $request->meal_id;
+
+            $favourite->meals()->attach($meal_id);
+            $message = 'Meal successfully added to favourite';
+        }
+        
 
         return response()->json([
-            'status' => (bool) $favourite,
-            'data' => $favourite,
-            'message' => '$status' ? 'Meal has been added to favourite!' : 'Meal not added'
+            //'status' => (bool) $favourite,
+           // 'data' => $favourite,
+            'message' => $message
         ]);
     }
 
     public function storeShop(Request $request)
     {
-        $favourite = Favourite::where('user_id', $request->user_id)->first('id');
-        $shop_id = $request->shop_id;
-        $favourite->shops()->attach($shop_id);
+        $favourite = Favourite::where('user_id', $request->user_id)->first();
+        $shops = $favourite->shops;
+        $exist = $shops->where('id', '=', $request->shop_id)->first();
+        
+        if ($exist)
+            $message = 'Shop already in favourite';
+        else{
+            $favourite = Favourite::where('user_id', $request->user_id)->first('id');
+            $shop_id = $request->shop_id;
+
+            $favourite->shops()->attach($shop_id);
+            $message = 'Shop successfully added to favourite';
+        }
 
         return response()->json([
-            'status' => (bool) $favourite,
-            'data' => $favourite,
-            'message' => '$status' ? 'Shop has been added to favourite!' : 'Shop not added'
+            'message' => $message
         ]);
     }
 
@@ -64,6 +84,7 @@ class FavouriteController extends Controller
      */
     public function showMeals(Request $request)
     {
+        //$favourite = Favourite::where('user_id', auth()->user()->id)->first();
         $favourite = Favourite::where('user_id', $request->user_id)->first();
         $meals = $favourite->meals;
 

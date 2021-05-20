@@ -1,6 +1,6 @@
 <template>
     <div>
-        <star-rating class="justify-content-center"
+        <star-rating  class="justify-content-center"
         v-model="rating" :read-only="true" 
         :increment="0.5" :star-size="20">
         </star-rating>

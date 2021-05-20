@@ -20,16 +20,24 @@
         <div>
             <div class="row">
                 <div class="mb-3 col-md-4 col-6" v-for="(meal, index) in sortedMeals" :key="index">
-                    <router-link :to="{ path: '/i/listings/'+meal.meal_slug}">
+                    <router-link v-if="!isLoggedIn" :to="{ path: '/i/listings/'+meal.meal_slug}">
                         <div>
                             <img :src="'/images/meal/'+ meal.image" alt="" width="160" height="160" class="rounded meal-image">
                         </div>
-                    </router-link>              
+                    </router-link>  
+                     <router-link v-if="isLoggedIn" :to="{ path: '/listings/'+meal.meal_slug}">
+                            <div>
+                                <img :src="'/images/meal/'+ meal.image" alt="" width="160" height="160" class="rounded meal-image">
+                            </div>
+                        </router-link>            
                     <div class="card-title mb-0">
-                        <p class="mb-0">{{meal.meal_name}}</p>
-                        <router-link :to="{ path: '/i/shop/'+meal.shop_name}">
+                        <p class="mb-0">{{meal.meal_name}}</p> 
+                        <router-link v-if="!isLoggedIn" :to="{ path: '/i/shop/'+meal.shop_name}">
                             <p class="mb-0" style="font-weight: 200;">{{meal.shop_name}}</p>
-                        </router-link> 
+                        </router-link>
+                        <router-link v-if="isLoggedIn" :to="{ path: '/shop/'+meal.shop_name}">
+                            <p class="mb-0" style="font-weight: 200;">{{meal.shop_name}}</p>
+                        </router-link>
                         <p class="mb-0"><b>NGN {{meal.meal_price}}</b></p>
                     </div>
                 </div>
@@ -42,6 +50,7 @@
 export default {
     data(){
         return{
+            isLoggedIn: localStorage.getItem('eatly.jwt') != null,
             loading: true,
             errored: false,
             meals: [],

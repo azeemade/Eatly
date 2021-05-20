@@ -14,6 +14,10 @@ class Meal_size extends Model
         'meal_price',
     ];
 
+    public function getMealPriceAttribute($meal_price){
+        return number_format($meal_price, 2);
+    }
+
     public function meal()
     {
         return $this->belongsTo(meal::class, 'meal_id');

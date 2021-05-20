@@ -30,6 +30,7 @@ class RatingController extends Controller
             'meal_id' => $request->meal_id,
             'user_id' => $request->user_id,
             'points' => $request->points,
+            'order_id' => $request->order_id,
 
         ]);
 

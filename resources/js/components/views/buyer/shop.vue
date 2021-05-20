@@ -28,11 +28,10 @@
                         Favourite shop
                     </button>
                 </div>
-                <div class="alert alert-danger alert-dismissible text-center " role="alert" v-bind:class="{hidden: hasShop}">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    Shop already in favourites
+                <div class="alert alert-secondary text-center mb-0" role="alert" v-if="message != null">
+                    <p>{{message}}</p>
                 </div>
-                <p><b>Bio: </b>{{shop.Bio}}</p>
+                <p><b>Bio: </b>{{shop.bio}}</p>
                 <div>
                     <p><b>Opening hours:</b></p>
                     <div class="text-center">
@@ -138,13 +137,13 @@ export default {
             sortDirection: 'asc',
             search: '',
             ratings: 0,
-            hasShop: true,
             isLoggedIn: localStorage.getItem('eatly.jwt') != null,
+            message: null
         }
     },
 
     beforeMount(){
-        let url = `http://127.0.0.1:8000/api/v1/shop/listing/${this.$route.params.shop_name}`
+        let url = `http://127.0.0.1:8000/api/v1/shop/vendor/?user_id=${this.$store.state.id}`
         axios.get(url).then(response => this.shop = response.data.data)
 
         let url1 = `http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=${this.$route.params.shop_name}`
@@ -152,20 +151,11 @@ export default {
     },
 
     mounted(){
-        let urlv = `http://127.0.0.1:8000/api/v1/meal/vendor?shop_name=${this.$route.params.shop_name}`
+        let urlv = `http://127.0.0.1:8000/api/v1/meal/vendor/active?shop_name=${this.$route.params.shop_name}`
         axios.get(urlv).then(response => this.meals = response.data.data)
 
         let url_1 = `http://127.0.0.1:8000/api/v1/order/featured-meals?shop_name=${this.$route.params.shop_name}`
         axios.get(url_1).then(response => this.fMeals = response.data.data)
-        
-
-        //let url_ =  `http://127.0.0.1:8000/api/mealDetails/${this.$route.params.id}`
-       // axios.get(url_).then(response => this.meals = response.data)
-       // .catch(error => {console.log(error)
-       // this.errored = true})
-        //.finally(() => this.loading = false)    
-
-       // this.$store.dispatch('fetchBookmarkShop', this.$store.state.id)
     },
 
     methods:{
@@ -178,21 +168,20 @@ export default {
             }
         },
         
-        favShop(shop){
+        favShop(){
             let shop_id = this.shop.id
             let id = this.$store.state.id
-            let found = this.$store.state.favShop.find(item => item.id == shop_id);
 
             if (this.isLoggedIn == true){
-                if (found) {
-                    this.hasShop = false;
-                } else {
-                    this.hasShop = true;
-                    axios.post(`http://127.0.0.1:8000/api/v1/favourite/shop?user_id=${id}&shop_id=${shop_id}`)
-                    .then(response => this.$store.commit('ADD_SHOP_TO_FAVOURITE', {shop}))
-                    alert('Shop added to favourite')
-                }
-            }else{
+                axios.post(`http://127.0.0.1:8000/api/v1/favourite/shop?user_id=${id}&shop_id=${shop_id}`)
+                .then(response => {
+                    this.message = response.data.message
+                    setTimeout(() => {
+                        this.message = null;
+                    }, 3000);
+                })
+            }
+            else{
                 this.$router.push({name: 'login', params: {nextUrl: this.$route.fullPath}})
             }
         }, 

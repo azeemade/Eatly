@@ -1,25 +1,56 @@
 let mutations = { 
-    SET_ID(state, id){
-        state.id = id
+    SET_ID(state){
+        let loggedIn = localStorage.getItem('eatly.jwt') != null
+        if (loggedIn){
+            let user = JSON.parse(localStorage.getItem('eatly.user'))
+            state.id = user.id
+        }
     },
 
     SET_MEAL_SLUG(state, meal_slug){
         state.meal_slug = meal_slug
     },
 
-
-    ADD_TO_CART(state, {meal, quantity, size}) {
-        state.cart.push(meal)
-        Vue.set(meal, 'quantity', quantity);
-        Vue.set(meal, 'size', size);
-        state.cartCount++;
-
-        this.commit('SAVE_CART');
+    SET_SHOP_NAME(state, shop_name){
+        state.shop_name = shop_name
+    },
+    SET_SHOP(state, shop){
+        state.shop = shop
     },
 
-    UPDATE_CART({meal, quantity}){
-        meal.quantity += quantity;
-       //Vue.set(meal, 'quantity', quantity);
+    SET_MASTER_IMAGE(state, files){
+        state.master_image = files
+    },
+    SET_IMAGES(state, files){   
+        state.meal_images.push(files)
+    },
+    REMOVE_IMAGE(state, index) {
+        state.meal_images.splice(index, 1);
+    },
+    REMOVE_FROM_IMAGES(state, index) {
+        state.selectedmeal_image.splice(index, 1);
+    },
+
+    ADD_SIZE(state){
+        state.selectedmeal.meal_size.push({ meal_size: '', meal_price: ''  });
+    },
+    REMOVE_SIZE(state, index){
+        state.selectedmeal.meal_size.splice(index, 1);
+    },
+
+
+    ADD_TO_CART(state, {meal, quantity, size_id, size}) {
+        let found = state.cart.find(item => item.id == meal.id && item.size == size);
+
+        if (found) {
+            found.quantity += quantity;
+        } else {
+            state.cart.push(meal)
+            Vue.set(meal, 'quantity', quantity);
+            Vue.set(meal, 'size', size);
+            Vue.set(meal, 'size_id', size_id);
+            state.cartCount++;
+        }      
         this.commit('SAVE_CART');
     },
 
@@ -63,7 +94,7 @@ let mutations = {
     },
 
 
-    REMOVE_MEAL(state, meal) {
+    REMOVE_CART_MEAL(state, meal) {
         let index = state.cart.indexOf(meal);
     
         state.cart.splice(index, 1);
@@ -81,6 +112,10 @@ let mutations = {
         return state.comments = comments
     },
 
+    EDITING_MEAL(state, meal){
+        return state.selectedmeal = meal
+    },
+
 
     ADD_RATING(state, points) {
         state.ratings.push(points)
@@ -96,14 +131,13 @@ let mutations = {
     },
 
     FETCH_VENDOR_MEALS(state, meals){
-        return state.vMeals = meals
+        return state.vendorMeals = meals
     },
 
-    REMOVE_VENDOR_MEAL(state, meal){
-        let index = state.vMeals.indexOf(meal);
+    REMOVE_MEAL(state, meal){
+        let index = state.vendorMeals.indexOf(meal);
     
-        state.vMeals.splice(index, 1);
-        //this.commit("FETCH_VENDOR_MEALS", meals)
+        state.vendorMeals.splice(index, 1);
     },
 
 
@@ -158,9 +192,13 @@ let mutations = {
         state.oOrders.splice(index, 1);
     },
 
-    SET_SHOP_NAME(state, shop_name){
-        state.shop_name = shop_name
-    }
+
     
+    FETCH_UNDELIVERED(state, uOrders){
+        return state.undelivered = uOrders
+    },
+    FETCH_DELIVERED(state, dOrders){
+        return state.delivered = dOrders
+    },
 }
 export default mutations

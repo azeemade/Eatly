@@ -11,31 +11,38 @@
             </div>
         </div> 
         <div v-else class="mb-5">
-            <div class="alert alert-success alert-dismissible text-center" role="alert" v-if="message != null">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
-                <p>{{message}}</p>
+            <div class="alert alert-secondary text-center" role="alert" v-if="$store.state.message != null">
+                <p>{{$store.state.message}}</p>
             </div> 
             <div class="row">
                 <div class="mb-5 col-md-6" v-for="(order, index) in cOrders" :key="index">
-                    <div class="row order-card">
-                        <div class="col-md-3 col-3">
-                            <img :src="'/images/meal/'+ order.image" alt="" width="100" height="100" class="rounded order-meal-image">
-                        </div>
-                        <div class="col-md-4 col-5">
-                            <p class="mb-0">{{order.meal_name}}</p>
-                            <p class="mb-0">{{order.shop_name}}</p>
-                            <p class="mb-0">NG₦ {{ order.meal_price}}</p>
-                            <p class="mb-0">Quantity: {{ order.quantity }}</p>
-                            <p class="mb-0"><b>NG₦ {{ (order.meal_price * order.quantity).toFixed(2) }}</b></p>
-                        </div>
-                        <div class="col-md-5 col-4">
-                            <p class="mb-0">ID: {{order.id}}</p>
-                            <p>{{order.created_at}}</p>
+                    <div class="v-meal-card p-2 meal-image">                   
+                        <div class="row">
+                            <div class="col-md-3 col-3">
+                                <img :src="'/images/meal/'+ order.image" alt="" width="100" height="100" class="rounded order-meal-image">
+                            </div>
+                            <div class="col-md-4 col-5">
+                                <p class="mb-0">{{order.meal_name}}</p>
+                                <p class="mb-0">{{order.shop_name}}</p>
+                                <p class="mb-0">NG₦ {{ order.meal_price}}</p>
+                                <p class="mb-0">Quantity: {{ order.quantity }}</p>
+                                <p class="mb-0"><b>NG₦ {{ ((order.meal_price.replace(",", "")) * order.quantity).toLocaleString() }}</b></p>
+                            </div>
+                            <div class="col-md-5 col-4">
+                                <p class="mb-0">ID: {{order.id}}</p>
+                                <p>{{order.updated_at}}</p>
+                                <div v-if="order.hasReview == null">
+                                    <button title="Meal review is required" class="btn" data-toggle="modal" data-target=".comment-modal">
+                                        <i class="bi bi-chat-square-dots"></i>
+                                    </button>
+                                    <add-review :order="order"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>         
             </div>
-            <button class="btn clear-btn btn-lg btn-block" @click="clearHistory()">
+            <button class="btn clear-btn btn-md btn-outline-danger" @click="clearHistory()">
                 Clear history
             </button>
         </div>
@@ -45,18 +52,30 @@
 <script>
 import {mapGetters} from 'vuex'
 export default {
-    data(){
-        return{
-            message: null,
-        }
-    },
-
     methods:{
         clearHistory(){
-            let url = `http://127.0.0.1:8000/api/v1/order/user/clear?user_id=${this.$store.state.id}`
-            axios.delete(url)
-            .then(response => this.message = response.data.message)
-            this.$store.dispatch('fetchClosedOrders', this.$store.state.id)
+            let found = this.$store.state.cOrders.find(item => item.hasReview == null);
+            if (found){
+                this.$store.commit('SET_MESSAGE', 'Meal review is required for all orders'),
+                setTimeout(() => {
+                    this.$store.commit('SET_MESSAGE',  null);
+                }, 3000);
+            }
+            else{
+                let url = `http://127.0.0.1:8000/api/v1/order/user/clear?user_id=${this.$store.state.id}`
+                axios.delete(url)
+                .then(response => {
+                    this.$store.dispatch('fetchClosedOrders', this.$store.state.id)
+                    
+                    let message = response.data.message
+                    this.$store.commit('SET_MESSAGE', message);
+                    setTimeout(() => {
+                        this.$store.commit('SET_MESSAGE', null);
+                    }, 4000);
+                })
+
+
+            }
         },
     },
 
@@ -79,16 +98,15 @@ export default {
         width: 50px;
         height: 50px;
     }
-    .clear-btn:hover{
-        background-color: red;
+    .clear-btn{
+        left: 50%;
+        position: absolute;
         border-radius: 4px;
     }
-    .order-card{
-        background-color: #fff;
-        margin: 0 0 10px 0;
-        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-        border-radius: 8px;
+    .v-meal-card{
+        border: 0.5px solid #a98629;
     }
+    
     @media only screen and (min-width: 768px) {
         .order-meal-image{
             width: 100px;

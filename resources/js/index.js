@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from "./components/views/general/home.vue"
 import vendorReg from "./components/views/general/vendorReg.vue"
 import login from "./components/views/general/Login.vue"
+import searchResult from "./components/views/general/search-result.vue"
 
 import uDashboard from "./components/views/buyer/uDashboard.vue"
 import Meal from "./components/views/buyer/meal.vue"
@@ -22,7 +23,10 @@ import uHome from "./components/views/buyer/uHome";
 import checkout from "./components/views/buyer/checkout";
 import Category from "./components/views/buyer/category";
 import Search from "./components/views/buyer/search";
+import Profile from "./components/views/buyer/profile.vue"
 
+import vOpenOrders from "./components/views/vendor/vOpenOrders.vue"
+import vClosedOrders from "./components/views/vendor/vClosedOrders.vue"
 import vHome from "./components/views/vendor/vendorHome.vue"
 import vDashboard from "./components/views/vendor/vDashboard.vue"
 import vMeals from "./components/views/vendor/vMeals.vue"
@@ -30,6 +34,7 @@ import vOrders from "./components/views/vendor/vOrders.vue"
 import addmeal from "./components/views/vendor/addmeal.vue"
 import editmeal from "./components/views/vendor/editmeal.vue"
 import vEarnings from "./components/views/vendor/vEarnings.vue"
+import vProfile from "./components/views/vendor/vProfile.vue"
 
 
 var Vue = require('vue');
@@ -40,7 +45,8 @@ const router = new VueRouter({
     routes:[
         {
             path: '/', 
-            component: Home
+            component: Home,
+            isLoggedIn: false
         },
         {
             path: '/i/listings/:meal_slug',
@@ -61,6 +67,9 @@ const router = new VueRouter({
             path: '/uDashboard', 
             name: 'uDashboard',
             component: uDashboard,
+            meta: {
+                isLoggedIn: true
+            },
             children: [
                 {
                     path: '/home',
@@ -72,16 +81,57 @@ const router = new VueRouter({
                         name: 'uDashboard',
                     }
                 },
-                {
+                /*{
                     path: '/search',
                     name: 'search', 
-                    component: Search,
+                    component: searchResult,
                     meta: {
                         requiresAuth: true,
                         is_user: true,
                         name: 'uDashboard',
-                    }
-                },
+                    },
+                },*/
+                    {
+                        path: '/search/meal/?q=:query',
+                        name: 'mealSearch', 
+                        component: searchResult,
+                        meta: {
+                            requiresAuth: true,
+                            is_user: true,
+                            name: 'uDashboard',
+                        },
+                    },
+                    /*{
+                        path: '/search/shop/?q=:query',
+                        name: 'shopSearch', 
+                        component: searchResult,
+                        meta: {
+                            requiresAuth: true,
+                            is_user: true,
+                            name: 'uDashboard',
+                        },
+                    },
+                    {
+                        path: '/search/user/?q=:query',
+                        name: 'userSearch', 
+                        component: searchResult,
+                        meta: {
+                            requiresAuth: true,
+                            is_user: true,
+                            name: 'uDashboard',
+                        },
+                    },
+                    {
+                        path: '/search/category/?q=:query',
+                        name: 'categorySearch', 
+                        component: searchResult,
+                        meta: {
+                            requiresAuth: true,
+                            is_user: true,
+                            name: 'uDashboard',
+                        },
+                    
+                },*/
                 {
                     path: '/meals',
                     name: 'meals', 
@@ -196,7 +246,7 @@ const router = new VueRouter({
                     },
                     children: [
                         {
-                            path: '/openOrders', 
+                            path: '/orders/open', 
                             name: 'openOrders',
                             component: openOrders,
                             meta: {
@@ -206,7 +256,7 @@ const router = new VueRouter({
                             },
                         },
                         {
-                            path: '/closedOrders', 
+                            path: '/orders/closed', 
                             name: 'closedOrders',
                             component: closedOrders,
                             meta: {
@@ -216,6 +266,56 @@ const router = new VueRouter({
                             },
                         },
                     ]
+                },
+                {
+                    path: '/edit/profile', 
+                    name: 'profile',
+                    component: Profile,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'uDashboard',
+                    }
+                },
+                {
+                    path: '/search/meal/?q=:search', 
+                    name: 'searchmeal',
+                    component: searchResult,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'uDashboard',
+                    }
+                },
+                {
+                    path: '/search/user/?q=:search', 
+                    name: 'searchuser',
+                    component: searchResult,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'uDashboard',
+                    }
+                },
+                {
+                    path: '/search/category/?q=:search', 
+                    name: 'searchcategory',
+                    component: searchResult,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'uDashboard',
+                    }
+                },
+                {
+                    path: '/search/shop/?q=:search', 
+                    name: 'searchshop',
+                    component: searchResult,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'uDashboard',
+                    }
                 },
                 //{
                  //   path: '/inbox', 
@@ -249,7 +349,10 @@ const router = new VueRouter({
         {
             path: '/login', 
             name: 'login',
-            component: login
+            component: login,
+            meta: {
+                    name: 'auth',
+                },
         },
         {
             path: '/register/vendor', 
@@ -262,7 +365,7 @@ const router = new VueRouter({
             component: vDashboard,
             children: [
                 {
-                    path: '/vendor/:shop_name/home',
+                    path: '/vendor/home',
                     name: 'vHome', 
                     component: vHome,
                     meta: {
@@ -282,15 +385,36 @@ const router = new VueRouter({
                     },
                 },
                 {
-                    path: '/vendor/orders',
-                    name: 'vOrders', 
+                    path: '/vOrders', 
+                    name: 'vOrders',
                     component: vOrders,
                     meta: {
                         requiresAuth: true,
                         is_user: true,
                         name: 'vDashboard',
                     },
-                    props: (route) => ({ pid: route.query.pid })
+                    children: [
+                        {
+                            path: '/undelivered-orders', 
+                            name: 'vOpenOrders',
+                            component: vOpenOrders,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'vDashboard',
+                            },
+                        },
+                        {
+                            path: '/delivered-orders', 
+                            name: 'vClosedOrders',
+                            component: vClosedOrders,
+                            meta: {
+                                requiresAuth: true,
+                                is_user: true,
+                                name: 'vDashboard',
+                            },
+                        },
+                    ]
                 },
                 {
                     path: '/vendor/add-meal',
@@ -322,6 +446,16 @@ const router = new VueRouter({
                         name: 'vDashboard',
                     }
                 },
+                {
+                    path: '/vendor/profile',
+                    name: 'vProfile', 
+                    component: vProfile,
+                    meta: {
+                        requiresAuth: true,
+                        is_user: true,
+                        name: 'vDashboard',
+                    }
+                },
             ]
         },
     ]
@@ -342,7 +476,7 @@ router.beforeEach((to, from, next) => {
                         next()
                     }
                     else{ 
-                    next({ path: '/home' })
+                        next({ path: '/home' })
                     }
                 }
                 else if (to.matched.some(record => record.meta.is_user)){
@@ -359,6 +493,18 @@ router.beforeEach((to, from, next) => {
     else {
         next()
     }
+
+    /**if (path === '/'){
+        if (localStorage.getItem('eatly.jwt') == false){
+            next({
+                path:'/',
+                params: { nextUrl: to.fullPath}
+            })
+        }
+        else{
+            next({path: '/home'})
+        }
+    }*/
 })
 
 export default router

@@ -14,7 +14,7 @@
                         <div>
                             <ul class="pl-0 mt-5 mb-2">
                                 <li class="v-menu-list mb-2">
-                                    <router-link to="/openOrders" class="btn justify-content-between d-flex" data-dismiss="modal">
+                                    <router-link to="/vendor/profile" class="btn justify-content-between d-flex" data-dismiss="modal">
                                         <div class="d-flex">
                                             <div class="mr-3">
                                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-shop" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -183,7 +183,7 @@ export default {
     .modal.right .modal-dialog{
 		position: fixed;
 		margin: auto;
-        top: 71px;
+        top: 0;
 		min-width: 100%;
 		height: 100%;
 		-webkit-transform: translate3d(0%, 0, 0);
@@ -204,7 +204,11 @@ export default {
     }
 
     .modal-header{
-        border-bottom: 0;
+        position: fixed;
+        width: 100%;
+        z-index: 1999;
+        background-color: white;
+        border-bottom: 1px solid whitesmoke;
     }
     .modal.right.fade .modal-dialog {
         right: 0px;

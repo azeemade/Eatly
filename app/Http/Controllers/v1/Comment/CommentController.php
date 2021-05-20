@@ -57,13 +57,14 @@ class CommentController extends Controller
             'review' => $request->review,
             'meal_id' => $request->meal_id,
             'user_id' => $request->user_id,
+            'order_id' => $request->order_id,
         ]);
 
 
         return response()->json([
             'status' => (bool) $comment,
             'data' => $comment,
-            'message' => $comment ? 'Review added!' : ' Error creating review',
+            'message' => $comment ? 'meal review successful!' : ' Error creating review',
         ]);
     }
 

@@ -17,7 +17,6 @@ class Shop extends Model
         'shop_description',
         'open_time',
         'close_time',
-        'shop_views'
     ];
     public function user()
     {

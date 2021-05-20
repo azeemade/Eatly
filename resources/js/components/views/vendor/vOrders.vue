@@ -1,124 +1,31 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-around mb-5 border-top border-bottom py-3">
             <div>
-                Open Orders
+                <router-link to="/undelivered-orders" class="tablinks">Undelivered Orders</router-link>
             </div>
             <div>
-                <button class="btn" id="orderbtn">Collapse</button>
-            </div>
-        </div>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Order date</th>
-                <th>Meal</th>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Delivery status</th>
-                <th>Action</th>
-            </tr>
-            <tr v-for="(norder, index) in oOrders" :key="index">
-                <td>{{norder.id}}</td>
-                <td>{{norder.created_at}}</td>
-                <td>{{norder.meal}}</td>
-                <td>{{norder.name}}</td>
-                <!--<td>Address</td>
-                <td>Quantity</td>-->
-                <td>NGN{{norder.amount}}</td>
-                <td v-if="norder.is_delivered == 0">Undelivered</td>
-                <td v-if="norder.is_delivered == 0">
-                    <button type="submit" @click="deliver(index)" class="btn btn-success">Deliver Meal</button>
-                </td>
-                
-            </tr>
-        </table>
-
-        <div class="d-flex justify-content-between mt-5">
-            <div>
-                Closed Orders
-            </div>
-            <div>
-                <button class="btn" id="orderbtn">Collapse</button>
+                <router-link to="/delivered-orders" class="tablinks">Delivered Orders</router-link>
             </div>
         </div>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Order date</th>
-                <th>Meal</th>
-                <th>Name</th>
-                <th>Delivery status</th>
-                <th>Amount</th>
-            </tr>
-            <tr v-for="(order, index) in cOrders" :key="index">
-                <td>{{order.id}}</td>
-                <td>{{order.created_at}}</td>
-                <td>{{order.meal.name}}</td>
-                <td>{{order.user.username}}</td>
-                <td v-if="order.is_delivered == 1">Delivered</td>
-                <td>NGN{{order.meal.price}}</td>
-            </tr>
-        </table>
+        <div>
+            <router-view></router-view>
+        </div>
     </div>
 </template>
-
-<script>
-export default {
-    props: ['pid'],
-    data(){
-        return{
-            cOrders: [],
-            oOrders: [],
-        }
-    },
-
-    beforeMount(){
-        let url1 =  `http://127.0.0.1:8000/api/vOpenOrders/${this.pid}`
-        axios.get(url1).then(response => this.oOrders = response.data.data.order)
-    },
-
-    methods:{
-        getAllMeals(){
-            let url1 =  `http://127.0.0.1:8000/api/vOpenOrders/${this.pid}`
-            axios.get(url1).then(response => this.oOrders = response.data)
-
-            let url2 =  `http://127.0.0.1:8000/api/vCloseOrders/${this.pid}`
-            axios.get(url2).then(response => this.cOrders = response.data)
-        },
-        deliver(index){
-            let norder = this.oOrders[index]
-            axios.put(`http://127.0.0.1:8000/api/orders/${norder.id}/delivery`)//, {user_id: norder.user.id, meal_id: norder.meal.id, vendor_id: norder.meal.vendor_id, is_delivered: true})
-            .then(response => {
-                this.cOrders.push(norder)
-                this.$forceUpdate()
-                this.getAllMeals()
-            })
-        }
-    },
-
-    mounted(){
-        let url2 =  `http://127.0.0.1:8000/api/vCloseOrders/${this.pid}`
-        axios.get(url2).then(response => this.cOrders = response.data)
-    },
-    
-}
-</script>
-
-<style scoped>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
+<style>
+    .router-link-exact-active.router-link-active.tablinks {
+        border-bottom: 2px solid;
+        padding-bottom: 1rem;
     }
 </style>
+<script>
+export default {
+
+    mounted(){
+        let id = this.$store.state.id
+        this.$store.dispatch('fetchUndelivered', id)
+        this.$store.dispatch('fetchDelivered', id)
+    }, 
+}
+</script>

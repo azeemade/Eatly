@@ -22,6 +22,7 @@ class CreateRatingsTable extends Migration
             $table->foreign('user_id')
             ->references('id')->on('users');
             $table->integer('points');
+            $table->unsignedBigInteger('order_id');
             $table->timestamps();
         });
     }

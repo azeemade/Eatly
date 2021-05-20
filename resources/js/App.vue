@@ -16,8 +16,12 @@ export default {
 }
 </script>
 <style>
-    a{
+    a {
         color: black;
+    }
+    a:hover {
+        color: black;
+        text-decoration: none;
     }
     li{
         list-style: none;

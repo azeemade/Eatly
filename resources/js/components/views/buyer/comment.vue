@@ -1,6 +1,6 @@
 <template>
     <div> 
-        <div class="d-flex">
+        <div class="d-flex mt-3">
             <h6 style="font-weight:100">REVIEWS</h6>
             <span class="badge badge-secondary ml-2 align-self-center">{{comments.length}}</span>
         </div>

@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
     Route::group(['prefix' => 'user'], function ($router) {
         Route::get('/show', 'v1\User\UserController@show');
         Route::post('/create', 'v1\User\UserController@store');
+        Route::put('/update', 'v1\User\UserController@update');
         Route::get('/', 'v1\User\UserController@index');
     });
     
@@ -38,6 +39,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::get('/shop-name', 'v1\Shop\ShopController@shopName');
         Route::get('/shop-props', 'v1\Shop\ShopController@shopProps');
         Route::get('/best-seller', 'v1\Shop\ShopController@bestSeller');
+       // Route::get('/id', 'v1\Shop\ShopController@getShopId');
         
 
         
@@ -52,7 +54,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
     Route::group(['prefix' => 'meal'], function ($router) {
         Route::get('/listing/{slug}', 'v1\Meal\MealController@show');
-        Route::get('/vendor', 'v1\Meal\MealController@vendorMeals');
+        Route::get('/vendor/active', 'v1\Meal\MealController@vendorActiveMeals');
         Route::get('/related-meals', 'v1\Meal\MealController@relatedMeals');
         Route::get('/active', 'v1\Meal\MealController@activeMeals');
         Route::get('/awaiting', 'v1\Meal\MealController@awaitingMeals');
@@ -65,6 +67,14 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::delete('delete', 'v1\Meal\MealController@delete');
         Route::delete('delete/secondary-image', 'v1\Meal\MealController@deleteSecondaryImage');
         Route::get('/meals', 'v1\Meal\MealController@index');
+        Route::get('/vendor', 'v1\Meal\MealController@vendorMeals');
+        Route::group(['prefix' => 'recommended'], function ($router) {
+            Route::get('/fav/meal', 'v1\Meal\MealController@basedOnFav');
+            Route::get('/fav/vendor/meal', 'v1\Meal\MealController@favVendorMeals');
+            Route::get('/order/meals', 'v1\Meal\MealController@orderMeals');
+            Route::get('/order/budget/meals', 'v1\Meal\MealController@orderBudget');
+        });
+
 
         
         
@@ -97,6 +107,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::get('/closed', 'v1\Order\OrderController@closedVendorOrder');
         Route::get('/open', 'v1\Order\OrderController@openedVendorOrder');
         Route::put('deliver', 'v1\Order\OrderController@deliverOrder');
+        Route::put('start-delivery', 'v1\Order\OrderController@startDelivery');
 
 
         Route::get('/orders', 'v1\Order\OrderController@index');
@@ -138,6 +149,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::get('/{title}/show', 'v1\Category\CategoryController@show');
         Route::post('/attach-meal', 'v1\Category\CategoryController@attachMeal');
         Route::delete('/detach-meal', 'v1\Category\CategoryController@detachMeal');
+        Route::get('/top-category', 'v1\Category\CategoryController@topCategory');
        // Route::get('/meals/sort', 'v1\Category\CategoryController@sortBy');
         
     });

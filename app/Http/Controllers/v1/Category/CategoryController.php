@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Category;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Category_meal;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -151,15 +152,16 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function attachMeal(Request $request)
+    public function attachMeal(Request $request, $meal)
     {
-        $category = Category::where('title', $request->title)->first();
-        $meal_id = $request->meal_id;
-        $category->meals()->attach($meal_id);
+        foreach($request->selectedcategories as $title){
+            $category = Category::where('title', $title)->first();
+            $meal_id = $meal->id;
+            $category->meals()->attach($meal_id);
+        }
 
         return response()->json([
             'status' => (bool) $category,
-           // 'data' => $cart,
             'message' => '$status' ? 'Meal has been added to category!' : 'Meal not added'
         ]);
     }
@@ -174,6 +176,19 @@ class CategoryController extends Controller
             'status' => (bool) $category,
            // 'data' => $cart,
             'message' => '$status' ? 'Meal has been removed to category!' : 'Meal not removed'
+        ]);
+    }
+    /** Category with most meals*/
+    public function topCategory(){
+        $category = Category::select('title')
+        ->join('category_meals', 'categories.id', 'category_meals.category_id')
+        ->selectRaw('COUNT(category_id) AS count')
+        ->groupby('title')
+        ->orderBy('count', 'desc')
+        ->take(5)
+        ->get();
+        return response()->json([
+            'data' => $category,
         ]);
     }
 }

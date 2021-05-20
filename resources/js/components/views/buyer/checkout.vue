@@ -46,13 +46,13 @@
                             <h4>Payment</h4>
                             <div class="custom-radio">
                                 <label for="">
-                                    <input type="radio" name="payType" class="ccPay" id="creditCard" value="creditCard" @change="ccPay" v-model="payType">
+                                    <input type="radio" name="payType" class="ccPay" id="creditCard" value="credit-card" @change="ccPay" v-model="payType">
                                     Credit card
                                 </label>
                             </div>
                             <div class="custom-radio">
                                 <label for="">
-                                    <input type="radio" name="payType" class="btPay" @change="btPay(), nameCard=ccn=exp=ccv= null" v-model="payType" id="bankTransfer" value="bankTransfer">
+                                    <input type="radio" name="payType" class="btPay" @change="btPay(), nameCard=ccn=exp=ccv= null" v-model="payType" id="bankTransfer" value="bank-transfer">
                                     Bank transfer
                                 </label>
                             </div>
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                             <div id="btPay">
-                                <h6 class="pt-2">Account name: <b>Eatly Incorparation</b></h6>
+                                <h6 class="pt-2">Account name: <b>Eatly Inc.</b></h6>
                                 <h6>Account number: <b>0x xxx xxx xx</b></h6>
                                 <h6 class="pb-2">Bank name: PACIFICA Bank</h6>
                             </div>
@@ -89,18 +89,21 @@
                 </div>
                 <div class="col-md-5">
                     <h4 class="text-center">Cart</h4>
-                    <div class="row mb-3 mealRow" v-for="(meal, index) in $store.state.cart" :key="index">
-                        <div class="col-md-3">
-                           <img :src="'/images/'+ meal.image" alt="" width="91" height="75" class="rounded">
+                    <div class="v-meal-card p-2 meal-image mb-3" v-for="(meal, index) in $store.state.cart" :key="index">
+                        <div class="row">
+                        <div class="col-md-4 col-5">
+                            <img :src="'/images/meal/'+ meal.image" alt="" width="100" height="100" class="rounded">
                         </div>
-                        <div class="col-md-6">
-                            <p><b>{{meal.name}}</b></p>
-                            <small>Quantity: <b>{{meal.quantity}}</b></small>
+                        <div class="mb-0 col-md-8 col-7">
+                            <div>
+                                <p class="mb-0">{{meal.meal_name}}</p>
+                                <p class="mb-0">Size: {{meal.size}}</p>
+                                <p class="mb-0"><b>NG₦ {{meal.meal_price}}</b></p>
+                                <p class="mb-0">Quantity: {{meal.quantity}}</p>
+                            </div>                     
                         </div>
-                        <div class="col-md-3">
-                            <p>NGN{{meal.price}}</p>
-                        </div><hr class="my-3">
-                    </div><hr class="my-3">
+                    </div>  
+                    </div>
                     <div>
                         <h6><b>Total: NGN{{totalPrice}}</b></h6>
                     </div><br>
@@ -122,7 +125,7 @@ export default {
     data(){
         return{
             hasError: true,
-            user: [],
+            user: {},
             ccv: "",
             ccn: "",
             exp: "",
@@ -142,20 +145,22 @@ export default {
             }
             else {
               this.hasError = true;
-                axios.put(`http://127.0.0.1:8000/api/users/${this.$store.state.id}`, {
+                axios.post(`http://127.0.0.1:8000/api/v1/user/create?user_id=${this.$store.state.id}`, {
                     firstname: this.user.firstname,
                     lastname: this.user.lastname,
-                    phoneNumber: this.user.phoneNumber
+                   phoneNumber: this.user.phoneNumber
                 })
 
-                let cart_ = this.$store.state.cart;
 
+                let cart_ = this.$store.state.cart;
                 for(var meal in cart_){
                     let user_id = this.$store.state.id;
-                    axios.post(`http://127.0.0.1:8000/api/order/${user_id}`, {
-                        id: cart_[meal].id,
-                        vendor_id: cart_[meal].vendor_id,
+                    axios.post(`http://127.0.0.1:8000/api/v1/order/checkout/`, {
+                        user_id: user_id,
+                        meal_id: cart_[meal].id,
+                        shop_id: cart_[meal].shop_id,
                         quantity: cart_[meal].quantity,
+                        meal_size_id: cart_[meal].size_id,
                         shippingAddress: this.sAddress,
                         billingAddress: this.bAddress,
                         paymentType: this.payType,
@@ -163,25 +168,19 @@ export default {
                         cardNumber: this.ccn,
                         cardExpiration: this.exp,
                         ccv: this.ccv
-                    }).then(response => response.data)
-                    .catch(err => {
-                        console.log(err)
-                    }
-                    )
-                }
-                
-                for(var meal in cart_){
-                    let user_id = this.$store.state.id;
-                    let meal_id = cart_[meal].id;
-                    let quantity = cart_[meal].quantity;
+                    })
+                     .then(response => {
+                        for(var meal in cart_){
+                            this.$store.commit('REMOVE_CART_MEAL', cart_[meal]);
+                        }
+                            this.$router.push({name: 'uHome'})
 
-                    axios.delete(`http://127.0.0.1:8000/api/cart/${meal_id}?id=${user_id}&meal_id=${meal_id}&quantity=${quantity}`)
-                    //.then(response =>  this.$store.commit('REMOVE_MEAL', {meal}))
-                    .then((response) => {this.$router.push({name: 'uHome'})})
-                    .catch(err => {
-                        console.log(err)
-                    }
-                    )
+                            var message = "Your meal order has been placed!"
+                            this.$store.commit('SET_MESSAGE', message)
+                            setTimeout(() => {
+                                this.$store.state.message = null;
+                            }, 3000);
+                    })
                 }
             }
         },
@@ -209,15 +208,16 @@ export default {
     computed:{
        totalPrice(){
             var totalSum = this.$store.state.cart.reduce(function(res, meal){
-               return res + (meal.price * meal.quantity);
+                var mp = meal.meal_price.replace(",", "")
+               return res + (mp * meal.quantity);
            }, 0);
-           return totalSum;
+           return totalSum.toLocaleString();
        },
     },
 
     mounted(){
-        axios.get('http://127.0.0.1:8000/api/users/'+this.$store.state.id)
-            .then(response => this.user = response.data)
+        axios.get(`http://127.0.0.1:8000/api/v1/user/show?user_id=${this.$store.state.id}`)
+        .then(response => this.user = response.data.data)
     }
 }
 </script>
@@ -240,5 +240,8 @@ export default {
     }
     .hidden{
         display: none;
+    }
+    .v-meal-card{
+        border: 0.5px solid #a98629;
     }
 </style>

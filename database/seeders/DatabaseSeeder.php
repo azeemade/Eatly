@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
          //Favourite::truncate();
          //Favourite_shop::truncate();
         //Rating::truncate();
-          //Comment::truncate();
+        //  Comment::truncate();
         Schema::enableForeignKeyConstraints();
 
        // $this->call(UsersTableSeeder::class);
@@ -65,8 +65,8 @@ class DatabaseSeeder extends Seeder
     //$this->call(SearchTableSeeder::class);
     //$this->call(CartsTableSeeder::class);
     //$this->call(FavouritesTableSeeder::class);
-        //$this->call(RatingsTableSeeder::class);
-        //$this->call(ReviewsTableSeeder::class);
+       // $this->call(RatingsTableSeeder::class);
+      //  $this->call(ReviewsTableSeeder::class);
        
     }
 }

@@ -24,11 +24,13 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "bootstrap-icons": "^1.1.0",
+        "bootstrap-icons": "^1.3.0",
         "vue-dynamic-star-rating": "^1.0.8",
         "vue-router": "^3.4.5",
+        "vue-simple-spinner": "^1.2.10",
         "vue-star-rating": "^1.7.0",
         "vue-swipeable-bottom-sheet": "0.0.5",
+        "vue-upload-multiple-image": "^1.1.6",
         "vuex": "^3.5.1"
     }
 }

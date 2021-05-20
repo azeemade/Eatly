@@ -33,6 +33,9 @@ class Order extends Model
     public function getCreatedAtAttribute($date){
         return Carbon::parse($date)->diffForHumans();
     }
+    public function getUpdatedAtAttribute($date){
+        return Carbon::parse($date)->diffForHumans();
+    }
 
     public function user()
     {
@@ -48,4 +51,13 @@ class Order extends Model
     {
         return $this->belongsTo(Meal_size::class, 'meal_size_id');
     }
+    public function comment()
+    {
+        return $this->hasOne(Comment::class);
+    }
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
+
 }

@@ -13,6 +13,7 @@ class Rating extends Model
         'meal_id',
         'user_id',
         'points',
+        'order_id',
     ];
 
     public function user()
@@ -23,6 +24,11 @@ class Rating extends Model
     public function meal()
     {
         return $this->belongsTo(Meal::class, 'meal_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
 }

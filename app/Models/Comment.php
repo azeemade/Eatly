@@ -13,7 +13,8 @@ class Comment extends Model
         'user_id',
         'meal_id',
         'review',
-        'created_at'
+        'created_at',
+        'order_id',
     ];
 
     public function getCreatedAtAttribute($date){
@@ -28,5 +29,10 @@ class Comment extends Model
     public function meal()
     {
         return $this->belongsTo(meal::class, 'meal_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }
