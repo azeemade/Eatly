@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function ($router) {
     Route::group(['prefix' => 'auth'], function ($router) {
         Route::post('/login', 'v1\User\UserController@login');
+        Route::post('/register', 'v1\User\UserController@consumerRegister');
     });
 
     Route::group(['prefix' => 'user'], function ($router) {

@@ -84,28 +84,35 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|alpha_dash|unique:users',
             'email' => 'required|email|unique:users',
-            'phoneNumber' => 'required|numeric|unique:users|max:11',
-            'password'  => 'required|min:8',
-            'password_confirmation' => 'required|same:password',
+            'password'  => ['required', 'string', 'min:8', 'regex:/[0-9]/'],
+            'confirmPassword'  => ['required','same:password'],
+        ],[
+            'password.regex' => 'The password must include alphanumeric characters [a-z and 0-9]'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            $valid = $validator->errors();
+            return response()->json($valid);
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
 
-        $user = User::create($input);
+       /* $user = User::create($input);
         $user->role = "consumer";
         $user->hasShop = "No";
 
         $success = [
             'user' => $user,
             'token' => $user->createToken('eatly')->accessToken,
-        ];
+        ];*/
 
-        return response()->json($success);
+       // return response()->json($success);
+        return response()->json([
+            //'status' => $status,
+            //'message' => '$status' ? 'Welcome to Eatly ' : 'Error creating account'
+            'message' => 'Success'
+        ]);
     }
 
     public function vendorRegister(Request $request)

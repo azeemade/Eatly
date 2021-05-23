@@ -27,6 +27,7 @@ Vue.component('navbar', require('./components/views/general/navbar.vue').default
 Vue.component('home', require('./components/views/general/home.vue').default);
 Vue.component('vendorReg', require('./components/views/general/vendorReg.vue').default);
 Vue.component('login', require('./components/views/general/Login.vue').default);
+Vue.component('register', require('./components/views/general/Register.vue').default);
 Vue.component('sidemenu', require('./components/views/general/sidemenu.vue').default);
 Vue.component('search-result', require('./components/views/general/search-result.vue').default);
 Vue.component('search-result', require('./components/views/general/search-result.vue').default);

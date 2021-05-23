@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from "./components/views/general/home.vue"
 import vendorReg from "./components/views/general/vendorReg.vue"
 import login from "./components/views/general/Login.vue"
+import register from "./components/views/general/Register.vue"
 import searchResult from "./components/views/general/search-result.vue"
 
 import uDashboard from "./components/views/buyer/uDashboard.vue"
@@ -355,10 +356,22 @@ const router = new VueRouter({
                 },
         },
         {
+            path: '/register', 
+            name: 'register',
+            component: register,
+            meta: {
+                    name: 'auth',
+                },
+        },
+        {
             path: '/register/vendor', 
             name: 'vendorReg',
-            component: vendorReg
+            component: vendorReg,
+            meta: {
+                name: 'auth',
+            },
         },
+
         {
             path: '/vDashboard',
             name: 'vDashboard',

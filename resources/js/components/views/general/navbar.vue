@@ -17,7 +17,7 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style>
     .nav-wrapper-container{
         width: 100%;
         background-color: white;
@@ -33,9 +33,9 @@
         right: 0;
         left:auto; 
     }
-    .hide{
+    .desktop{
         display: none;
-        }
+    }
     #cart-content, #sidebar-content{
         display: none;
         width: 100%;
@@ -63,7 +63,7 @@
         height: 100%;
     }
     @media only screen and (min-width: 768px) {
-        .hide{
+        .desktop{
             display: block;
         }
         .logo{

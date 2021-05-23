@@ -3,7 +3,7 @@
         <router-link to="/" class="navbar-brand">
             <img :src="'/images/eatly_new.svg'" alt="" class="rounded logo" height="30" width="66">
         </router-link>
-        <div class="hide">
+        <div class="desktop">
             <div class="d-flex align-items-baseline">
                 <input type="search" placeholder="Search" size="40" class="form-control mr-2"  v-model="search">
                 <router-link :to="{ path: '/search/meal/?q='+search}" @click="openSearch">
@@ -23,10 +23,23 @@
                     <cart :id="id"/>
                 </div>
             </div>
-            <div>
-                <button class="btn cart-btn" type="button" @click="openMenu">
-                    <i class="bi bi-justify-right"></i>
+            <div class="dropdown">
+                <button class="btn cart-btn dropdown-toggle" type="button" id="accountBtn" 
+                data-bs-toggle="dropdown" aria-expanded="flase">
+                    <i class="bi bi-person"></i>
                 </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountBtn">
+                    <li>
+                        <a class="dropdown-item">
+                            <router-link to="/login" class="btn">Login</router-link>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item">
+                            <router-link to="/register" class="btn">Register</router-link>
+                        </a>
+                    </li>
+                </ul>
                 <div class="sidebar-menu" id="sidebar-content">  
                     <sidemenu />
                 </div>
@@ -34,3 +47,63 @@
         </div>
     </div>
 </template>
+<script>
+import {mapGetters} from 'vuex';
+export default {
+    data(){
+        return{
+            user_type: null,
+            isLoggedIn: localStorage.getItem('eatly.jwt') != null,
+            username: null,
+            id: null,
+            hasShop: null,
+            shop_name: null,
+            image: null,
+            search: '',
+        }
+    },
+    methods:{
+        loadCart(){
+            let user_id = this.id
+            axios.get(`http://127.0.0.1:8000/api/cart?id=${user_id}`)
+            .then(response => this.cart = response.data.data.cart.meals)
+            .catch(console.error)
+        },
+
+        openSearch(){
+            let id = this.$store.state.id;
+            let search = this.search;
+            this.$store.dispatch('storeSearch', {id, search})
+            this.$store.commit('NEW_SEARCH', search)
+        },
+
+        openCart(){
+            document.getElementById("cart-content").style.display = "block";
+        },
+        openMenu(){
+            document.getElementById("sidebar-content").style.display = "block";
+        }
+
+    },
+
+    beforeMount(){     
+        this.$store.commit('SET_ID');
+
+        var id = this.$store.state.id
+        this.$store.dispatch('setShop',id)
+        
+
+        this.setDefaults();
+
+    },
+
+    mounted(){
+        this.$store.dispatch('fetchUser', this.id)
+    },
+    computed: {
+        ...mapGetters([
+            'cart'
+        ])
+    }
+}
+</script>

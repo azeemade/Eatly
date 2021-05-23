@@ -1,18 +1,18 @@
 <template>
     <div>
         <div class="desktop">
-            <desktopLogin />
+            <desktop-register />
         </div>
         <div class="mobile">
-            <mobile-login/>
+            <mobile-register />
         </div>
     </div>
 </template>
 <script>
-import desktopLogin from '../assets/desktopLogin.vue';
-import mobileLogin from '../assets/mobileLogin.vue';
+import desktopRegister from '../assets/desktopRegister.vue';
+import mobileRegister from '../assets/mobileRegister.vue';
 export default {
-    components: { 'mobileLogin': mobileLogin, 'desktopLogin': desktopLogin },
+    components: { mobileRegister, desktopRegister },
 
     created: function(){
         document.body.style.backgroundColor = "#EDE5C7"
