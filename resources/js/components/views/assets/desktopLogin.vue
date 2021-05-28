@@ -21,6 +21,7 @@
                         <i class="small fst-normal text-decoration-none">Forgotten password?</i>
                     </router-link>
                 </div>
+                <span class="small text-danger m-1">{{error}}</span>
                 <div class="d-flex justify-content-center">
                     <button class="text-white btn auth-btn" @click="handleSubmit">{{signin}}</button>
                 </div>
@@ -37,7 +38,8 @@ export default {
         return {
             email: '',
             password: '',
-            signin: 'Sign in'
+            signin: 'Sign in',
+            error: '',
       }
     },
 
@@ -74,9 +76,13 @@ export default {
                         }
                     }
                 })
-                .catch(error => {
-                    console.log(error)
-                    })
+                .catch(err => {
+                    this.error = err.response.data.error
+                    this.signin = 'Sign in'
+                })
+            }
+            else{
+                this.error.error = 'email or password cannot be null'
             }
         }
     },

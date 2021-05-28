@@ -5,7 +5,7 @@
         </div>
         <div class="container bg-white rounded-3 py-3 px-4">
             <div class="d-flex align-items-center mb-4">
-                <a class="btn ps-0">
+                <a class="btn ps-0" @click="goBack">
                     <i class="bi bi-chevron-left"></i>
                 </a>
                 <a class="fs-5 text-decoration-none">Create Account</a>
@@ -64,17 +64,22 @@ export default {
             password: null,
             confirmPassword: null,
             signup: 'Create account',
-            errors: {},
+            errors: [],
             isSubmitting: false,
+            hasErrors: false,
             message: null,
         }
     },
 
     methods:{
+        goBack(){
+            this.$router.go(-1);
+        },
+
         handleSubmit(e) {
             e.preventDefault();
             this.signup = 'Creating account...';
-            this.isSubmitting = true;
+            this.errors = [];
 
             let username = this.username
             let email = this.email
@@ -82,32 +87,24 @@ export default {
             let confirmPassword = this.confirmPassword
 
             axios.post('api/v1/auth/register', {username, email, password, confirmPassword})
-            .then(response => {
-                this.errors = response.data
-
-                /*localStorage.setItem('eatly.user', JSON.stringify(response.data.user))
-                localStorage.setItem('eatly.jwt', response.data.token)
+            .then((response) => {
+                localStorage.setItem('eatly.user', JSON.stringify(response.data.status.user))
+                localStorage.setItem('eatly.jwt', response.data.status.token)
 
                 if (localStorage.getItem('eatly.jwt') != null) {
                     this.$emit('Account created!')
                     let nextUrl = this.$route.params.nextUrl
                     this.$router.push((nextUrl != null ? nextUrl: "/home"))
 
-                    this.$store.commit('SET_MESSAGE', response.data.message)*/
-                    this.message = response.data.message;
+                    this.$store.commit('SET_MESSAGE', response.data.message)
                     setTimeout(() => {
-                        //this.$store.state.message = null;
-                        this.message = null;
-                    }, 3000);
-                //}
-                //else{
-                    /*this.errors.username = response.errors.username 
-                    this.errors.email = response.errors.email  
-                    this.errors.password = response.errors.password  
-                    this.errors.confirmPassword = response.errors.confirmPassword  */
-                   // this.isSubmitting = false;
-                    //this.errors = response.data.errors
-                //} 
+                        this.$store.state.message = null;
+                    }, 50000);
+                }   
+            })
+            .catch(err => {
+                this.errors = err.response.data.errors
+                this.signup = 'Create account'
             })
         }
     }

@@ -82,7 +82,7 @@ const router = new VueRouter({
                         name: 'uDashboard',
                     }
                 },
-                /*{
+                {
                     path: '/search',
                     name: 'search', 
                     component: searchResult,
@@ -91,7 +91,7 @@ const router = new VueRouter({
                         is_user: true,
                         name: 'uDashboard',
                     },
-                },*/
+                },
                     {
                         path: '/search/meal/?q=:query',
                         name: 'mealSearch', 

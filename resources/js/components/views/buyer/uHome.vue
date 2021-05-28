@@ -1,5 +1,12 @@
 <template>
     <div class="">
+        <div class="alert alert-success text-center mb-0" role="alert" v-if="message != null">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+            <p>{{$store.state.message}}</p>
+            <router-link to="/edit/profile">
+                Get started by updating your profile
+            </router-link>
+        </div>
         <div class="row my-3">
             <div class="col-md-6 col-6">
                 <div class="home-card-1 p-3">

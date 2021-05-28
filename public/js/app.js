@@ -1965,13 +1965,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'desktopLogin',
   data: function data() {
     return {
       email: '',
       password: '',
-      signin: 'Sign in'
+      signin: 'Sign in',
+      error: ''
     };
   },
   methods: {
@@ -2007,9 +2009,12 @@ __webpack_require__.r(__webpack_exports__);
               }
             }
           }
-        })["catch"](function (error) {
-          console.log(error);
+        })["catch"](function (err) {
+          _this.error = err.response.data.error;
+          _this.signin = 'Sign in';
         });
+      } else {
+        this.error.error = 'email or password cannot be null';
       }
     }
   }
@@ -2091,49 +2096,22 @@ __webpack_require__.r(__webpack_exports__);
       password: null,
       confirmPassword: null,
       signup: 'Create account',
-      errors: {},
-
-      /* email: [],
-       username: [],
-       password: [],
-       confirmPassword: [],
-      },*/
+      errors: [],
       isSubmitting: false,
+      hasErrors: false,
       message: null
     };
   },
   methods: {
-    /*validateForm(e){
-        e.preventDefault();
-          if (this.email && this.username && this.password && this.confirmPassword){
-            this.handleSubmit();
-            this.isSubmitting = true;
-              this.errors.email = null;
-            this.errors.username = null;
-            this.errors.password = null;
-            this.errors.confirmPassword = null;
-        }
-          this.isSubmitting = false;
-        if (!this.email){
-            this.errors.email = 'E-mail required';
-        }
-        if (!this.username){
-            this.errors.username = 'Username required';
-        }
-        if (!this.password){
-            this.errors.password = 'Password required';
-        }
-        if (!this.confirmPassword || this.password !== this.confirmPassword ){
-            this.password = null;
-            this.confirmPassword  = null;
-            this.errors.confirmPassword = 'Password do not match';
-        }
-    },*/
+    goBack: function goBack() {
+      this.$router.go(-1);
+    },
     handleSubmit: function handleSubmit(e) {
       var _this = this;
 
       e.preventDefault();
       this.signup = 'Creating account...';
+      this.errors = [];
       var username = this.username;
       var email = this.email;
       var password = this.password;
@@ -2144,31 +2122,25 @@ __webpack_require__.r(__webpack_exports__);
         password: password,
         confirmPassword: confirmPassword
       }).then(function (response) {
-        _this.isSubmitting = true;
-        _this.errors = response.data;
-        console.log(response.data);
-        /*localStorage.setItem('eatly.user', JSON.stringify(response.data.user))
-        localStorage.setItem('eatly.jwt', response.data.token)
-          if (localStorage.getItem('eatly.jwt') != null) {
-            this.$emit('Account created!')
-            let nextUrl = this.$route.params.nextUrl
-            this.$router.push((nextUrl != null ? nextUrl: "/home"))
-              this.$store.commit('SET_MESSAGE', response.data.message)*/
+        localStorage.setItem('eatly.user', JSON.stringify(response.data.status.user));
+        localStorage.setItem('eatly.jwt', response.data.status.token);
 
-        _this.message = response.data.message;
-        setTimeout(function () {
-          //this.$store.state.message = null;
-          _this.message = null;
-        }, 3000); //}
-        //else{
+        if (localStorage.getItem('eatly.jwt') != null) {
+          _this.$emit('Account created!');
 
-        /*this.errors.username = response.errors.username 
-        this.errors.email = response.errors.email  
-        this.errors.password = response.errors.password  
-        this.errors.confirmPassword = response.errors.confirmPassword  */
-        // this.isSubmitting = false;
-        //this.errors = response.data.errors
-        //} 
+          var nextUrl = _this.$route.params.nextUrl;
+
+          _this.$router.push(nextUrl != null ? nextUrl : "/home");
+
+          _this.$store.commit('SET_MESSAGE', response.data.message);
+
+          setTimeout(function () {
+            _this.$store.state.message = null;
+          }, 50000);
+        }
+      })["catch"](function (err) {
+        _this.errors = err.response.data.errors;
+        _this.signup = 'Create account';
       });
     }
   }
@@ -2186,12 +2158,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -2245,25 +2211,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user_type: null,
-      isLoggedIn: localStorage.getItem('eatly.jwt') != null,
-      username: null,
-      id: null,
-      hasShop: null,
-      shop_name: null,
-      image: null,
       search: ''
     };
   },
   methods: {
-    loadCart: function loadCart() {
-      var _this = this;
-
-      var user_id = this.id;
-      axios.get("http://127.0.0.1:8000/api/cart?id=".concat(user_id)).then(function (response) {
-        return _this.cart = response.data.data.cart.meals;
-      })["catch"](console.error);
-    },
     openSearch: function openSearch() {
       var id = this.$store.state.id;
       var search = this.search;
@@ -2275,21 +2226,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     openCart: function openCart() {
       document.getElementById("cart-content").style.display = "block";
-    },
-    openMenu: function openMenu() {
-      document.getElementById("sidebar-content").style.display = "block";
     }
-  },
-  beforeMount: function beforeMount() {
-    this.$store.commit('SET_ID');
-    var id = this.$store.state.id;
-    this.$store.dispatch('setShop', id);
-    this.setDefaults();
-  },
-  mounted: function mounted() {
-    this.$store.dispatch('fetchUser', this.id);
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['cart']))
+  }
 });
 
 /***/ }),
@@ -2416,13 +2354,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'mobileLogin',
   data: function data() {
     return {
       email: '',
       password: '',
-      signin: 'Sign in'
+      signin: 'Sign in',
+      hasError: false,
+      error: ''
     };
   },
   methods: {
@@ -2432,8 +2373,10 @@ __webpack_require__.r(__webpack_exports__);
       e.preventDefault();
       document.getElementById("loginBtn").disabled = true;
       this.signin = 'Signing in...';
+      this.error = '';
+      this.hasErrors = false;
 
-      if (this.password.length > 0) {
+      if (this.email == '' || this.password.length > 0) {
         axios.post('api/v1/auth/login', {
           email: this.email,
           password: this.password
@@ -2457,9 +2400,12 @@ __webpack_require__.r(__webpack_exports__);
               }
             }
           }
-        })["catch"](function (error) {
-          console.log(error);
+        })["catch"](function (err) {
+          _this.error = err.response.data.error;
+          _this.signin = 'Sign in';
         });
+      } else {
+        this.error.error = 'email or password cannot be null';
       }
     }
   }
@@ -2516,6 +2462,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'mobileRegister',
   data: function data() {
@@ -2525,49 +2479,47 @@ __webpack_require__.r(__webpack_exports__);
       password: '',
       confirmPassword: '',
       signup: 'Create account',
-      vEmail: '',
-      vUsername: '',
-      vPassword: '',
-      vCPassword: ''
+      errors: [],
+      message: null
     };
   },
   methods: {
     handleSubmit: function handleSubmit(e) {
+      var _this = this;
+
       e.preventDefault();
-      if (this.email == '') this.vEmail = 'Email cannot be empty';else if (this.username == '') this.vUsername = 'Username cannot be empty';else if (this.password == '') this.vPassword = 'Password cannot be empty';else if (this.confirmPassword == '' || this.confirmPassword != this.password) this.vCPassword = 'Passwords do not match';else {
-        this.vEmail = this.vUsername = this.vPassword = this.vPassword = '';
-        this.signup = 'Creating account...';
-      }
-      /**document.getElementById("loginBtn").disabled = true;
-      
-          if (this.password.length > 0) {
-          axios.post('api/v1/auth/login', {
-              email: this.email, 
-              password: this.password
-              })
-          .then(response => {
-              let role = response.data.user.role
-                localStorage.setItem('eatly.user', JSON.stringify(response.data.user))
-              localStorage.setItem('eatly.jwt', response.data.token)
-                if (localStorage.getItem('eatly.jwt') != null) {
-                  this.$emit('loggedIn')
-                  if (this.$route.params.nextUrl != null) {
-                      this.$router.push(this.$route.params.nextUrl)
-                  } else {
-                      if (role == "user"){
-                          this.$router.push('/home')
-                      }else{
-                          if (role == "admin"){
-                              this.$router.push('/admin')
-                          }
-                      }
-                  }
-              }
-          })
-          .catch(error => {
-              console.log(error)
-              })
-      }**/
+      this.signup = 'Creating account...';
+      this.errors = [];
+      var username = this.username;
+      var email = this.email;
+      var password = this.password;
+      var confirmPassword = this.confirmPassword;
+      axios.post('api/v1/auth/register', {
+        username: username,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword
+      }).then(function (response) {
+        localStorage.setItem('eatly.user', JSON.stringify(response.data.status.user));
+        localStorage.setItem('eatly.jwt', response.data.status.token);
+
+        if (localStorage.getItem('eatly.jwt') != null) {
+          _this.$emit('Account created!');
+
+          var nextUrl = _this.$route.params.nextUrl;
+
+          _this.$router.push(nextUrl != null ? nextUrl : "/home");
+
+          _this.$store.commit('SET_MESSAGE', response.data.message);
+
+          setTimeout(function () {
+            _this.$store.state.message = null;
+          }, 50000);
+        }
+      })["catch"](function (err) {
+        _this.errors = err.response.data.errors;
+        _this.signup = 'Create account';
+      });
     }
   }
 });
@@ -2732,6 +2684,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'userNavbar',
@@ -2742,7 +2696,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       username: null,
       id: null,
       hasShop: null,
-      shop_name: null,
       image: null,
       search: ''
     };
@@ -5686,6 +5639,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -6100,6 +6060,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6196,16 +6159,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _assets_vendorNavbar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/vendorNavbar.vue */ "./resources/js/components/views/assets/vendorNavbar.vue");
-/* harmony import */ var _assets_userNavbar_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/userNavbar.vue */ "./resources/js/components/views/assets/userNavbar.vue");
-/* harmony import */ var _assets_guestNavbar_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../assets/guestNavbar.vue */ "./resources/js/components/views/assets/guestNavbar.vue");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+/* harmony import */ var _assets_vendorNavbar_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../assets/vendorNavbar.vue */ "./resources/js/components/views/assets/vendorNavbar.vue");
+/* harmony import */ var _assets_userNavbar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/userNavbar.vue */ "./resources/js/components/views/assets/userNavbar.vue");
+/* harmony import */ var _assets_guestNavbar_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/guestNavbar.vue */ "./resources/js/components/views/assets/guestNavbar.vue");
 //
 //
 //
@@ -6286,89 +6242,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
+//import {mapGetters} from 'vuex';
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    vendorNavbar: _assets_vendorNavbar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    userNavbar: _assets_userNavbar_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    guestNavbar: _assets_guestNavbar_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
-  },
-  data: function data() {
-    return {
-      user_type: null,
-      isLoggedIn: localStorage.getItem('eatly.jwt') != null,
-      username: null,
-      id: null,
-      hasShop: null,
-      shop_name: null,
-      image: null,
-      search: ''
-    };
-  },
-  methods: {
-    setDefaults: function setDefaults() {
-      if (this.isLoggedIn) {
-        var user = JSON.parse(localStorage.getItem('eatly.user'));
-        this.username = user.username;
-        this.user_type = user.role;
-        this.id = user.id;
-        this.hasShop = user.hasShop;
-        this.image = user.user_image;
-      }
-    },
-    change: function change() {
-      this.isLoggedIn = localStorage.getItem('eatly.jwt') != null;
-      this.setDefaults();
-    },
-    logout: function logout() {
-      localStorage.removeItem('eatly.jwt');
-      localStorage.removeItem('eatly.user');
-      this.change();
-      this.$router.push('/');
-    },
-    loadCart: function loadCart() {
-      var _this = this;
-
-      var user_id = this.id;
-      axios.get("http://127.0.0.1:8000/api/cart?id=".concat(user_id)).then(function (response) {
-        return _this.cart = response.data.data.cart.meals;
-      })["catch"](console.error);
-    },
-    openSearch: function openSearch() {
-      var id = this.$store.state.id;
-      var search = this.search;
-      this.$store.dispatch('storeSearch', {
-        id: id,
-        search: search
-      });
-      this.$store.commit('NEW_SEARCH', search);
-    },
-    openCart: function openCart() {
-      document.getElementById("cart-content").style.display = "block";
-    },
-    openMenu: function openMenu() {
-      document.getElementById("sidebar-content").style.display = "block";
-    }
-  },
-  beforeMount: function beforeMount() {
-    this.$store.commit('SET_ID');
-    var id = this.$store.state.id; //this.$store.dispatch('setShopName',id)
-
-    this.$store.dispatch('setShop', id);
-    this.setDefaults(); // axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${this.id}`)
-    // .then(response => this.shop_name = response.data.data.shop_name)
-  },
-  mounted: function mounted() {
-    //   this.$store.commit('SET_ID');
-    //  this.$store.dispatch('setShopName', this.$store.state.id)
-    // this.$store.commit('SET_ID', this.id);
-    // this.$store.dispatch('fetchCart', this.id)
-    this.$store.dispatch('fetchUser', this.id);
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['cart']))
+    vendorNavbar: _assets_vendorNavbar_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    userNavbar: _assets_userNavbar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    guestNavbar: _assets_guestNavbar_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  }
 });
 
 /***/ }),
@@ -13492,7 +13375,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.hero-title{\n    color: #A98402;\n    font-size: 3.5rem;\n    font-weight: 300;\n    line-height: 1.2;\n}\n.jumbotron{\n    background-color: white;\n}\n.hide{\n    display: none;\n}\n.get-started-btn{\n    background: rgba(253, 197, 0, 0.5);\n    border-radius: 4px;\n    color: #A98402;\n    width: 40%;\n    font-size: small;\n}\n.border-bottom-input{\n    border: none;\n    border-bottom: 1px solid black;\n    background-color: white;\n}\n.section-title{\n    font-weight: normal;\n}\n.hr-section{\n    display: flex;\n    overflow-x: auto;\n}\n.hr-section::-webkit-scrollbar{\n    display: none;\n}\n.section-title{\n    font-weight: normal;\n}\n.hr-section-inner{\n    overflow: auto;\n    white-space: nowrap;\n    width: 100%;\n}\n.hr-section-inner::-webkit-scrollbar{\n    display: none;\n}\n.hr-section{\n    display: flex;\n    flex-direction: row;\n}\n.category-title{\n    font-weight:600;\n    white-space: nowrap;\n    color: #a98402;\n}\n.category-card{\n    border-radius: 8px;\n    background-color:#fee280;\n}\n.category-card:hover{\n    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);\n}\n#scroll-btn-left{\n    left: 0;\n}\n#scroll-btn-right{\n    right: 0;\n}\n.positioner{\n    position: relative;\n}\n.positioner-btn-l{\n    position:absolute;\n    top: 30%;\n    z-index: 1;\n    left: 0;\n}\n.positioner-btn-r{\n    position:absolute;\n    top: 30%;\n    z-index: 1;\n    right: 0;\n}\n.home-image-section{\n    width: 160px;\n    height: 160px;\n    position: relative;\n}\n.home-image-overlay{\n    position: absolute;\n    width: 160px;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    height: 100%;\n    opacity: 0;\n    background-color: #000;\n    transition: .3s ease;\n}\n.home-image-section:hover .home-image-overlay{\n    opacity: 0.3;\n}\n.home-image-overlay-icon {\n    color: white;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    -ms-transform: translate(-50%, -50%);\n    text-align: center;\n}\n@media only screen and (min-width: 768px) {\n.hide{\n        display: block;\n}\n.search-bar{\n        display: none;\n}\n}\n\n", ""]);
+exports.push([module.i, "\n.hero-title{\n    color: #A98402;\n    font-size: 3.5rem;\n    font-weight: 300;\n    line-height: 1.2;\n}\n.jumbotron{\n    background-color: white;\n}\n.hide{\n    display: none;\n}\n.get-started-btn{\n    background: rgba(253, 197, 0, 0.5);\n    border-radius: 4px;\n    color: #A98402;\n    width: 40%;\n    font-size: small;\n}\n.border-bottom-input{\n    border: none;\n    border-bottom: 1px solid black;\n    background-color: white;\n}\n.section-title{\n    font-weight: normal;\n}\n.hr-section{\n    display: flex;\n    overflow-x: auto;\n}\n.hr-section::-webkit-scrollbar{\n    display: none;\n}\n.section-title{\n    font-weight: normal;\n}\n.hr-section-inner{\n    overflow: auto;\n    white-space: nowrap;\n    width: 100%;\n}\n.hr-section-inner::-webkit-scrollbar{\n    display: none;\n}\n.hr-section{\n    display: flex;\n    flex-direction: row;\n}\n.category-title{\n    font-weight:600;\n    white-space: nowrap;\n    color: #a98402;\n}\n.category-card{\n    border-radius: 8px;\n    border: 1px solid gray;\n}\na{\n    text-decoration: none;\n}\n.category-card:hover{\n    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);\n}\n#scroll-btn-left{\n    left: 0;\n}\n#scroll-btn-right{\n    right: 0;\n}\n.positioner{\n    position: relative;\n}\n.positioner-btn-l{\n    position:absolute;\n    top: 30%;\n    z-index: 1;\n    left: 0;\n}\n.positioner-btn-r{\n    position:absolute;\n    top: 30%;\n    z-index: 1;\n    right: 0;\n}\n.home-image-section{\n    width: 160px;\n    height: 160px;\n    position: relative;\n}\n.home-image-overlay{\n    position: absolute;\n    width: 160px;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    height: 100%;\n    opacity: 0;\n    background-color: #000;\n    transition: .3s ease;\n}\n.home-image-section:hover .home-image-overlay{\n    opacity: 0.3;\n}\n.home-image-overlay-icon {\n    color: white;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    -ms-transform: translate(-50%, -50%);\n    text-align: center;\n}\n@media only screen and (min-width: 768px) {\n.hide{\n        display: block;\n}\n.search-bar{\n        display: none;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -47333,6 +47216,10 @@ var render = function() {
         1
       ),
       _vm._v(" "),
+      _c("span", { staticClass: "small text-danger m-1" }, [
+        _vm._v(_vm._s(_vm.error))
+      ]),
+      _vm._v(" "),
       _c("div", { staticClass: "d-flex justify-content-center" }, [
         _c(
           "button",
@@ -47408,7 +47295,15 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "container bg-white rounded-3 py-3 px-4" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "d-flex align-items-center mb-4" }, [
+        _c("a", { staticClass: "btn ps-0", on: { click: _vm.goBack } }, [
+          _c("i", { staticClass: "bi bi-chevron-left" })
+        ]),
+        _vm._v(" "),
+        _c("a", { staticClass: "fs-5 text-decoration-none" }, [
+          _vm._v("Create Account")
+        ])
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -47634,22 +47529,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex align-items-center mb-4" }, [
-      _c("a", { staticClass: "btn ps-0" }, [
-        _c("i", { staticClass: "bi bi-chevron-left" })
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "fs-5 text-decoration-none" }, [
-        _vm._v("Create Account")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -47738,7 +47618,7 @@ var render = function() {
             },
             [
               _c("i", { staticClass: "bi bi-cart4" }),
-              _c("span", { staticClass: "badge" }, [
+              _c("span", { staticClass: "badge text-warning" }, [
                 _vm._v(_vm._s(_vm.$store.state.cartCount))
               ])
             ]
@@ -47747,7 +47627,7 @@ var render = function() {
           _c(
             "div",
             { staticClass: "cart-menu", attrs: { id: "cart-content" } },
-            [_c("cart", { attrs: { id: _vm.id } })],
+            [_c("cart")],
             1
           )
         ]),
@@ -48048,6 +47928,10 @@ var render = function() {
       1
     ),
     _vm._v(" "),
+    _c("span", { staticClass: "small text-danger m-1" }, [
+      _vm._v(_vm._s(_vm.error))
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "d-flex justify-content-center" }, [
       _c(
         "button",
@@ -48156,9 +48040,15 @@ var render = function() {
         _vm._v("Email")
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "small text-danger" }, [
-        _vm._v(_vm._s(_vm.vEmail))
-      ])
+      _c(
+        "ul",
+        _vm._l(_vm.errors.email, function(eEmail, index) {
+          return _c("li", { key: index, staticClass: "small text-danger" }, [
+            _vm._v(_vm._s(eEmail))
+          ])
+        }),
+        0
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-floating mb-3" }, [
@@ -48193,9 +48083,15 @@ var render = function() {
         _vm._v("Username")
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "small text-danger" }, [
-        _vm._v(_vm._s(_vm.vUsername))
-      ])
+      _c(
+        "ul",
+        _vm._l(_vm.errors.username, function(eUsername, index) {
+          return _c("li", { key: index, staticClass: "small text-danger" }, [
+            _vm._v(_vm._s(eUsername))
+          ])
+        }),
+        0
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-floating mb-3" }, [
@@ -48230,9 +48126,15 @@ var render = function() {
         _vm._v("Password")
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "small text-danger" }, [
-        _vm._v(_vm._s(_vm.vPassword))
-      ])
+      _c(
+        "ul",
+        _vm._l(_vm.errors.password, function(ePassword, index) {
+          return _c("li", { key: index, staticClass: "small text-danger" }, [
+            _vm._v(_vm._s(ePassword))
+          ])
+        }),
+        0
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-floating mb-4" }, [
@@ -48267,9 +48169,15 @@ var render = function() {
         _vm._v("Confrim Password")
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "small text-danger" }, [
-        _vm._v(_vm._s(_vm.vCPassword))
-      ])
+      _c(
+        "ul",
+        _vm._l(_vm.errors.confirmPassword, function(eCPassword, index) {
+          return _c("li", { key: index, staticClass: "small text-danger" }, [
+            _vm._v(_vm._s(eCPassword))
+          ])
+        }),
+        0
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "d-flex justify-content-center" }, [
@@ -48536,43 +48444,45 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "d-flex align-items-baseline" },
-        [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.search,
-                expression: "search"
-              }
-            ],
-            staticClass: "form-control mr-2",
-            attrs: { type: "search", placeholder: "Search", size: "40" },
-            domProps: { value: _vm.search },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+      _c("div", { staticClass: "desktop" }, [
+        _c(
+          "div",
+          { staticClass: "d-flex align-items-baseline" },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.search,
+                  expression: "search"
                 }
-                _vm.search = $event.target.value
+              ],
+              staticClass: "form-control mr-2",
+              attrs: { type: "search", placeholder: "Search", size: "40" },
+              domProps: { value: _vm.search },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.search = $event.target.value
+                }
               }
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              attrs: { to: { path: "/search/meal/?q=" + _vm.search } },
-              on: { click: _vm.openSearch }
-            },
-            [_c("i", { staticClass: "bi bi-search" })]
-          )
-        ],
-        1
-      ),
+            }),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                attrs: { to: { path: "/search/meal/?q=" + _vm.search } },
+                on: { click: _vm.openSearch }
+              },
+              [_c("i", { staticClass: "bi bi-search" })]
+            )
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "d-flex" }, [
         _c("div", { staticClass: "mr-2" }, [
@@ -54314,7 +54224,29 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _vm._m(0),
+    _vm.message != null
+      ? _c(
+          "div",
+          {
+            staticClass: "alert alert-success text-center mb-0",
+            attrs: { role: "alert" }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("p", [_vm._v(_vm._s(_vm.$store.state.message))]),
+            _vm._v(" "),
+            _c("router-link", { attrs: { to: "/edit/profile" } }, [
+              _vm._v(
+                "\n            Get started by updating your profile\n        "
+              )
+            ])
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm._m(1),
     _vm._v(" "),
     _c("div", {}, [
       _c("div", { staticClass: "mb-5" }, [
@@ -54970,6 +54902,23 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("x")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row my-3" }, [
       _c("div", { staticClass: "col-md-6 col-6" }, [
         _c("div", { staticClass: "home-card-1 p-3" }, [
@@ -55278,7 +55227,7 @@ var render = function() {
                 return _c("div", { key: index, staticClass: "col-md-2" }, [
                   _c(
                     "div",
-                    { staticClass: "category-card p-1 text-center" },
+                    { staticClass: "category-card p-1 text-center me-1" },
                     [
                       _c(
                         "router-link",
@@ -55316,7 +55265,7 @@ var render = function() {
         _vm._v(" "),
         _c("h5", { staticClass: "section-title" }, [_vm._v("Top meals")]),
         _vm._v(" "),
-        _c("div", { staticClass: "ml-3 hr-section mb-3 positioner" }, [
+        _c("div", { staticClass: "me-3 hr-section mb-3 positioner" }, [
           _c("div", { staticClass: "positioner-btn-l" }, [
             _c(
               "button",
@@ -83940,18 +83889,16 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
         is_user: true,
         name: 'uDashboard'
       }
-    },
-    /*{
-        path: '/search',
-        name: 'search', 
-        component: searchResult,
-        meta: {
-            requiresAuth: true,
-            is_user: true,
-            name: 'uDashboard',
-        },
-    },*/
-    {
+    }, {
+      path: '/search',
+      name: 'search',
+      component: _components_views_general_search_result_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+      meta: {
+        requiresAuth: true,
+        is_user: true,
+        name: 'uDashboard'
+      }
+    }, {
       path: '/search/meal/?q=:query',
       name: 'mealSearch',
       component: _components_views_general_search_result_vue__WEBPACK_IMPORTED_MODULE_5__["default"],

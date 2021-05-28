@@ -20,6 +20,7 @@
                 <i class="small fst-normal text-decoration-none">Forgotten password?</i>
             </router-link>
         </div>
+        <span class="small text-danger m-1">{{error}}</span>
         <div class="d-flex justify-content-center">
             <button class="text-white btn auth-btn" @click="handleSubmit" id="loginBtn">{{ signin }}</button>
         </div>
@@ -35,7 +36,9 @@ export default {
         return {
             email: '',
             password: '',
-            signin: 'Sign in'
+            signin: 'Sign in',
+            hasError: false,
+            error: '',
       }
     },
 
@@ -44,37 +47,43 @@ export default {
             e.preventDefault();
             document.getElementById("loginBtn").disabled = true;
             this.signin = 'Signing in...'
+            this.error = '';
+            this.hasErrors = false;
 
 
-            if (this.password.length > 0) {
+            if (this.email == '' || this.password.length > 0) {
                 axios.post('api/v1/auth/login', {
                     email: this.email, 
                     password: this.password
                     })
                 .then(response => {
-                    let role = response.data.user.role
+                        let role = response.data.user.role
 
-                    localStorage.setItem('eatly.user', JSON.stringify(response.data.user))
-                    localStorage.setItem('eatly.jwt', response.data.token)
+                        localStorage.setItem('eatly.user', JSON.stringify(response.data.user))
+                        localStorage.setItem('eatly.jwt', response.data.token)
 
-                    if (localStorage.getItem('eatly.jwt') != null) {
-                        this.$emit('loggedIn')
-                        if (this.$route.params.nextUrl != null) {
-                            this.$router.push(this.$route.params.nextUrl)
-                        } else {
-                            if (role == "user"){
-                                this.$router.push('/home')
-                            }else{
-                                if (role == "admin"){
-                                    this.$router.push('/admin')
+                        if (localStorage.getItem('eatly.jwt') != null) {
+                            this.$emit('loggedIn')
+                            if (this.$route.params.nextUrl != null) {
+                                this.$router.push(this.$route.params.nextUrl)
+                            } else {
+                                if (role == "user"){
+                                    this.$router.push('/home')
+                                }else{
+                                    if (role == "admin"){
+                                        this.$router.push('/admin')
+                                    }
                                 }
                             }
                         }
-                    }
                 })
-                .catch(error => {
-                    console.log(error)
-                    })
+                .catch(err => {
+                    this.error = err.response.data.error
+                    this.signin = 'Sign in'
+                })
+            }
+            else{
+                this.error.error = 'email or password cannot be null'
             }
         }
     },

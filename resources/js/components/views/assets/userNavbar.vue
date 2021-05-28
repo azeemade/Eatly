@@ -3,11 +3,13 @@
         <router-link to="/home" class="navbar-brand">
             <img :src="'/images/eatly_new.svg'" alt="" class="rounded logo" height="30" width="66">
         </router-link>
-        <div class="d-flex align-items-baseline">
-            <input type="search" placeholder="Search" size="40" class="form-control mr-2"  v-model="search">
-            <router-link :to="{ path: '/search/meal/?q='+search}" @click="openSearch">
-                <i class="bi bi-search"></i>
-            </router-link>
+        <div class="desktop">
+            <div class="d-flex align-items-baseline">
+                <input type="search" placeholder="Search" size="40" class="form-control mr-2"  v-model="search">
+                <router-link :to="{ path: '/search/meal/?q='+search}" @click="openSearch">
+                    <i class="bi bi-search"></i>
+                </router-link>
+            </div>
         </div>
         <div class="d-flex">
             <div class="mr-2">
@@ -45,7 +47,6 @@ export default {
             username: null,
             id: null,
             hasShop: null,
-            shop_name: null,
             image: null,
             search: '',
         }

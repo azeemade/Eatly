@@ -64,7 +64,7 @@ class UserController extends Controller
         ];
 
         $status = 401;
-        $response = ['error' => 'Unauthorized'];
+        $response = ['error' => 'Invalid email or password'];
 
         if (Auth::attempt($credentials)) {
             $status = 200;
@@ -73,6 +73,7 @@ class UserController extends Controller
             $response = [
                 'user' => $user,
                 'token' => $user->createToken('eatly')->accessToken,
+                
             ];
         }
 
@@ -92,26 +93,25 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             $valid = $validator->errors();
-            return response()->json($valid);
+            return response()->json(['errors' => $valid]);
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
 
-       /* $user = User::create($input);
-        $user->role = "consumer";
+        $user = User::create($input);
+        $user->role = "user";
         $user->hasShop = "No";
 
         $success = [
             'user' => $user,
             'token' => $user->createToken('eatly')->accessToken,
-        ];*/
+        ];
 
        // return response()->json($success);
         return response()->json([
-            //'status' => $status,
-            //'message' => '$status' ? 'Welcome to Eatly ' : 'Error creating account'
-            'message' => 'Success'
+            'status' => $success,
+            'message' => '$success' ? 'Welcome to Eatly ' : 'Error creating account'
         ]);
     }
 

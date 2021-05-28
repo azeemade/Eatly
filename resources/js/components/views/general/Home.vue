@@ -49,7 +49,7 @@
                     <h5 class="section-title">Categories</h5>
                     <div class="hr-section mx-3">
                         <div v-for="(category, index) in categories" :key="index" class="col-md-2">
-                            <div class="category-card p-1 text-center">
+                            <div class="category-card p-1 text-center me-1">
                                 <router-link :to="{ path: '/category/'+category.title}">
                                     <p class="category-title mb-0">{{category.title}}</p>
                                 </router-link> 
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <h5 class="section-title">Top meals</h5>
-                <div class="ml-3 hr-section mb-3 positioner">
+                <div class="me-3 hr-section mb-3 positioner">
                     <div class="positioner-btn-l">
                         <button id="scroll-btn-left" class="hide btn" @click="swipeLeft">
                             <i class="bi bi-caret-left-square-fill"></i>
@@ -159,7 +159,10 @@
     }
     .category-card{
         border-radius: 8px;
-        background-color:#fee280;
+        border: 1px solid gray;
+    }
+    a{
+        text-decoration: none;
     }
     .category-card:hover{
         box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);

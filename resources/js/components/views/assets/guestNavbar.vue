@@ -17,10 +17,10 @@
         <div class="d-flex">
             <div>
                 <button class="btn cart-btn" type="button" @click="openCart">
-                    <i class="bi bi-cart4"></i><span class="badge">{{ $store.state.cartCount }}</span>
+                    <i class="bi bi-cart4"></i><span class="badge text-warning">{{ $store.state.cartCount }}</span>
                 </button>
                 <div class="cart-menu" id="cart-content">  
-                    <cart :id="id"/>
+                    <cart />
                 </div>
             </div>
             <div class="dropdown">
@@ -52,23 +52,10 @@ import {mapGetters} from 'vuex';
 export default {
     data(){
         return{
-            user_type: null,
-            isLoggedIn: localStorage.getItem('eatly.jwt') != null,
-            username: null,
-            id: null,
-            hasShop: null,
-            shop_name: null,
-            image: null,
             search: '',
         }
     },
     methods:{
-        loadCart(){
-            let user_id = this.id
-            axios.get(`http://127.0.0.1:8000/api/cart?id=${user_id}`)
-            .then(response => this.cart = response.data.data.cart.meals)
-            .catch(console.error)
-        },
 
         openSearch(){
             let id = this.$store.state.id;
@@ -80,30 +67,7 @@ export default {
         openCart(){
             document.getElementById("cart-content").style.display = "block";
         },
-        openMenu(){
-            document.getElementById("sidebar-content").style.display = "block";
-        }
 
-    },
-
-    beforeMount(){     
-        this.$store.commit('SET_ID');
-
-        var id = this.$store.state.id
-        this.$store.dispatch('setShop',id)
-        
-
-        this.setDefaults();
-
-    },
-
-    mounted(){
-        this.$store.dispatch('fetchUser', this.id)
-    },
-    computed: {
-        ...mapGetters([
-            'cart'
-        ])
     }
 }
 </script>
