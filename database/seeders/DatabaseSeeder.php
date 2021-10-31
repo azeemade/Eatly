@@ -23,50 +23,54 @@ use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        Schema::disableForeignKeyConstraints();
-      //  User::truncate();
-       // Shop::truncate();
-        // Meal::truncate();
-        //Cart::truncate();
-        //Favourite::truncate();
-       // Meal_size::truncate();
-       // Image::truncate();
-        //  Order::truncate();
-         // Category::truncate();
-        // Category_meal::truncate();
-        // Search::truncate();
-         // Cart::truncate();
-        // Cart_meal::truncate();
-         //Favourite_meal::truncate();
-         //Favourite::truncate();
-         //Favourite_shop::truncate();
-        //Rating::truncate();
-        //  Comment::truncate();
-        Schema::enableForeignKeyConstraints();
+  /**
+   * Seed the application's database.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    //Schema::disableForeignKeyConstraints();
+    //  User::truncate();
+    // Shop::truncate();
+    // Meal::truncate();
+    //Cart::truncate();
+    //Favourite::truncate();
+    // Meal_size::truncate();
+    // Image::truncate();
+    //  Order::truncate();
+    // Category::truncate();
+    // Category_meal::truncate();
+    // Search::truncate();
+    // Cart::truncate();
+    // Cart_meal::truncate();
+    //Favourite_meal::truncate();
+    //Favourite::truncate();
+    //Favourite_shop::truncate();
+    //Rating::truncate();
+    //  Comment::truncate();
+    //Schema::enableForeignKeyConstraints();
 
-       // $this->call(UsersTableSeeder::class);
-       // \App\Models\User::factory(5)->create();
-       // \App\Models\Shop::factory(5)->create();
-       // $this->call(MealsTableSeeder::class);      
-        //$this->call(OrdersTableSeeder::class);
-       //$this->call(CartsTableSeeder::class);
-      // $this->call(FavouritesTableSeeder::class);
+    // $this->call(UsersTableSeeder::class);
+    // \App\Models\User::factory(5)->create();
+    // \App\Models\Shop::factory(5)->create();
+    // $this->call(MealsTableSeeder::class);      
+    //$this->call(OrdersTableSeeder::class);
+    //$this->call(CartsTableSeeder::class);
+    // $this->call(FavouritesTableSeeder::class);
     //  $this->call(MealSizeSeeder::class);
-      //$this->call(ImageTableSeeder::class);
-     //$this->call(OrdersTableSeeder::class);
+    //$this->call(ImageTableSeeder::class);
+    //$this->call(OrdersTableSeeder::class);
     //$this->call(CategoriesTableSeeder::class);
     //$this->call(SearchTableSeeder::class);
     //$this->call(CartsTableSeeder::class);
     //$this->call(FavouritesTableSeeder::class);
-       // $this->call(RatingsTableSeeder::class);
-      //  $this->call(ReviewsTableSeeder::class);
-       
-    }
+    // $this->call(RatingsTableSeeder::class);
+    //  $this->call(ReviewsTableSeeder::class);
+
+    $this->call([
+      UsersTableSeeder::class,
+      MealsTableSeeder::class
+    ]);
+  }
 }
