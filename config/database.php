@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION_SECOND', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +51,11 @@ return [
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
+            /*'host' => env('RDS_HOSTNAME', '127.0.0.1'),
+            'port' => env('RDS_PORT', '3306'),
+            'database' => env('RDS_DB_DATABASE', 'forge'),
+            'username' => env('RDS_USERNAME', 'forge'),
+            'password' => env('RDS_PASSWORD', ''),*/
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -66,11 +71,11 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST_SECOND', '127.0.0.1'),
+            'port' => env('DB_PORT_SECOND', '5432'),
+            'database' => env('DB_DATABASE_SECOND', 'eatly'),
+            'username' => env('DB_USERNAME_SECOND', 'postgres'),
+            'password' => env('DB_PASSWORD_SECOND', 'admin'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
@@ -123,7 +128,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
