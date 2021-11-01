@@ -17,15 +17,15 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
-            $table->string('displayName')->nullable();
+            $table->string('display_name')->nullable();
             $table->string('username')->unique();
             $table->string('user_image')->nullable();
-            $table->string('phoneNumber')->unique()->nullable();
+            $table->string('phone_number')->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('user');
-            $table->string('hasShop')->default('No');
+            $table->string('has_shop')->default('No');
             $table->timestamp('last_seen')->nullable();
             $table->rememberToken();
             $table->timestamps();
