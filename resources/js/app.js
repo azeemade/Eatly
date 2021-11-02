@@ -24,7 +24,7 @@ import store from './store/index'
 Vue.component('image-upload', require('./components/views/assets/image-upload.vue').default);
 
 Vue.component('navbar', require('./components/views/general/navbar.vue').default);
-Vue.component('home', require('./components/views/general/home.vue').default);
+Vue.component('home', require('./components/views/general/Home.vue').default);
 Vue.component('vendorReg', require('./components/views/general/vendorReg.vue').default);
 Vue.component('login', require('./components/views/general/Login.vue').default);
 Vue.component('register', require('./components/views/general/Register.vue').default);
@@ -46,7 +46,7 @@ Vue.component('ordersOpen', require('./components/views/buyer/ordersOpen.vue').d
 Vue.component('ordersClosed', require('./components/views/buyer/ordersClosed.vue').default);
 Vue.component('message', require('./components/views/buyer/message.vue').default);
 Vue.component('notification', require('./components/views/buyer/notification.vue').default);
-Vue.component('favourites', require('./components/views/buyer/favourites.vue').default);
+Vue.component('favourites', require('./components/views/buyer/Favourites.vue').default);
 Vue.component('checkout', require('./components/views/buyer/checkout.vue').default);
 Vue.component('comment', require('./components/views/buyer/comment.vue').default);
 Vue.component('shopFav', require('./components/views/buyer/shopFav.vue').default);

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router'
 
-import Home from "./components/views/general/home.vue"
+import Home from "./components/views/general/Home.vue"
 import vendorReg from "./components/views/general/vendorReg.vue"
 import login from "./components/views/general/Login.vue"
 import register from "./components/views/general/Register.vue"
@@ -13,7 +13,7 @@ import Shops from "./components/views/buyer/shops.vue"
 import Shop from "./components/views/buyer/shop.vue"
 import cart from "./components/views/buyer/cart.vue"
 import message from "./components/views/buyer/message.vue"
-import Favourites from "./components/views/buyer/favourites.vue"
+import Favourites from "./components/views/buyer/Favourites.vue"
 import mealFav from "./components/views/buyer/mealFav.vue"
 import shopFav from "./components/views/buyer/shopFav.vue"
 import openOrders from "./components/views/buyer/ordersOpen.vue"

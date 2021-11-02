@@ -2725,7 +2725,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       var user_id = this.id;
-      axios.get("http://127.0.0.1:8000/api/cart?id=".concat(user_id)).then(function (response) {
+      axios.get("/api/cart?id=".concat(user_id)).then(function (response) {
         return _this.cart = response.data.data.cart.meals;
       })["catch"](console.error);
     },
@@ -2833,7 +2833,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       var user_id = this.id;
-      axios.get("http://127.0.0.1:8000/api/cart?id=".concat(user_id)).then(function (response) {
+      axios.get("/api/cart?id=".concat(user_id)).then(function (response) {
         return _this.cart = response.data.data.cart.meals;
       })["catch"](console.error);
     },
@@ -3078,7 +3078,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this = this;
 
     this.setDefaults();
-    axios.get("http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
+    axios.get("/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
       return _this.shop_name = response.data.data.shop_name;
     });
   }
@@ -3157,12 +3157,12 @@ __webpack_require__.r(__webpack_exports__);
           _this.message = null;
         }, 3000);
       } else {
-        axios.post("http://127.0.0.1:8000/api/v1/rating/store", {
+        axios.post("/api/v1/rating/store", {
           user_id: this.$store.state.id,
           meal_id: this.order.meal_id,
           points: this.rating,
           order_id: this.order.id
-        }).then(axios.post("http://127.0.0.1:8000/api/v1/comment/store", {
+        }).then(axios.post("/api/v1/comment/store", {
           user_id: this.$store.state.id,
           meal_id: this.order.meal_id,
           review: this.review,
@@ -3382,12 +3382,12 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     var _this = this;
 
-    var url = "http://127.0.0.1:8000/api/v1/category/".concat(this.$route.params.title, "/show");
+    var url = "/api/v1/category/".concat(this.$route.params.title, "/show");
     axios.get(url).then(function (response) {
       return _this.meals = response.data.data;
     });
   },
-  mounted: function mounted() {//let url_ =  `http://127.0.0.1:8000/api/mealDetails/${this.$route.params.id}`
+  mounted: function mounted() {//let url_ =  `/api/mealDetails/${this.$route.params.id}`
     // axios.get(url_).then(response => this.meals = response.data)
     // .catch(error => {console.log(error)
     // this.errored = true})
@@ -3578,7 +3578,7 @@ __webpack_require__.r(__webpack_exports__);
 
         (function () {
           _this.hasError = true;
-          axios.post("http://127.0.0.1:8000/api/v1/user/create?user_id=".concat(_this.$store.state.id), {
+          axios.post("/api/v1/user/create?user_id=".concat(_this.$store.state.id), {
             firstname: _this.user.firstname,
             lastname: _this.user.lastname,
             phoneNumber: _this.user.phoneNumber
@@ -3587,7 +3587,7 @@ __webpack_require__.r(__webpack_exports__);
 
           for (meal in cart_) {
             var user_id = _this.$store.state.id;
-            axios.post("http://127.0.0.1:8000/api/v1/order/checkout/", {
+            axios.post("/api/v1/order/checkout/", {
               user_id: user_id,
               meal_id: cart_[meal].id,
               shop_id: cart_[meal].shop_id,
@@ -3651,7 +3651,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    axios.get("http://127.0.0.1:8000/api/v1/user/show?user_id=".concat(this.$store.state.id)).then(function (response) {
+    axios.get("/api/v1/user/show?user_id=".concat(this.$store.state.id)).then(function (response) {
       return _this2.user = response.data.data;
     });
   }
@@ -3710,7 +3710,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchComments: function fetchComments(page_url) {
       var _this = this;
 
-      page_url = page_url || "http://127.0.0.1:8000/api/v1/comment/?meal_slug=".concat(this.$store.state.meal_slug);
+      page_url = page_url || "/api/v1/comment/?meal_slug=".concat(this.$store.state.meal_slug);
       axios.get(page_url).then(function (response) {
         _this.comments = response.data.data.data;
 
@@ -4072,7 +4072,7 @@ __webpack_require__.r(__webpack_exports__);
       var id = this.id;
 
       if (this.isLoggedIn == true) {
-        axios.post("http://127.0.0.1:8000/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
+        axios.post("/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
           _this2.message = response.data.message;
           setTimeout(function () {
             _this2.message = null;
@@ -4090,7 +4090,7 @@ __webpack_require__.r(__webpack_exports__);
     loadPrice: function loadPrice() {
       var _this3 = this;
 
-      axios.get("http://127.0.0.1:8000/api/v1/meal/listing/".concat(this.$route.params.meal_slug, "?meal_size=").concat(this.size)).then(function (response) {
+      axios.get("/api/v1/meal/listing/".concat(this.$route.params.meal_slug, "?meal_size=").concat(this.size)).then(function (response) {
         _this3.meal.meal_price = response.data.selected_size.meal_price;
       })["catch"](function (error) {
         console.log(error);
@@ -4104,13 +4104,13 @@ __webpack_require__.r(__webpack_exports__);
     var _this4 = this;
 
     this.setDefaults();
-    axios.get("http://127.0.0.1:8000/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
+    axios.get("/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
       return _this4.meal = response.data.data;
     });
-    axios.get("http://127.0.0.1:8000/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
+    axios.get("/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
       return _this4.images = response.data.images;
     });
-    axios.get("http://127.0.0.1:8000/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
+    axios.get("/api/v1/meal/listing/".concat(this.$route.params.meal_slug)).then(function (response) {
       return _this4.meal_sizes = response.data.meal_sizes;
     });
     var meal_slug = this.$route.params.meal_slug;
@@ -4119,7 +4119,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this5 = this;
 
-    var url_ = "http://127.0.0.1:8000/api/v1/meal/related-meals/?meal_slug=".concat(this.$route.params.meal_slug);
+    var url_ = "/api/v1/meal/related-meals/?meal_slug=".concat(this.$route.params.meal_slug);
     axios.get(url_).then(function (response) {
       return _this5.meals = response.data.data;
     });
@@ -4201,7 +4201,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     removeMeal: function removeMeal(meal) {
       var _this = this;
 
-      axios["delete"]("http://127.0.0.1:8000/api/v1/favourite/delete/meal?user_id=".concat(this.$store.state.id, "&meal_id=").concat(meal.id)).then(function (response) {
+      axios["delete"]("/api/v1/favourite/delete/meal?user_id=".concat(this.$store.state.id, "&meal_id=").concat(meal.id)).then(function (response) {
         _this.message = response.data.message;
         setTimeout(function () {
           _this.message = null;
@@ -4354,7 +4354,7 @@ __webpack_require__.r(__webpack_exports__);
         this.hasMeal = false;
       } else {
         this.hasMeal = true;
-        axios.post('http://127.0.0.1:8000/api/bookmark/meal/' + meal_id, {
+        axios.post('/api/bookmark/meal/' + meal_id, {
           meal_id: meal_id,
           id: id
         }).then(function (response) {
@@ -4612,7 +4612,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.$store.commit('SET_MESSAGE', null);
         }, 3000);
       } else {
-        var url = "http://127.0.0.1:8000/api/v1/order/user/clear?user_id=".concat(this.$store.state.id);
+        var url = "/api/v1/order/user/clear?user_id=".concat(this.$store.state.id);
         axios["delete"](url).then(function (response) {
           _this.$store.dispatch('fetchClosedOrders', _this.$store.state.id);
 
@@ -4707,7 +4707,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     clear: function clear(order) {
       var _this = this;
 
-      var url = "http://127.0.0.1:8000/api/v1/order/user/cancel-order?order_id=".concat(order.id);
+      var url = "/api/v1/order/user/cancel-order?order_id=".concat(order.id);
       axios["delete"](url).then(function (response) {
         return _this.message = response.data.message;
       }).then(function (response) {
@@ -4811,7 +4811,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         formData.append("username", this.user.username);
         formData.append("phoneNumber", this.user.phoneNumber);
         console.log(this.master_image);
-        axios.post("http://127.0.0.1:8000/api/v1/user/update?id=".concat(this.$store.state.id), formData, {
+        axios.post("/api/v1/user/update?id=".concat(this.$store.state.id), formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -4834,7 +4834,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   beforeMount: function beforeMount() {
     var _this2 = this;
 
-    axios.get("http://127.0.0.1:8000/api/v1/user/show?user_id=8").then(function (response) {
+    axios.get("/api/v1/user/show?user_id=8").then(function (response) {
       return _this2.user = response.data.data;
     });
   },
@@ -4949,7 +4949,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this = this;
 
     this.$store.dispatch('fetchRecent', this.$store.state.id);
-    axios.get("http://127.0.0.1:8000/api/v1/search/popular").then(function (response) {
+    axios.get("/api/v1/search/popular").then(function (response) {
       return _this.searchPop = response.data.data;
     });
   },
@@ -5121,11 +5121,11 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     var _this = this;
 
-    var url = "http://127.0.0.1:8000/api/v1/shop/vendor/?user_id=".concat(this.$store.state.id);
+    var url = "/api/v1/shop/vendor/?user_id=".concat(this.$store.state.id);
     axios.get(url).then(function (response) {
       return _this.shop = response.data.data;
     });
-    var url1 = "http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=".concat(this.$route.params.shop_name);
+    var url1 = "/api/v1/rating/shop/?shop_name=".concat(this.$route.params.shop_name);
     axios.get(url1).then(function (response) {
       return _this.ratings = response.data.data;
     });
@@ -5133,11 +5133,11 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    var urlv = "http://127.0.0.1:8000/api/v1/meal/vendor/active?shop_name=".concat(this.$route.params.shop_name);
+    var urlv = "/api/v1/meal/vendor/active?shop_name=".concat(this.$route.params.shop_name);
     axios.get(urlv).then(function (response) {
       return _this2.meals = response.data.data;
     });
-    var url_1 = "http://127.0.0.1:8000/api/v1/order/featured-meals?shop_name=".concat(this.$route.params.shop_name);
+    var url_1 = "/api/v1/order/featured-meals?shop_name=".concat(this.$route.params.shop_name);
     axios.get(url_1).then(function (response) {
       return _this2.fMeals = response.data.data;
     });
@@ -5158,7 +5158,7 @@ __webpack_require__.r(__webpack_exports__);
       var id = this.$store.state.id;
 
       if (this.isLoggedIn == true) {
-        axios.post("http://127.0.0.1:8000/api/v1/favourite/shop?user_id=".concat(id, "&shop_id=").concat(shop_id)).then(function (response) {
+        axios.post("/api/v1/favourite/shop?user_id=".concat(id, "&shop_id=").concat(shop_id)).then(function (response) {
           _this3.message = response.data.message;
           setTimeout(function () {
             _this3.message = null;
@@ -5266,7 +5266,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     removeShop: function removeShop(shop) {
       var _this = this;
 
-      axios["delete"]("http://127.0.0.1:8000/api/v1/favourite/delete/shop?user_id=".concat(this.$store.state.id, "&shop_id=").concat(shop.id)).then(function (response) {
+      axios["delete"]("/api/v1/favourite/delete/shop?user_id=".concat(this.$store.state.id, "&shop_id=").concat(shop.id)).then(function (response) {
         _this.message = response.data.message;
         setTimeout(function () {
           _this.message = null;
@@ -5420,7 +5420,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.setDefaults();
-    axios.get("http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
+    axios.get("/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
       return _this.shop_name = response.data.data.shop_name;
     });
   },
@@ -5702,7 +5702,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var meal_id = meal.id;
       var id = this.$store.state.id;
-      axios.post("http://127.0.0.1:8000/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
+      axios.post("/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
         _this.message = response.data.message;
         setTimeout(function () {
           _this.message = null;
@@ -5721,10 +5721,10 @@ __webpack_require__.r(__webpack_exports__);
     //  .catch(error => {console.log(error)
     // this.errored = true})
     // .finally(() => this.loading = false)
-    axios.get('http://127.0.0.1:8000/api/v1/category/top-category').then(function (response) {
+    axios.get('/api/v1/category/top-category').then(function (response) {
       return _this2.categories = response.data.data;
     });
-    axios.get('http://127.0.0.1:8000/api/v1/order/top-meals').then(function (response) {
+    axios.get('/api/v1/order/top-meals').then(function (response) {
       return _this2.meals = response.data.data;
     })["catch"](function (error) {
       console.log(error);
@@ -5732,10 +5732,10 @@ __webpack_require__.r(__webpack_exports__);
     })["finally"](function () {
       return _this2.loading = false;
     });
-    axios.get("http://127.0.0.1:8000/api/v1/meal/recommended/fav/meal?user_id=".concat(this.$store.state.id)).then(function (response) {
+    axios.get("/api/v1/meal/recommended/fav/meal?user_id=".concat(this.$store.state.id)).then(function (response) {
       return _this2.favMeals = response.data.data;
     });
-    axios.get("http://127.0.0.1:8000/api/v1/meal/recommended/fav/vendor/meal?user_id=".concat(this.$store.state.id)).then(function (response) {
+    axios.get("/api/v1/meal/recommended/fav/vendor/meal?user_id=".concat(this.$store.state.id)).then(function (response) {
       return _this2.favShopMeals = response.data.data;
     }); //this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)
   }
@@ -6076,10 +6076,10 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     var _this = this;
 
-    axios.get('http://127.0.0.1:8000/api/v1/category/top-category').then(function (response) {
+    axios.get('/api/v1/category/top-category').then(function (response) {
       return _this.categories = response.data.data;
     });
-    axios.get('http://127.0.0.1:8000/api/v1/order/top-meals').then(function (response) {
+    axios.get('/api/v1/order/top-meals').then(function (response) {
       return _this.meals = response.data.data;
     });
   },
@@ -6118,7 +6118,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.shop_name == '') {
         alert('Please enter a name');
       } else {
-        axios.get("http://127.0.0.1:8000/api/v1/shop/exist?shop_name=".concat(this.shop_name)).then(function (response) {
+        axios.get("/api/v1/shop/exist?shop_name=".concat(this.shop_name)).then(function (response) {
           return _this2.message = response.data.message;
         });
       }
@@ -6130,7 +6130,7 @@ __webpack_require__.r(__webpack_exports__);
       var id = this.$store.state.id;
 
       if (this.isLoggedIn == true) {
-        axios.post("http://127.0.0.1:8000/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
+        axios.post("/api/v1/favourite/meal?user_id=".concat(id, "&meal_id=").concat(meal_id)).then(function (response) {
           _this3.message = response.data.message;
           setTimeout(function () {
             _this3.message = null;
@@ -6486,19 +6486,19 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    var urlm = "http://127.0.0.1:8000/api/v1/meal/meals";
+    var urlm = "/api/v1/meal/meals";
     axios.get(urlm).then(function (response) {
       return _this.meals = response.data.data;
     });
-    var urls = "http://127.0.0.1:8000/api/v1/shop/shops";
+    var urls = "/api/v1/shop/shops";
     axios.get(urls).then(function (response) {
       return _this.shops = response.data.data;
     });
-    var urlc = "http://127.0.0.1:8000/api/v1/category/";
+    var urlc = "/api/v1/category/";
     axios.get(urlc).then(function (response) {
       return _this.categories = response.data.data;
     });
-    var urlu = "http://127.0.0.1:8000/api/v1/user/";
+    var urlu = "/api/v1/user/";
     axios.get(urlu).then(function (response) {
       return _this.users = response.data.data;
     });
@@ -6778,7 +6778,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         $.each(this.selectedcategories, function (key, title) {
           formData.append("selectedcategories[".concat(key, "]"), title);
         });
-        axios.post("http://127.0.0.1:8000/api/v1/meal/meal-details/", formData, {
+        axios.post("/api/v1/meal/meal-details/", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -6802,7 +6802,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this2 = this;
 
     this.setDefaults();
-    axios.get("http://127.0.0.1:8000/api/v1/category/").then(function (response) {
+    axios.get("/api/v1/category/").then(function (response) {
       return _this2.categories = response.data.data;
     });
   }
@@ -6974,9 +6974,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   beforeMount: function beforeMount() {
     var _this = this;
 
-    //    axios.get(`http://127.0.0.1:8000/api/v1/meal/edit/?meal_slug=${this.$store.state.meal_slug}`)
+    //    axios.get(`/api/v1/meal/edit/?meal_slug=${this.$store.state.meal_slug}`)
     //    .then(response => this.meal = response.data.data)
-    axios.get("http://127.0.0.1:8000/api/v1/category/").then(function (response) {
+    axios.get("/api/v1/category/").then(function (response) {
       return _this.categories = response.data.data;
     });
   },
@@ -7265,7 +7265,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.hasError = false;
       } else {
         this.hasError = true;
-        axios.put("http://127.0.0.1:8000/api/meals/".concat(meal.id), {
+        axios.put("/api/meals/".concat(meal.id), {
           name: name,
           price: price,
           image: image
@@ -7278,7 +7278,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       if (confirm('Are you sure?')) {
-        axios["delete"]('http://127.0.0.1:8000/api/meals/' + meal.id).then(function (response) {
+        axios["delete"]('/api/meals/' + meal.id).then(function (response) {
           return _this2.$store.commit('REMOVE_VENDOR_MEAL', meal);
         });
       }
@@ -7514,7 +7514,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     remove: function remove(meal) {
       var _this = this;
 
-      axios["delete"]("http://127.0.0.1:8000/api/v1/meal/delete?meal_id=".concat(meal.id)).then(function (response) {
+      axios["delete"]("/api/v1/meal/delete?meal_id=".concat(meal.id)).then(function (response) {
         _this.message = response.data.message, _this.$store.commit('REMOVE_MEAL', meal);
       });
     },
@@ -7529,16 +7529,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     var _this2 = this;
 
-    axios.get("http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=".concat(this.$store.state.id)).then(function (response) {
-      _this2.shop_name = response.data.data.shop_name, //axios.get(`http://127.0.0.1:8000/api/v1/meal/vendor?shop_name=${this.shop_name}`)
+    axios.get("/api/v1/shop/shop-name?user_id=".concat(this.$store.state.id)).then(function (response) {
+      _this2.shop_name = response.data.data.shop_name, //axios.get(`/api/v1/meal/vendor?shop_name=${this.shop_name}`)
       //.then(response =>this.meals = response.data.data)
-      _this2.$store.dispatch('fetchVendorMeals', _this2.shop_name), axios.get("http://127.0.0.1:8000/api/v1/meal/active/?shop_name=".concat(_this2.shop_name)).then(function (response) {
+      _this2.$store.dispatch('fetchVendorMeals', _this2.shop_name), axios.get("/api/v1/meal/active/?shop_name=".concat(_this2.shop_name)).then(function (response) {
         return _this2.active = response.data.data;
       });
-      axios.get("http://127.0.0.1:8000/api/v1/meal/awaiting/?shop_name=".concat(_this2.shop_name)).then(function (response) {
+      axios.get("/api/v1/meal/awaiting/?shop_name=".concat(_this2.shop_name)).then(function (response) {
         return _this2.awaiting = response.data.data;
       });
-      axios.get("http://127.0.0.1:8000/api/v1/meal/cancelled/?shop_name=".concat(_this2.shop_name)).then(function (response) {
+      axios.get("/api/v1/meal/cancelled/?shop_name=".concat(_this2.shop_name)).then(function (response) {
         return _this2.cancelled = response.data.data;
       });
     });
@@ -7630,7 +7630,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     deliver: function deliver(order) {
       var _this = this;
 
-      var url = "http://127.0.0.1:8000/api/v1/order/start-delivery?order_id=".concat(order.id);
+      var url = "/api/v1/order/start-delivery?order_id=".concat(order.id);
       axios.put(url).then(function (response) {
         return _this.message = response.data.message;
       }).then(this.$store.dispatch('fetchUndelivered', this.$store.state.id));
@@ -7807,7 +7807,7 @@ __webpack_require__.r(__webpack_exports__);
         formData.append("user_id", this.$store.state.id);
         formData.append("open_time", this.shop.opening_time);
         formData.append("close_time", this.shop.close_time);
-        axios.post("http://127.0.0.1:8000/api/v1/shop/store/", formData, {
+        axios.post("/api/v1/shop/store/", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -7826,7 +7826,7 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     var _this2 = this;
 
-    axios.get("http://127.0.0.1:8000/api/v1/shop/vendor?user_id=8").then(function (response) {
+    axios.get("/api/v1/shop/vendor?user_id=8").then(function (response) {
       return _this2.shop = response.data.data;
     });
   }
@@ -8190,7 +8190,7 @@ __webpack_require__.r(__webpack_exports__);
     loadShopData: function loadShopData() {
       var _this = this;
 
-      var url__ = "http://127.0.0.1:8000/api/v1/shop/shop-props?user_id=".concat(this.$store.state.id, "&month=").concat(this.month);
+      var url__ = "/api/v1/shop/shop-props?user_id=".concat(this.$store.state.id, "&month=").concat(this.month);
       axios.get(url__).then(function (response) {
         return _this.shopData = response.data.data;
       });
@@ -8202,18 +8202,18 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    var url__1 = "http://127.0.0.1:8000/api/v1/shop/shop-props?user_id=".concat(this.$store.state.id, "&month=").concat(this.month);
+    var url__1 = "/api/v1/shop/shop-props?user_id=".concat(this.$store.state.id, "&month=").concat(this.month);
     axios.get(url__1).then(function (response) {
       _this2.shopData = response.data.data, _this2.month = response.data.data.month;
     });
-    var url = "http://127.0.0.1:8000/api/v1/shop/vendor?user_id=".concat(this.$store.state.id);
+    var url = "/api/v1/shop/vendor?user_id=".concat(this.$store.state.id);
     axios.get(url).then(function (response) {
       _this2.shop = response.data.data;
-      var url_ = "http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=".concat(_this2.shop.shop_name);
+      var url_ = "/api/v1/rating/shop/?shop_name=".concat(_this2.shop.shop_name);
       axios.get(url_).then(function (response) {
         return _this2.ratings = response.data.data;
       });
-      var url1 = "http://127.0.0.1:8000/api/v1/shop/best-seller?shop_name=".concat(_this2.shop.shop_name);
+      var url1 = "/api/v1/shop/best-seller?shop_name=".concat(_this2.shop.shop_name);
       axios.get(url1).then(function (response) {
         return _this2.bestSellers = response.data.data;
       });
@@ -8308,7 +8308,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.setDefaults();
-    axios.get("http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
+    axios.get("/api/v1/shop/shop-name?user_id=".concat(this.id)).then(function (response) {
       return _this.shop_name = response.data.data.shop_name;
     }); // .then(this.$store.commit('SET_SHOP_NAME', ))
   }
@@ -84312,7 +84312,7 @@ var actions = {
   setShopName: function setShopName(_ref, id) {
     var commit = _ref.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=".concat(user_id)).then(function (res) {
+    axios.get("/api/v1/shop/shop-name?user_id=".concat(user_id)).then(function (res) {
       commit('SET_SHOP_NAME', res.data.data.shop_name);
     })["catch"](function (err) {
       console.log(err);
@@ -84320,7 +84320,7 @@ var actions = {
   },
   setShop: function setShop(_ref2, id) {
     var commit = _ref2.commit;
-    var url = "http://127.0.0.1:8000/api/v1/shop/vendor?user_id=".concat(id);
+    var url = "/api/v1/shop/vendor?user_id=".concat(id);
     axios.get(url).then(function (res) {
       commit('SET_SHOP', res.data.data);
     })["catch"](function (err) {
@@ -84329,7 +84329,7 @@ var actions = {
   },
   ////fetchCart({commit}, id) {
   //    let user_id = id
-  //    axios.get(`http://127.0.0.1:8000/api/v1/cart/?user_id=${user_id}`)
+  //    axios.get(`/api/v1/cart/?user_id=${user_id}`)
   //        .then(res => {
   //            commit('FETCH_CART', res.data.data)
   //        }).catch(err => {
@@ -84339,7 +84339,7 @@ var actions = {
   fetchFavMeal: function fetchFavMeal(_ref3, id) {
     var commit = _ref3.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/favourite/meals?user_id=".concat(user_id)) //axios.get(`http://127.0.0.1:8000/api/v1/favourite/meals`)
+    axios.get("/api/v1/favourite/meals?user_id=".concat(user_id)) //axios.get(`/api/v1/favourite/meals`)
     .then(function (res) {
       commit('FETCH_FAV_MEAL', res.data.data);
     })["catch"](function (err) {
@@ -84349,7 +84349,7 @@ var actions = {
   fetchFavShop: function fetchFavShop(_ref4, id) {
     var commit = _ref4.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/favourite/shops?user_id=".concat(user_id)).then(function (res) {
+    axios.get("/api/v1/favourite/shops?user_id=".concat(user_id)).then(function (res) {
       commit('FETCH_FAV_SHOP', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84358,7 +84358,7 @@ var actions = {
   fetchOpenOrders: function fetchOpenOrders(_ref5, id) {
     var commit = _ref5.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/order/user/open?user_id=".concat(user_id)).then(function (res) {
+    axios.get("/api/v1/order/user/open?user_id=".concat(user_id)).then(function (res) {
       commit('FETCH_OPEN_ORDERS', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84367,7 +84367,7 @@ var actions = {
   fetchClosedOrders: function fetchClosedOrders(_ref6, id) {
     var commit = _ref6.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/order/user/closed?user_id=".concat(user_id)).then(function (res) {
+    axios.get("/api/v1/order/user/closed?user_id=".concat(user_id)).then(function (res) {
       commit('FETCH_CLOSED_ORDERS', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84375,7 +84375,7 @@ var actions = {
   },
   fetchUndelivered: function fetchUndelivered(_ref7, id) {
     var commit = _ref7.commit;
-    axios.get("http://127.0.0.1:8000/api/v1/order/open/?user_id=".concat(id)).then(function (res) {
+    axios.get("/api/v1/order/open/?user_id=".concat(id)).then(function (res) {
       commit('FETCH_UNDELIVERED', res.data.data.order);
     })["catch"](function (err) {
       console.log(err);
@@ -84383,7 +84383,7 @@ var actions = {
   },
   fetchDelivered: function fetchDelivered(_ref8, id) {
     var commit = _ref8.commit;
-    axios.get("http://127.0.0.1:8000/api/v1/order/closed/?user_id=".concat(id)).then(function (res) {
+    axios.get("/api/v1/order/closed/?user_id=".concat(id)).then(function (res) {
       commit('FETCH_DELIVERED', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84392,7 +84392,7 @@ var actions = {
   fetchComments: function fetchComments(_ref9, meal_slug) {
     var commit = _ref9.commit;
     //let meal_id = meal.id
-    axios.get("http://127.0.0.1:8000/api/v1/comment/?meal_slug=".concat(meal_slug)).then(function (res) {
+    axios.get("/api/v1/comment/?meal_slug=".concat(meal_slug)).then(function (res) {
       commit('FETCH_COMMENTS', res.data.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84400,7 +84400,7 @@ var actions = {
   },
   fetchVendorMeals: function fetchVendorMeals(_ref10, shop_name) {
     var commit = _ref10.commit;
-    axios.get("http://127.0.0.1:8000/api/v1/meal/vendor?shop_name=".concat(shop_name)).then(function (res) {
+    axios.get("/api/v1/meal/vendor?shop_name=".concat(shop_name)).then(function (res) {
       commit('FETCH_VENDOR_MEALS', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84409,7 +84409,7 @@ var actions = {
   fetchSale: function fetchSale(_ref11, meal) {
     var commit = _ref11.commit;
     var meal_id = meal.id;
-    axios.get("http://127.0.0.1:8000/api/meal/sales?id=".concat(meal_id)).then(function (res) {
+    axios.get("/api/meal/sales?id=".concat(meal_id)).then(function (res) {
       commit('FETCH_SALE', res.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84418,7 +84418,7 @@ var actions = {
   fetchVRating: function fetchVRating(_ref12, meal) {
     var commit = _ref12.commit;
     var meal_id = meal.id;
-    axios.get("http://127.0.0.1:8000/api/meal/rating?id=".concat(meal_id)) //axios.get(`http://127.0.0.1:8000/api/meal/sales?id=${meal_id}`)
+    axios.get("/api/meal/rating?id=".concat(meal_id)) //axios.get(`/api/meal/sales?id=${meal_id}`)
     .then(function (res) {
       commit('FETCH_VENDOR_RATING', res.data);
     })["catch"](function (err) {
@@ -84428,7 +84428,7 @@ var actions = {
   fetchRecent: function fetchRecent(_ref13, id) {
     var commit = _ref13.commit;
     var user_id = id;
-    axios.get("http://127.0.0.1:8000/api/v1/search/recent?user_id=".concat(user_id)).then(function (res) {
+    axios.get("/api/v1/search/recent?user_id=".concat(user_id)).then(function (res) {
       commit('FETCH_RECENT_SEARCH', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84440,7 +84440,7 @@ var actions = {
         search = _ref15.search;
     var user_id = id;
     var search_ = search;
-    axios.post("http://127.0.0.1:8000/api/v1/search/create?user_id=".concat(user_id, "&search_title=").concat(search_)).then(function (res) {
+    axios.post("/api/v1/search/create?user_id=".concat(user_id, "&search_title=").concat(search_)).then(function (res) {
       commit('STORE_SEARCH', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84449,7 +84449,7 @@ var actions = {
   clearRecent: function clearRecent(_ref16, id) {
     var commit = _ref16.commit;
     var user_id = id;
-    axios["delete"]("http://127.0.0.1:8000/api/v1/search/clear?user_id=".concat(user_id)).then(function (res) {
+    axios["delete"]("/api/v1/search/clear?user_id=".concat(user_id)).then(function (res) {
       commit('CLEAR_RECENT', res.data.data);
     })["catch"](function (err) {
       console.log(err);
@@ -84457,7 +84457,7 @@ var actions = {
   },
   fetchUser: function fetchUser(_ref17, id) {
     var commit = _ref17.commit;
-    var url = "http://127.0.0.1:8000/api/v1/user/show?user_id=".concat(id);
+    var url = "/api/v1/user/show?user_id=".concat(id);
     axios.get(url).then(function (res) {
       commit('FETCH_USER', res.data.data);
     })["catch"](function (err) {
@@ -84466,7 +84466,7 @@ var actions = {
   },
   editingMeal: function editingMeal(_ref18, meal_slug) {
     var commit = _ref18.commit;
-    var url = "http://127.0.0.1:8000/api/v1/meal/edit/?meal_slug=".concat(meal_slug);
+    var url = "/api/v1/meal/edit/?meal_slug=".concat(meal_slug);
     axios.get(url).then(function (res) {
       commit('EDITING_MEAL', res.data.data);
     })["catch"](function (err) {
