@@ -20,13 +20,13 @@ class User extends Authenticatable
     protected $fillable = [
         'firstname',
         'lastname',
-        'displayName',
+        'display_name',
         'username',
         'email',
         'password',
-        'phoneNumber',
+        'phone_number',
         'role',
-        'hasShop',
+        'has_shop',
         'user_image'
     ];
 
@@ -87,4 +87,3 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 }
-

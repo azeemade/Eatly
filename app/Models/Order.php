@@ -19,21 +19,23 @@ class Order extends Model
         'shop_id',
         'order_status',
         'meal_size',
-        'shippingAddress',
-        'billingAddress',
-        'paymentType',
-        'cardType',
-        'nameOnCard',
-        'cardNumber',
-        'cardExpiration',
+        'shipping_address',
+        'billing_address',
+        'payment_type',
+        'card_type',
+        'name_on_card',
+        'card_number',
+        'card_expiration',
         'ccv',
         'promo_code'
     ];
 
-    public function getCreatedAtAttribute($date){
+    public function getCreatedAtAttribute($date)
+    {
         return Carbon::parse($date)->diffForHumans();
     }
-    public function getUpdatedAtAttribute($date){
+    public function getUpdatedAtAttribute($date)
+    {
         return Carbon::parse($date)->diffForHumans();
     }
 
@@ -59,5 +61,4 @@ class Order extends Model
     {
         return $this->hasOne(Rating::class);
     }
-
 }
