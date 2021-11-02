@@ -67,7 +67,7 @@ export default {
     },
 
     beforeMount(){
-        let url = `http://127.0.0.1:8000/api/v1/category/${this.$route.params.title}/show`
+        let url = `/api/v1/category/${this.$route.params.title}/show`
         axios.get(url).then(response => this.meals = response.data.data)
     },
 
@@ -75,7 +75,7 @@ export default {
 
         
 
-        //let url_ =  `http://127.0.0.1:8000/api/mealDetails/${this.$route.params.id}`
+        //let url_ =  `/api/mealDetails/${this.$route.params.id}`
        // axios.get(url_).then(response => this.meals = response.data)
        // .catch(error => {console.log(error)
        // this.errored = true})

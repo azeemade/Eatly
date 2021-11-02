@@ -145,14 +145,14 @@ export default {
             else {
               this.hasError = true;
 
-             axios.put(`http://127.0.0.1:8000/api/meals/${meal.id}`, {name, price, image})
+             axios.put(`/api/meals/${meal.id}`, {name, price, image})
              .then(response => this.$store.commit('SET_MESSAGE', response.data.message))
             }
         },  
 
         deleteMeal(meal){
             if(confirm('Are you sure?')){
-                axios.delete('http://127.0.0.1:8000/api/meals/'+ meal.id)
+                axios.delete('api/meals/'+ meal.id)
                 .then(response => this.$store.commit('REMOVE_VENDOR_MEAL', meal))
             }
         },   

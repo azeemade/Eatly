@@ -145,7 +145,7 @@ export default {
             }
             else {
               this.hasError = true;
-                axios.post(`http://127.0.0.1:8000/api/v1/user/create?user_id=${this.$store.state.id}`, {
+                axios.post(`/api/v1/user/create?user_id=${this.$store.state.id}`, {
                     firstname: this.user.firstname,
                     lastname: this.user.lastname,
                    phoneNumber: this.user.phoneNumber
@@ -155,7 +155,7 @@ export default {
                 let cart_ = this.$store.state.cart;
                 for(var meal in cart_){
                     let user_id = this.$store.state.id;
-                    axios.post(`http://127.0.0.1:8000/api/v1/order/checkout/`, {
+                    axios.post(`/api/v1/order/checkout/`, {
                         user_id: user_id,
                         meal_id: cart_[meal].id,
                         shop_id: cart_[meal].shop_id,
@@ -216,7 +216,7 @@ export default {
     },
 
     mounted(){
-        axios.get(`http://127.0.0.1:8000/api/v1/user/show?user_id=${this.$store.state.id}`)
+        axios.get(`/api/v1/user/show?user_id=${this.$store.state.id}`)
         .then(response => this.user = response.data.data)
     }
 }

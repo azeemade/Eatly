@@ -49,7 +49,7 @@ export default {
     },
     methods:{
         removeShop(shop) {
-           axios.delete(`http://127.0.0.1:8000/api/v1/favourite/delete/shop?user_id=${this.$store.state.id}&shop_id=${shop.id}`)
+           axios.delete(`/api/v1/favourite/delete/shop?user_id=${this.$store.state.id}&shop_id=${shop.id}`)
            .then(response =>  {
                this.message = response.data.message
                setTimeout(() => {

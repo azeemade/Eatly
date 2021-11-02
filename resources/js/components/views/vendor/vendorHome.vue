@@ -113,7 +113,7 @@ export default {
         },
 
         loadShopData(){
-            let url__ = `http://127.0.0.1:8000/api/v1/shop/shop-props?user_id=${this.$store.state.id}&month=${this.month}`
+            let url__ = `/api/v1/shop/shop-props?user_id=${this.$store.state.id}&month=${this.month}`
             axios.get(url__).then(response => this.shopData = response.data.data) 
         }
     },
@@ -123,20 +123,20 @@ export default {
     },
     
     mounted(){
-        let url__1 = `http://127.0.0.1:8000/api/v1/shop/shop-props?user_id=${this.$store.state.id}&month=${this.month}`
+        let url__1 = `/api/v1/shop/shop-props?user_id=${this.$store.state.id}&month=${this.month}`
         axios.get(url__1).then(response => {
             this.shopData = response.data.data, 
             this.month = response.data.data.month
         } ) 
 
-        let url =  `http://127.0.0.1:8000/api/v1/shop/vendor?user_id=${this.$store.state.id}`
+        let url =  `/api/v1/shop/vendor?user_id=${this.$store.state.id}`
         axios.get(url).then(response => {
             this.shop = response.data.data
 
-            let url_ = `http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=${this.shop.shop_name}`
+            let url_ = `/api/v1/rating/shop/?shop_name=${this.shop.shop_name}`
             axios.get(url_).then(response => this.ratings = response.data.data)
 
-            let url1 = `http://127.0.0.1:8000/api/v1/shop/best-seller?shop_name=${this.shop.shop_name}`
+            let url1 = `/api/v1/shop/best-seller?shop_name=${this.shop.shop_name}`
             axios.get(url1).then(response => this.bestSellers = response.data.data) 
             }
         )  

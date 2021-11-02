@@ -90,7 +90,7 @@ export default {
         this.$store.dispatch('fetchRecent', this.$store.state.id)
 
 
-        axios.get(`http://127.0.0.1:8000/api/v1/search/popular`)
+        axios.get(`/api/v1/search/popular`)
         .then(response => this.searchPop = response.data.data)
 
         

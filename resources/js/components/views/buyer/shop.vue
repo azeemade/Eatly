@@ -143,18 +143,18 @@ export default {
     },
 
     beforeMount(){
-        let url = `http://127.0.0.1:8000/api/v1/shop/vendor/?user_id=${this.$store.state.id}`
+        let url = `/api/v1/shop/vendor/?user_id=${this.$store.state.id}`
         axios.get(url).then(response => this.shop = response.data.data)
 
-        let url1 = `http://127.0.0.1:8000/api/v1/rating/shop/?shop_name=${this.$route.params.shop_name}`
+        let url1 = `/api/v1/rating/shop/?shop_name=${this.$route.params.shop_name}`
         axios.get(url1).then(response => this.ratings = response.data.data)
     },
 
     mounted(){
-        let urlv = `http://127.0.0.1:8000/api/v1/meal/vendor/active?shop_name=${this.$route.params.shop_name}`
+        let urlv = `/api/v1/meal/vendor/active?shop_name=${this.$route.params.shop_name}`
         axios.get(urlv).then(response => this.meals = response.data.data)
 
-        let url_1 = `http://127.0.0.1:8000/api/v1/order/featured-meals?shop_name=${this.$route.params.shop_name}`
+        let url_1 = `/api/v1/order/featured-meals?shop_name=${this.$route.params.shop_name}`
         axios.get(url_1).then(response => this.fMeals = response.data.data)
     },
 
@@ -173,7 +173,7 @@ export default {
             let id = this.$store.state.id
 
             if (this.isLoggedIn == true){
-                axios.post(`http://127.0.0.1:8000/api/v1/favourite/shop?user_id=${id}&shop_id=${shop_id}`)
+                axios.post(`/api/v1/favourite/shop?user_id=${id}&shop_id=${shop_id}`)
                 .then(response => {
                     this.message = response.data.message
                     setTimeout(() => {

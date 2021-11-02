@@ -57,7 +57,7 @@ export default {
 
     methods:{
         clear(order){
-            let url = `http://127.0.0.1:8000/api/v1/order/user/cancel-order?order_id=${order.id}`
+            let url = `/api/v1/order/user/cancel-order?order_id=${order.id}`
             axios.delete(url)
             .then(response => this.message = response.data.message)
             .then(response =>  this.$store.commit('CANCEL_ORDER', order))

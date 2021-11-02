@@ -41,7 +41,7 @@ export default {
 
     methods:{
         fetchComments(page_url){
-            page_url = page_url || `http://127.0.0.1:8000/api/v1/comment/?meal_slug=${this.$store.state.meal_slug}`
+            page_url = page_url || `/api/v1/comment/?meal_slug=${this.$store.state.meal_slug}`
 
             axios.get(page_url)
             .then(response => {

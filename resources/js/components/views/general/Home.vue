@@ -246,9 +246,9 @@ export default {
     },
 
     beforeMount(){
-        axios.get('http://127.0.0.1:8000/api/v1/category/top-category')
+        axios.get('api/v1/category/top-category')
         .then(response => this.categories = response.data.data)
-        axios.get('http://127.0.0.1:8000/api/v1/order/top-meals')
+        axios.get('api/v1/order/top-meals')
         .then(response => this.meals = response.data.data)
     },
 
@@ -289,7 +289,7 @@ export default {
             if (this.shop_name == ''){
                 alert('Please enter a name')
             }else{
-                axios.get(`http://127.0.0.1:8000/api/v1/shop/exist?shop_name=${this.shop_name}`)
+                axios.get(`/api/v1/shop/exist?shop_name=${this.shop_name}`)
                 .then(response =>  this.message = response.data.message)
             }
         },
@@ -297,7 +297,7 @@ export default {
             let meal_id = meal.id
             let id = this.$store.state.id
             if (this.isLoggedIn == true){
-                axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
+                axios.post(`/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
                 .then(response => {
                     this.message = response.data.message
                     setTimeout(() => {

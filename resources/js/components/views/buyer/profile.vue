@@ -76,7 +76,7 @@ export default {
 
                 console.log(this.master_image);
 
-                axios.post(`http://127.0.0.1:8000/api/v1/user/update?id=${this.$store.state.id}`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                axios.post(`/api/v1/user/update?id=${this.$store.state.id}`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
                     .then(response => {
                         if(response.data.message === 'Profile updated successfully'){
                             this.$router.push('/home')
@@ -94,7 +94,7 @@ export default {
     },
 
     beforeMount(){
-        axios.get(`http://127.0.0.1:8000/api/v1/user/show?user_id=8`)
+        axios.get(`/api/v1/user/show?user_id=8`)
         .then(response => this.user = response.data.data)
     },
 

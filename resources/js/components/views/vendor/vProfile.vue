@@ -64,7 +64,7 @@ export default {
                 formData.append("open_time", this.shop.opening_time);
                 formData.append("close_time", this.shop.close_time);
 
-                axios.post(`http://127.0.0.1:8000/api/v1/shop/store/`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                axios.post(`/api/v1/shop/store/`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
                     .then(response => {
                         if(response.data.message === 'Meal saved successfully'){
                             this.$router.push('/vendor/meals')
@@ -79,7 +79,7 @@ export default {
     },
 
     beforeMount(){
-        axios.get(`http://127.0.0.1:8000/api/v1/shop/vendor?user_id=8`)
+        axios.get(`/api/v1/shop/vendor?user_id=8`)
         .then(response => this.shop = response.data.data)
     }
 }

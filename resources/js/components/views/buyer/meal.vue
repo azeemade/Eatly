@@ -266,7 +266,7 @@ export default {
             let id = this.id
 
             if (this.isLoggedIn == true){
-                axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
+                axios.post(`/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
                 .then(response => {
                     this.message = response.data.message
                     setTimeout(() => {
@@ -280,7 +280,7 @@ export default {
         }, 
 
         loadPrice(){
-            axios.get(`http://127.0.0.1:8000/api/v1/meal/listing/${this.$route.params.meal_slug}?meal_size=${this.size}`)
+            axios.get(`/api/v1/meal/listing/${this.$route.params.meal_slug}?meal_size=${this.size}`)
             .then((response) => {
                 this.meal.meal_price = response.data.selected_size.meal_price;
             })
@@ -296,13 +296,13 @@ export default {
 
     beforeMount(){ 
         this.setDefaults();
-        axios.get(`http://127.0.0.1:8000/api/v1/meal/listing/${this.$route.params.meal_slug}`)
+        axios.get(`/api/v1/meal/listing/${this.$route.params.meal_slug}`)
         .then(response => this.meal = response.data.data)
 
-        axios.get(`http://127.0.0.1:8000/api/v1/meal/listing/${this.$route.params.meal_slug}`)
+        axios.get(`/api/v1/meal/listing/${this.$route.params.meal_slug}`)
         .then(response => this.images = response.data.images)
 
-        axios.get(`http://127.0.0.1:8000/api/v1/meal/listing/${this.$route.params.meal_slug}`)
+        axios.get(`/api/v1/meal/listing/${this.$route.params.meal_slug}`)
         .then(response => this.meal_sizes = response.data.meal_sizes)
         
         let meal_slug = this.$route.params.meal_slug
@@ -310,7 +310,7 @@ export default {
     },
 
     mounted(){
-        let url_ =`http://127.0.0.1:8000/api/v1/meal/related-meals/?meal_slug=${this.$route.params.meal_slug}`
+        let url_ =`/api/v1/meal/related-meals/?meal_slug=${this.$route.params.meal_slug}`
         axios.get(url_).then(response => this.meals = response.data.data)    
     },
 }

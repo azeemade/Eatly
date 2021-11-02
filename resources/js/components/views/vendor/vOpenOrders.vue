@@ -56,7 +56,7 @@ export default {
 
     methods:{
         deliver(order){
-            let url = `http://127.0.0.1:8000/api/v1/order/start-delivery?order_id=${order.id}`
+            let url = `/api/v1/order/start-delivery?order_id=${order.id}`
             axios.put(url)
             .then(response => this.message = response.data.message)
             .then(this.$store.dispatch('fetchUndelivered', this.$store.state.id))

@@ -263,7 +263,7 @@ export default {
             let meal_id = meal.id
             let id = this.$store.state.id
 
-            axios.post(`http://127.0.0.1:8000/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
+            axios.post(`/api/v1/favourite/meal?user_id=${id}&meal_id=${meal_id}`)
             .then(response => {
                 this.message = response.data.message
                 setTimeout(() => {
@@ -284,19 +284,19 @@ export default {
        // this.errored = true})
        // .finally(() => this.loading = false)
 
-        axios.get('http://127.0.0.1:8000/api/v1/category/top-category')
+        axios.get('api/v1/category/top-category')
         .then(response => this.categories = response.data.data)
 
-        axios.get('http://127.0.0.1:8000/api/v1/order/top-meals')
+        axios.get('api/v1/order/top-meals')
         .then(response => this.meals = response.data.data)
         .catch(error => {console.log(error)
         this.errored = true})
         .finally(() => this.loading = false)
 
-        axios.get(`http://127.0.0.1:8000/api/v1/meal/recommended/fav/meal?user_id=${this.$store.state.id}`)
+        axios.get(`/api/v1/meal/recommended/fav/meal?user_id=${this.$store.state.id}`)
         .then(response => this.favMeals = response.data.data)
 
-        axios.get(`http://127.0.0.1:8000/api/v1/meal/recommended/fav/vendor/meal?user_id=${this.$store.state.id}`)
+        axios.get(`/api/v1/meal/recommended/fav/vendor/meal?user_id=${this.$store.state.id}`)
         .then(response => this.favShopMeals = response.data.data)
 
         //this.$store.dispatch('fetchBookmarkMeal', this.$store.state.id)

@@ -119,7 +119,7 @@ export default {
                 this.hasMeal = false;
             } else {
                 this.hasMeal = true;
-            axios.post('http://127.0.0.1:8000/api/bookmark/meal/'+meal_id, {meal_id, id})
+            axios.post('api/bookmark/meal/'+meal_id, {meal_id, id})
             .then(response => this.$store.commit('ADD_TO_BOOKMARK_MEAL', {meal}))
             alert('Meal added to bookmark')
             }

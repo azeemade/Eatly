@@ -62,7 +62,7 @@ export default {
                 }, 3000);
             }
             else{
-                let url = `http://127.0.0.1:8000/api/v1/order/user/clear?user_id=${this.$store.state.id}`
+                let url = `/api/v1/order/user/clear?user_id=${this.$store.state.id}`
                 axios.delete(url)
                 .then(response => {
                     this.$store.dispatch('fetchClosedOrders', this.$store.state.id)

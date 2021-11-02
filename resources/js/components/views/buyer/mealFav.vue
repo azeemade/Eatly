@@ -54,7 +54,7 @@ export default {
     },
     methods:{
         removeMeal(meal) {
-           axios.delete(`http://127.0.0.1:8000/api/v1/favourite/delete/meal?user_id=${this.$store.state.id}&meal_id=${meal.id}`)
+           axios.delete(`/api/v1/favourite/delete/meal?user_id=${this.$store.state.id}&meal_id=${meal.id}`)
            .then(response =>  {
                 this.message = response.data.message
                 setTimeout(() => {

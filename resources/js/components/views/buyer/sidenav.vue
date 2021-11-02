@@ -78,7 +78,7 @@ export default {
 
     beforeMount(){
         this.setDefaults();
-        axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${this.id}`)
+        axios.get(`/api/v1/shop/shop-name?user_id=${this.id}`)
         .then(response => this.shop_name = response.data.data.shop_name)
     },
 

@@ -220,16 +220,16 @@ export default {
     },
 
     mounted(){
-        let urlm = `http://127.0.0.1:8000/api/v1/meal/meals`
+        let urlm = `/api/v1/meal/meals`
         axios.get(urlm).then(response => this.meals = response.data.data)
 
-        let urls = `http://127.0.0.1:8000/api/v1/shop/shops`
+        let urls = `/api/v1/shop/shops`
         axios.get(urls).then(response => this.shops = response.data.data)
 
-        let urlc = `http://127.0.0.1:8000/api/v1/category/`
+        let urlc = `/api/v1/category/`
         axios.get(urlc).then(response => this.categories = response.data.data)
 
-        let urlu = `http://127.0.0.1:8000/api/v1/user/`
+        let urlu = `/api/v1/user/`
         axios.get(urlu).then(response => this.users = response.data.data)
     },
 

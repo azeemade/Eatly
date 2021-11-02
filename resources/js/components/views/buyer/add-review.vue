@@ -58,14 +58,14 @@ export default {
                     this.message = null;
                 }, 3000);
             }else{
-                axios.post("http://127.0.0.1:8000/api/v1/rating/store", {
+                axios.post("api/v1/rating/store", {
                     user_id: this.$store.state.id,
                     meal_id: this.order.meal_id,
                     points: this.rating,
                     order_id: this.order.id
                 })
                 .then(               
-                    axios.post("http://127.0.0.1:8000/api/v1/comment/store", {
+                    axios.post("api/v1/comment/store", {
                         user_id: this.$store.state.id,
                         meal_id: this.order.meal_id,
                         review: this.review,

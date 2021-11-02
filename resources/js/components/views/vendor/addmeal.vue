@@ -183,7 +183,7 @@ export default {
                 })
 
 
-                axios.post(`http://127.0.0.1:8000/api/v1/meal/meal-details/`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                axios.post(`/api/v1/meal/meal-details/`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
                     .then(response => {
                         if(response.data.message === 'Meal saved successfully'){
                             this.$router.push('/vendor/meals')
@@ -203,7 +203,7 @@ export default {
     beforeMount(){
         this.setDefaults();
 
-        axios.get(`http://127.0.0.1:8000/api/v1/category/`)
+        axios.get(`/api/v1/category/`)
         .then(response => this.categories = response.data.data)
     },
 }

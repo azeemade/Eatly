@@ -61,7 +61,7 @@ export default {
 
         loadCart(){
             let user_id = this.id
-            axios.get(`http://127.0.0.1:8000/api/cart?id=${user_id}`)
+            axios.get(`/api/cart?id=${user_id}`)
             .then(response => this.cart = response.data.data.cart.meals)
             .catch(console.error)
         },

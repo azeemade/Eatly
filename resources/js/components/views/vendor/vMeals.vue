@@ -165,7 +165,7 @@ export default {
         },
 
         remove(meal){
-            axios.delete(`http://127.0.0.1:8000/api/v1/meal/delete?meal_id=${meal.id}`)
+            axios.delete(`/api/v1/meal/delete?meal_id=${meal.id}`)
             .then(response => {
                 this.message = response.data.message,
                 this.$store.commit('REMOVE_MEAL', meal)
@@ -184,19 +184,19 @@ export default {
     },
 
     mounted(){
-        axios.get(`http://127.0.0.1:8000/api/v1/shop/shop-name?user_id=${this.$store.state.id}`)
+        axios.get(`/api/v1/shop/shop-name?user_id=${this.$store.state.id}`)
         .then(response => {
             this.shop_name = response.data.data.shop_name,
 
-            //axios.get(`http://127.0.0.1:8000/api/v1/meal/vendor?shop_name=${this.shop_name}`)
+            //axios.get(`/api/v1/meal/vendor?shop_name=${this.shop_name}`)
             //.then(response =>this.meals = response.data.data)
             this.$store.dispatch('fetchVendorMeals', this.shop_name), 
            
-            axios.get(`http://127.0.0.1:8000/api/v1/meal/active/?shop_name=${this.shop_name}`)
+            axios.get(`/api/v1/meal/active/?shop_name=${this.shop_name}`)
             .then(response =>this.active = response.data.data)
-            axios.get(`http://127.0.0.1:8000/api/v1/meal/awaiting/?shop_name=${this.shop_name}`)
+            axios.get(`/api/v1/meal/awaiting/?shop_name=${this.shop_name}`)
             .then(response =>this.awaiting = response.data.data)
-            axios.get(`http://127.0.0.1:8000/api/v1/meal/cancelled/?shop_name=${this.shop_name}`)
+            axios.get(`/api/v1/meal/cancelled/?shop_name=${this.shop_name}`)
             .then(response =>this.cancelled = response.data.data)
         })
     },

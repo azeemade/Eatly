@@ -152,9 +152,9 @@ export default {
         }
     },
     beforeMount(){
-    //    axios.get(`http://127.0.0.1:8000/api/v1/meal/edit/?meal_slug=${this.$store.state.meal_slug}`)
+    //    axios.get(`/api/v1/meal/edit/?meal_slug=${this.$store.state.meal_slug}`)
     //    .then(response => this.meal = response.data.data)
-        axios.get(`http://127.0.0.1:8000/api/v1/category/`)
+        axios.get(`/api/v1/category/`)
         .then(response => this.categories = response.data.data)
     },
     mounted(){
